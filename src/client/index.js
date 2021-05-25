@@ -1,19 +1,24 @@
 
+import { connect, play } from "./networking"
 import './style.css';
 
 const playMenu = document.getElementById('play-menu');
 const playButton = document.getElementById('play-button');
-var usernameInput = document.getElementById('username-input').value;
+const usernameInput = document.getElementById('username-input');
 
-console.log(usernameInput);
 
 Promise.all([
     
 ]).then(() => {
     playButton.onclick = () => {
-        console.log("hi erwre");
         var usernameInput = document.getElementById('username-input').value;
-        document.getElementById("debug").innerHTML = usernameInput;
+        play(usernameInput);
+        console.log(usernameInput);
     };
+    
 })
 
+export function changeDisplay(username){
+    console.log("I'm clicked " + username);
+    document.getElementById("debug").innerHTML = username;
+}
