@@ -19,3 +19,7 @@
 5) Voting
 * Records of past days - who voted who
 6) When dead, add option for “see roles”
+
+
+* Figure out HTML Scene transitions
+* CSS Redesign webpage
