@@ -4,5 +4,7 @@ module.exports = Object.freeze({
         JOIN_LOBBY: 'join_lobby',
         INPUT: 'input',
         GAME_OVER: 'dead',
+        ENOUGH_PEOPLE: 'enough_people',
+        START_GAME: 'start_game'
     },
 });

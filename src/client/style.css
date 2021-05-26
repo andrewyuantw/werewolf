@@ -1,0 +1,20 @@
+#lobby {
+    float: left;
+    margin-left: 500px;
+}
+
+#start-game-button {
+    visibility: hidden;
+}
+
+#start-game-button.show {
+    visibility: visible;
+}
+
+#play-menu {
+    visibility: visible;
+}
+
+#play-menu.hide {
+    visibility: hidden;
+}

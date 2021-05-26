@@ -28,6 +28,7 @@ io.on('connection', socket => {
     console.log('Player connected!', socket.id);
     socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
     socket.on('disconnect', onDisconnect);
+    socket.on(Constants.MSG_TYPES.START_GAME, startGame);
 });
 
 // Setup the Game
@@ -42,4 +43,8 @@ function joinGame(username) {
   
 function onDisconnect() {
     game.removePlayer(this);
+}
+
+function startGame(){
+    game.startGame();
 }
