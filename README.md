@@ -3,9 +3,9 @@
 ### To Do
 
 
-1) Welcome menu
-* Take display name and display as numbered list
-* Host starts game with enough people 
+1) Welcome menu - DONE
+* Take display name and display as numbered list - DONE
+* Host starts game with enough people - DONE
 2) Character reveal menu
 * Players press “Ready”, moves on once all 9 are ready
 3) Night
