@@ -2,7 +2,6 @@
 
 ### To Do
 
-
 1) Welcome menu - DONE
 * Take display name and display as numbered list - DONE
 * Host starts game with enough people - DONE
