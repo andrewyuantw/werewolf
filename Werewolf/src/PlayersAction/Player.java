@@ -1,5 +1,5 @@
 package PlayersAction;
-import java.util.*;
+
 public abstract class Player{
 	
 	private static int nextNumber=1;
@@ -25,6 +25,10 @@ public abstract class Player{
 	public void joinElection() {
 		this.joinElection = true;
 		this.voted = true;
+	}
+	
+	public void quitElection() {
+		this.joinElection = false;
 	}
 	
 	public void vote(Player target) {
@@ -54,6 +58,20 @@ public abstract class Player{
 		return voted;
 	}
 	
+	public void resetCurrVote() {
+		this.currVote = 0;
+	}
+	
+	public void resetVoted() {
+		this.voted = false;
+		this.votedFor = 0;
+	}
+	
+	
+	public void setSheriff() {
+		this.sheriff = true;
+	}
+	
 	public boolean sheriffOrNot() {
 		return sheriff;
 	}
@@ -72,6 +90,7 @@ public abstract class Player{
 	
 	public void dead() {
 		this.alive = false;
+		this.sheriff = false;
 	}
 	
 	public void changeAliveStatus() {
