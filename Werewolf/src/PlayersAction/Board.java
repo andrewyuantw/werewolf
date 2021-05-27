@@ -8,6 +8,7 @@ public class Board {
 	private Map<Player, ArrayList<Integer>> votesList; //Player X has votes from {...}
 	private Map<Player, Double> playerWithVotes; // Player x has n votes (type double).
 	private ArrayList<Player> alivePlayers; // Players who are alive.
+	private ArrayList<Player> skippedPlayers; // Players who skipped vote.
 	private ArrayList<Player> lastNightDead; // List of players who died last night.
 	private int wolfNum, villagerNum, godNum; // Number of werewolves, villagers, and gods. Used to determine win condition.
 	
@@ -37,6 +38,7 @@ public class Board {
 	public void decreaseWolfNumber() {
 		this.wolfNum--;
 	}
+
 
 	public void decreaseVillagerNumber() {
 		this.villagerNum--;
@@ -92,11 +94,31 @@ public class Board {
 	// add player to alive player list.
 	public void addAlivePlayer(Player newPlayer) {
 		alivePlayers.add(newPlayer);
+		
+		if(newPlayer instanceof Werewolf) {
+			wolfNum++;
+		}
+		if(newPlayer instanceof Villager) {
+			villagerNum++;
+		}
+		if(newPlayer instanceof God) {
+			godNum++;
+		}
 	}
 	
 	// add player to alive player list.
 	public void removeAlivePlayer(Player thePlayer) {
 		alivePlayers.remove(thePlayer);
+		
+		if(thePlayer instanceof Werewolf) {
+			wolfNum--;
+		}
+		if(thePlayer instanceof Villager) {
+			villagerNum--;
+		}
+		if(thePlayer instanceof God) {
+			godNum--;
+		}
 	}
 	
 	// used mainly for sheriff election, sometimes for tie votes pk
@@ -112,6 +134,30 @@ public class Board {
 			ArrayList<Integer> votesFrom = new ArrayList<Integer>();
 			playerWithVotes.put(element, 0.0);
 			votesList.put(element, votesFrom);
+		}
+	}
+	
+	// update votes after every player voted
+	public void updateVotes() {		
+		for(Entry<Player, Double> entry : playerWithVotes.entrySet()) {
+			double votes = entry.getKey().getCurrVote();
+			entry.setValue(votes);
+			
+		}
+		
+		for(Entry<Player, ArrayList<Integer>> entry : votesList.entrySet()) {
+			int currPlayerNum = entry.getKey().getNumber();
+			for(Player player : alivePlayers) {
+				if(player.getVotedFor() == currPlayerNum) {
+					entry.getValue().add(player.getNumber());
+				}
+			}
+		}
+		
+		for(Player player : alivePlayers) {
+			if(player.getVotedFor() == 0) {
+				skippedPlayers.add(player);
+			}
 		}
 	}
 	
@@ -163,8 +209,31 @@ public class Board {
 
 	}
 	
+	public void revealVotes() {
+		for(Entry<Player, ArrayList<Integer>> entry : votesList.entrySet()) {
+			Player curr = entry.getKey();
+			ArrayList<Integer> votesFrom = entry.getValue();
+			
+			System.out.print(curr + " has votes from: ");
+			for(Integer number : votesFrom) {
+				System.out.print(number + " ");
+			}
+			System.out.println();
+		}
+		
+		System.out.print("Players skipped: ");
+		for(Player player : skippedPlayers) {
+			System.out.print(player.getNumber() + " ");
+		}
+		System.out.println();
+	}
+	
+	
+	
+	
 	// display the result of sheriff election
 	public void electionResult(ArrayList<Player> result) {
+		revealVotes();
 		if(result.size() != 1) {
 			System.out.println("No one becomes sheriff.");
 		} else {
@@ -175,6 +244,7 @@ public class Board {
 	
 	// display the result of exile
 	public void exileResult(ArrayList<Player> result) {
+		revealVotes();
 		if(result.size() != 1) {
 			System.out.println("No one is exiled.");
 		} else {
