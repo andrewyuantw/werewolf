@@ -25,6 +25,7 @@ public abstract class Player{
 	public void joinElection() {
 		this.joinElection = true;
 		this.voted = true;
+		this.votedFor = -1;
 	}
 	
 	public void quitElection() {
@@ -99,3 +100,4 @@ public abstract class Player{
 	
 	public abstract boolean getWolfOrNot();
 }
+
