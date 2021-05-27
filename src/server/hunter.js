@@ -2,8 +2,9 @@ const God = require("./god");
 
 
 class Hunter extends God {
-    constructor(){
-        
+    
+    shoot(target){
+        target.dead();
     }
 }
 

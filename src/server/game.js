@@ -1,6 +1,8 @@
 const Player = require('./player');
 const Constants = require('../shared/constants');
 
+const PLAYERNUM = 2;
+
 class Game {
     constructor() {
         this.sockets = {};
@@ -8,7 +10,7 @@ class Game {
         this.playerCount = 0;
         this.hostID = null;
         this.current_roster = "Lobby: <br>";
-
+        this.ready_number = 0;
     }
   
     addPlayer(socket, username) {
@@ -26,7 +28,7 @@ class Game {
             each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster);
         })
 
-        if (this.playerCount >= 2){
+        if (this.playerCount >= PLAYERNUM){
             const host_socket = this.sockets[this.hostID];
             host_socket.emit(Constants.MSG_TYPES.ENOUGH_PEOPLE);
         }
@@ -62,9 +64,16 @@ class Game {
         })
     }
 
-    assignRoles(){
-        this.wolfID = Object.keys(this.sockets)[0];
-        this.seerID = Object.keys(this.sockets)[1]; 
+    playerReady(){
+        this.ready_number++;
+        if (this.ready_number >= PLAYERNUM){
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+                
+            })
+            console.log("night");
+        }
     }
 
 

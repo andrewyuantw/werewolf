@@ -29,6 +29,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
     socket.on('disconnect', onDisconnect);
     socket.on(Constants.MSG_TYPES.START_GAME, startGame);
+    socket.on(Constants.MSG_TYPES.READY_TO_START, playerIsReady);
 });
 
 // Setup the Game
@@ -47,4 +48,8 @@ function onDisconnect() {
 
 function startGame(){
     game.startGame();
+}
+
+function playerIsReady(){
+    game.playerReady();
 }

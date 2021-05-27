@@ -29,3 +29,11 @@
 #character-reveal.hide {
     visibility: hidden;
 }
+
+#ready {
+    visibility: visible;
+}
+
+#ready.hide {
+    visibility: hidden;
+}

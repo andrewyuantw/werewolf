@@ -1,12 +1,12 @@
 
-import { connect, play, startGame } from "./networking"
+import { connect, play, readyToStart, startGame } from "./networking"
 import './style.css';
 
 const playMenu = document.getElementById('play-menu');
 const playButton = document.getElementById('play-button');
 const usernameInput = document.getElementById('username-input');
 const startGameButton = document.getElementById('start-game-button');
-
+const readyButton = document.getElementById('ready');
 
 Promise.all([
     
@@ -20,6 +20,13 @@ Promise.all([
         startGame();
         console.log("Game has been started");
     };
+    readyButton.onclick = () => {
+        readyToStart();
+        var readyButton = document.getElementById("ready");
+        if (! readyButton.classList.contains("hide"))
+            readyButton.classList.toggle("hide");
+        console.log("im ready to start");
+    }
     
 })
 
@@ -45,5 +52,6 @@ export function startGameForAll(role){
     var characterReveal = document.getElementById("character-reveal");
     characterReveal.classList.toggle("hide");
     document.getElementById("role").innerHTML = `Your role is ${role}`;
+    document.getElementById("ready").classList.toggle("hide");
     console.log(role);
 }

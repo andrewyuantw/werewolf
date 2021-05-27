@@ -37,6 +37,14 @@ class Player {
     getRole(){
         return this.role;
     }
+
+    getRoleNumber(){
+        return this.roleNumber;
+    }
+
+    getWolfOrNot(){
+        return false;
+    }
 }
 
 module.exports = Player;

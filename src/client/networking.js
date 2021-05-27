@@ -24,3 +24,6 @@ export function startGame(){
     socket.emit(Constants.MSG_TYPES.START_GAME);
 }
 
+export function readyToStart(){
+    socket.emit(Constants.MSG_TYPES.READY_TO_START);
+}

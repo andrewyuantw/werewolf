@@ -5,6 +5,8 @@ module.exports = Object.freeze({
         INPUT: 'input',
         GAME_OVER: 'dead',
         ENOUGH_PEOPLE: 'enough_people',
-        START_GAME: 'start_game'
+        START_GAME: 'start_game',
+        READY_TO_START: 'ready_to_start',
+        GO_TO_NIGHT: 'gp_to_night'
     },
 });
