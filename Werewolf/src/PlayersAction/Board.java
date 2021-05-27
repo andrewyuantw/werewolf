@@ -70,7 +70,7 @@ public class Board {
 	}
 	
 	// assign identities to players using shuffled random array
-	public Player playerRandomizer(int digit) throws Exception {
+	public Player playerRandomizer(int digit) {
 		switch(digit) {
 			case 1:
 			case 2:
@@ -86,9 +86,9 @@ public class Board {
 			case 8:
 			case 9:
 				return new Werewolf();
-			default:
-				throw new Exception("Something went wrong");
+			
 		}
+		return null;
 	}
 	
 	// add player to alive player list.
@@ -136,6 +136,16 @@ public class Board {
 			votesList.put(element, votesFrom);
 		}
 	}
+	
+	public void updateElectionCandidates() {
+		for(Player p : alivePlayers) {
+			if(p.joinedElectionOrNot()) {
+				addPlayerWithVotes(p);
+			}
+		}
+	}
+	
+	
 	
 	// update votes after every player voted
 	public void updateVotes() {		
