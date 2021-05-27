@@ -7,7 +7,7 @@
 * Take display name and display as numbered list - DONE
 * Host starts game with enough people - DONE
 2) Character reveal menu - DONE
-* Players press “Ready”, moves on once all 9 are ready
+* Players press “Ready”, moves on once all 9 are ready - DONE
 3) Night
 * Werewolf kills - take number input (add chat menu?) (All three agree to kill)
 * Seer looks - take number input
