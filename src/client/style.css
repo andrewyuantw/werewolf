@@ -1,14 +1,17 @@
 #lobby {
     float: left;
     margin-left: 500px;
+    top: 0;
+    left: 0;
 }
 
 #start-game-button {
-    visibility: hidden;
+    visibility: visible;
 }
 
-#start-game-button.show {
-    visibility: visible;
+#start-game-button.hide
+{
+    visibility: hidden;
 }
 
 #play-menu {
@@ -16,5 +19,13 @@
 }
 
 #play-menu.hide {
+    visibility: hidden;
+}
+
+#character-reveal {
+    visibility: visible;
+}
+
+#character-reveal.hide {
     visibility: hidden;
 }

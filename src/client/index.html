@@ -5,16 +5,21 @@
 </head>
 
 <body>
-    <canvas id="game-canvas"></canvas>
     
     <div id="play-menu">
         <h1>Welcome to the Game!</h1>
         <h3>Enter your desired display name...</h3>
         <input type="text" id="username-input" placeholder="Username" />
         <button id="play-button">PLAY</button>
+        
     </div>
     <br>
-    <button id="start-game-button">START</button>
+    <button id="start-game-button" class= "hide">START</button>
+    <div id="character-reveal" class="hide"> 
+        <h1>GAME HAS STARTED</h1>
+        <h2 id="role"></h2>
+        <button id="ready">READY</button>
+    </div>
 
     <br>
     <div id= "lobby">Lobby:</div>
