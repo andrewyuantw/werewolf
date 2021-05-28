@@ -1,5 +1,5 @@
 
-import { connect, enterUsername, getSeerChoice, hostStartGame, play, playerReady, readyToStart, seerLook, startGame } from "./networking"
+import { connect, enterUsername, getSeerChoice, hostStartGame, play, playerReady, readyToStart, seerLook, startGame, wolfChatMessage } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -7,6 +7,8 @@ const playButton = document.getElementById('play-button');
 const startGameButton = document.getElementById('start-game-button');
 const readyButton = document.getElementById('ready');
 const seerButton = document.getElementById('seer-button');
+const wolfButton = document.getElementById('wolf-button');
+const chatButton = document.getElementById('chat-button');
 
 // Handle HTML button onclick functions
 Promise.all([
@@ -53,7 +55,25 @@ Promise.all([
         if (numInput >= 1 && numInput <= 9)
             getSeerChoice(numInput);
     }
-})
+
+    // When the wolf has clicked confirm after inputting a player number 
+    wolfButton.onclick = () => {
+
+        // We get the number from the input box, and check if it is valid
+       
+        var numInput = document.getElementById('wolf-input').value;
+        
+    }
+
+    // When the wolf has clicked confirm after inputting a player number 
+    chatButton.onclick = () => {
+
+        // We get the number from the input box, and check if it is valid
+       
+        var textInput = document.getElementById('chat-input').value;
+        wolfChatMessage(textInput);
+    }
+}) 
 
 // Handles server message indicating a new person has joined the lobby
 export function changeDisplay(username){
@@ -106,4 +126,23 @@ export function gotSeerResult(bad){
     var seer_display = document.getElementById("seer-result");
     seer_display.innerHTML = (bad) ? "This person is bad!" : "This person is good!";
     document.getElementById("seer-button").classList.toggle("hide");
+}
+
+export function wolfNight(){
+
+    // shows the wolf menu
+    document.getElementById("wolf-menu").classList.toggle("hide");
+}
+
+export function wolfChat(message){
+
+    // shows the wolf menu
+    var wolf_display = document.getElementById("chat");
+    wolf_display.innerHTML = message;
+}
+
+export function gotKillResult(bad){
+
+    // 
+    document.getElementById("wolf-menu").classList.toggle("hide");
 }

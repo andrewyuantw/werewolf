@@ -31,6 +31,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.START_GAME, startGame);
     socket.on(Constants.MSG_TYPES.READY_TO_START, playerIsReady);
     socket.on(Constants.MSG_TYPES.SEER_RESPONSE, verify_seer_choice);
+    socket.on(Constants.MSG_TYPES.WOLF_RESPONSE, display_message);
 });
 
 // Sets up the Game
@@ -56,4 +57,8 @@ function playerIsReady(){
 
 function verify_seer_choice(num){
     game.check_player(num);
+}
+
+function display_message(message){
+    game.display_message(message);
 }

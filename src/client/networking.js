@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, showStartGameButton, startGameForAll } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -20,7 +20,9 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.ENOUGH_PEOPLE, showStartGameButton);
     socket.on(Constants.MSG_TYPES.START_GAME, startGameForAll);
     socket.on(Constants.MSG_TYPES.SEER_NIGHT, seerNight);
+    socket.on(Constants.MSG_TYPES.WOLF_NIGHT, wolfNight);
     socket.on(Constants.MSG_TYPES.SEER_RESULT, gotSeerResult);
+    socket.on(Constants.MSG_TYPES.CHAT_MESSAGE, wolfChat);
 });
 
 
@@ -40,4 +42,8 @@ export function playerReady(){
 
 export function getSeerChoice(numInput){
     socket.emit(Constants.MSG_TYPES.SEER_RESPONSE, numInput);
+}
+
+export function wolfChatMessage(message){
+    socket.emit(Constants.MSG_TYPES.WOLF_RESPONSE, message);
 }

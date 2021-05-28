@@ -15,7 +15,12 @@ module.exports = Object.freeze({
         // SEER_RESPONSE sent whenever a seer has submitted the player number they want to check
         SEER_RESPONSE: 'seer_response',
 
+        // WOLF_RESPONSE sent whenever a wolf presses send to chat
+        WOLF_RESPONSE: 'wolf_response',
 
+        // WOLF_RESPONSE sent whenever a wolf presses send to chat
+        CHAT_MESSAGE: 'chat_message',
+        
 
         
 
@@ -39,6 +44,9 @@ module.exports = Object.freeze({
         SEER_NIGHT: 'seer_night',
 
         // SEER_RESULT is sent to the seer with the results of their check
-        SEER_RESULT: "seer_result"
+        SEER_RESULT: "seer_result",
+
+        // SEER_NIGHT is sent to the seer when night starts
+        WOLF_NIGHT: 'wolf_night'
     },
 });
