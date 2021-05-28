@@ -18,10 +18,14 @@ module.exports = Object.freeze({
         // WOLF_RESPONSE sent whenever a wolf presses send to chat
         WOLF_RESPONSE: 'wolf_response',
 
-        // WOLF_RESPONSE sent whenever a wolf presses send to chat
+        // CHAT_MESSAGE sent whenever a wolf presses send to chat
         CHAT_MESSAGE: 'chat_message',
         
+        // RUN_FOR_MAYOR sent whenever someone presses YES or NO to running for mayor
+        RUN_FOR_MAYOR: 'run_for_mayor',
 
+        // MOVE_TO_MAYOR_VOTE sent when host presses move to mayor vote
+        MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote',
         
 
         // Server to Client
@@ -47,6 +51,18 @@ module.exports = Object.freeze({
         SEER_RESULT: "seer_result",
 
         // SEER_NIGHT is sent to the seer when night starts
-        WOLF_NIGHT: 'wolf_night'
+        WOLF_NIGHT: 'wolf_night',
+
+
+        // ELECTION_START is sent at the end of the first night
+        ELECTION_START: 'election_start',
+
+        // ELECTION_SPEECH_START is sent after everyone has said whether they want to run or not
+        ELECTION_SPEECH_START: 'election_speech_start',
+
+        // SHOW_MAYOR_BUTTON is sent to the host when mayor speeches begin
+        SHOW_MAYOR_BUTTON: 'show_mayor_button',
+
+        MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote'
     },
 });

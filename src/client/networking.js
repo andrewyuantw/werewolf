@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -23,6 +23,10 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.WOLF_NIGHT, wolfNight);
     socket.on(Constants.MSG_TYPES.SEER_RESULT, gotSeerResult);
     socket.on(Constants.MSG_TYPES.CHAT_MESSAGE, wolfChat);
+    socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);
+    socket.on(Constants.MSG_TYPES.ELECTION_SPEECH_START, electionSpeechStart)
+    socket.on(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON, show_mayor_button);
+    socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, show_mayor_menu);
 });
 
 
@@ -46,4 +50,12 @@ export function getSeerChoice(numInput){
 
 export function wolfChatMessage(message){
     socket.emit(Constants.MSG_TYPES.WOLF_RESPONSE, message);
+}
+
+export function runForMayorOrNot(run){
+    socket.emit(Constants.MSG_TYPES.RUN_FOR_MAYOR, run);
+}
+
+export function moveToMayorVote(){
+    socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
 }

@@ -1,5 +1,5 @@
 
-import { connect, enterUsername, getSeerChoice, hostStartGame, play, playerReady, readyToStart, seerLook, startGame, wolfChatMessage } from "./networking"
+import { connect, enterUsername, getSeerChoice, hostStartGame, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, wolfChatMessage } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -9,6 +9,10 @@ const readyButton = document.getElementById('ready');
 const seerButton = document.getElementById('seer-button');
 const wolfButton = document.getElementById('wolf-button');
 const chatButton = document.getElementById('chat-button');
+const yesMayorButton = document.getElementById('yes-mayor');
+const noMayorButton = document.getElementById('no-mayor');
+const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
+
 
 // Handle HTML button onclick functions
 Promise.all([
@@ -24,6 +28,7 @@ Promise.all([
         // If the input isn't empty, we send a message to the server
         if (usernameInput.length != 0){
             enterUsername(usernameInput);
+            playButton.classList.toggle("hide");
         }
     };
 
@@ -73,6 +78,23 @@ Promise.all([
         var textInput = document.getElementById('chat-input').value;
         wolfChatMessage(textInput);
     }
+
+    yesMayorButton.onclick = () =>{
+        runForMayorOrNot(true);
+        yesMayorButton.classList.toggle("hide");
+        noMayorButton.classList.toggle("hide");
+    }
+
+    noMayorButton.onclick = () =>{
+        runForMayorOrNot(false);
+        yesMayorButton.classList.toggle("hide");
+        noMayorButton.classList.toggle("hide");
+    }
+
+    startMayorVoteButton.onclick = () =>{
+        startMayorVoteButton.classList.toggle("hide");
+        moveToMayorVote();
+    }
 }) 
 
 // Handles server message indicating a new person has joined the lobby
@@ -89,6 +111,7 @@ export function showStartGameButton(){
     var startGameButton = document.getElementById("start-game-button");
     if (startGameButton.classList.contains("hide"))
         startGameButton.classList.toggle("hide");
+
 }
 
 // Handles the server message sent indicating the host has started the game
@@ -145,4 +168,33 @@ export function gotKillResult(bad){
 
     // 
     document.getElementById("wolf-menu").classList.toggle("hide");
+}
+
+
+
+export function electionStart(){
+
+    // COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING
+    // Hide welcome menu
+    /*
+    var welcomeMenu = document.getElementById("play-menu");
+    welcomeMenu.classList.toggle("hide");
+    */
+
+    document.getElementById('election-choice-menu').classList.toggle("hide");
+}
+
+export function electionSpeechStart(speakingOrder){
+    document.getElementById('election-choice-menu').classList.toggle("hide");
+    document.getElementById("election-speech-menu").classList.toggle("hide");
+    document.getElementById("speaking-order").innerHTML = speakingOrder;
+}
+
+export function show_mayor_button(){
+    document.getElementById("start-mayor-vote-button").classList.toggle("hide");
+}
+
+export function show_mayor_menu(){
+    document.getElementById('election-choice-menu').classList.toggle("hide");
+    document.getElementById("mayor-voting").classList.toggle("hide");
 }

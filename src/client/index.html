@@ -13,7 +13,6 @@
             <input type="text" id="username-input" placeholder="Username" />
             <button id="play-button">PLAY</button>
             <br>
-            <br>
             <button id="start-game-button" class= "hide">START</button>
         </div>
 
@@ -54,16 +53,24 @@
 
         </div>
 
-        <div id="mayor-choice-menu" class="hide">
-
+        <div id="election-choice-menu" class="hide">
+            <h2>Do you want to run for mayor?</h2>
+            <button id="yes-mayor">Yes</button>
+            <button id="no-mayor">No</button>
         </div>
 
-        <div id="mayor-election-speeches" class="hide">
-
+        <div id="election-speech-menu" class="hide">
+            <h2>Election Speeches</h2>
+            <h3>Speaking Order</h3>
+            <h3 id="speaking-order"></h3>
+            <button id="start-mayor-vote-button" class= "hide">MOVE TO VOTING</button>
+            <button id="drop-out-button" class= "hide">DROP OUT OF ELECTIOn</button>
         </div>
 
         <div id="mayor-voting" class="hide">
-            
+            <h2>Time to Vote!</h2>
+            <input type="number" id="mayor-input" placeholder="enter num">
+            <button id="mayor-vote-button" >VOTE</button>
         </div>
 
     </body>

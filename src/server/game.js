@@ -1,5 +1,6 @@
 const Player = require('./player');
 const Constants = require('../shared/constants');
+const socket = require('socket.io-client/lib/socket');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
 const PLAYERNUM = 9;
@@ -34,6 +35,15 @@ class Game {
 
         // Holds a string to be displayed in werewolves' chat
         this.wolf_chat = "Chat: <br>";
+        
+        // People who have run for mayor
+        this.mayorNominees = [];
+
+        // People still in the election (excludes people who have dropped out during speeches)
+        this.activeNominees = [];
+
+        // Counts how many people have submitted whether to run for mayor
+        this.mayorCount = 0;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -85,6 +95,7 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
+            //ach_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
         })
     }
 
@@ -177,6 +188,58 @@ class Game {
         this.wolfIDs.forEach(playerID => {
             const wolf_socket = this.sockets[playerID];
             wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, this.wolf_chat);
+        })
+    }
+
+    run_for_mayor(socket, run){
+        if (run){
+            this.mayorNominees.push(socket.id)
+            this.activeNominees.push(socket.id)
+        }
+        this.mayorCount++;
+        
+        if (this.mayorCount >= PLAYERNUM){
+            var array = this.mayorNominees;
+            var rand = Math.floor(Math.random() * array.length);
+            var direction = Math.round(Math.random());
+
+            var speakingOrder = "";
+
+            if (direction == 0){
+                for (var i = 0; i < array.length; i ++){
+                    var index = (rand + i) % array.length; 
+                    var player = this.players[array[index]];
+                    var playerNum = player.getPlayerNum();
+                    speakingOrder += playerNum.toString() + " ";
+                }
+            } else {
+                for (var i = array.length; i > 0; i --){
+                    var index = (rand + i) % array.length; 
+                    var player = this.players[array[index]];
+                    var playerNum = player.getPlayerNum();
+                    speakingOrder += playerNum.toString() + " ";
+                }
+            }
+            
+            
+            console.log("everyone participated");
+            console.log(speakingOrder);
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.ELECTION_SPEECH_START, speakingOrder);
+            })
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON);
+
+
+        }
+
+    }
+
+    mayor_vote(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
         })
     }
 }
