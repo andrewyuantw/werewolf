@@ -137,3 +137,21 @@
 				top:0;
 				bottom: 0;
         }
+/* Styling for the character reveal menu uncomplete*/
+#character-reveal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: gray;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    border-radius: 50px;
+}
+
+/* Styling for the menu that the seer sees at night uncomplete*/
+#seer-menu{
+    color: white;
+}
