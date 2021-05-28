@@ -2,9 +2,9 @@
 /* Body - visibility set to default here already */
 /* do NOT change visibility for subsequent elements */
 body {
-    font-family: "Gill Sans","Inter", sans-serif;
+    font-family: 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
     background-color: rgb(255, 255, 255);
-    background-color: black;
+    background-color: rgb(99, 91, 219);
     visibility: visible;
 }
 
@@ -14,7 +14,7 @@ body {
 }
 
 /* Styling for the welcome page where you input display name */
-#play-menu {
+div:not(#lobby) {
     /* Use the next four lines to move any div into the middle */
     position: fixed;
     top: 50%;
@@ -23,20 +23,18 @@ body {
 
     /* optional styling below */
     width: 600px;
-    background-color: gray;
+    background-color: rgb(0, 0, 0);
     padding: 10px;
     text-align: center;
     color: white;
-    border-radius: 50px;
 }
 
 /* Styling for the list of players to the top right */
-#lobby {
+div#lobby {
 
     /* Positions the div to the top right */
     float: right;
     margin-left: 10px;
-    position: absolute;
     top: 20px;
     right: 30px;
 
@@ -48,21 +46,52 @@ body {
     border-radius: 3px;
 }
 
-/* Styling for the character reveal menu */
-#character-reveal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    background-color: gray;
-    padding: 10px;
+/* Styling for input boxes */
+input {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
     text-align: center;
+    border: 2px solid #3498db;
+    padding: 14px 10px;
+    width: 180px;
+    outline: none;
     color: white;
-    border-radius: 50px;
+    border-radius: 24px;
+    transition: 0.25s;
 }
 
-/* Styling for the menu that the seer sees at night */
-#seer-menu{
+input:focus{
+    width: 280px;
+	border-color: #2ecc71;
+}
+
+input::placeholder{
     color: white;
+}
+
+/* Styling for buttons */
+button {
+    border: 0;
+    background: none;
+    margin: 20px auto;
+    margin-top: 0;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 10px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+    font-family:"serif";
+}
+
+button:hover {
+    background: #2ecc71;
+    border-color: #2ecc71;
 }
