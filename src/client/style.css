@@ -1,29 +1,46 @@
+
+/* Body - visibility set to default here already */
+/* do NOT change visibility for subsequent elements */
 body {
-    font-family: "Inter", sans-serif;
+    font-family: "Gill Sans","Inter", sans-serif;
     background-color: rgb(255, 255, 255);
     background-color: black;
+    visibility: visible;
 }
 
+/* toggle the "hide" class to hide any elements */
+.hide{
+    visibility: hidden;
+}
+
+/* Styling for the welcome page where you input display name */
 #play-menu {
+    /* Use the next four lines to move any div into the middle */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    /* optional styling below */
     width: 600px;
     background-color: gray;
     padding: 10px;
     text-align: center;
     color: white;
     border-radius: 50px;
-    visibility: visible;
 }
 
+/* Styling for the list of players to the top right */
 #lobby {
+
+    /* Positions the div to the top right */
     float: right;
     margin-left: 10px;
     position: absolute;
     top: 20px;
     right: 30px;
+
+    /* Optional styling */
     padding: 10px;
     width: 150px;
     color: white;
@@ -31,19 +48,7 @@ body {
     border-radius: 3px;
 }
 
-#start-game-button {
-    visibility: visible;
-}
-
-#start-game-button.hide
-{
-    visibility: hidden;
-}
-
-#play-menu.hide {
-    visibility: hidden;
-}
-
+/* Styling for the character reveal menu */
 #character-reveal {
     position: fixed;
     top: 50%;
@@ -55,26 +60,9 @@ body {
     text-align: center;
     color: white;
     border-radius: 50px;
-    visibility: visible;
 }
 
-#character-reveal.hide {
-    visibility: hidden;
-}
-
-#ready {
-    visibility: visible;
-}
-
-#ready.hide {
-    visibility: hidden;
-}
-
+/* Styling for the menu that the seer sees at night */
 #seer-menu{
-    visibility: visible;
     color: white;
-}
-
-#seer-menu.hide{
-    visibility: hidden;
 }

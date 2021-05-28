@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Werewolf!</title>
-    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
-</head>
+    <head>
+        <title>Werewolf!</title>
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    </head>
 
-<body>
-    
-    <div id="play-menu">
-        <h1>Welcome to the Game!</h1>
-        <h3>Enter your desired display name...</h3>
-        <input type="text" id="username-input" placeholder="Username" />
-        <button id="play-button">PLAY</button>
+    <body>
+        
+        <div id="play-menu">
+            <h1>Welcome to the Game!</h1>
+            <h3>Enter your desired display name...</h3>
+            <input type="text" id="username-input" placeholder="Username" />
+            <button id="play-button">PLAY</button>
+            <br>
+            <br>
+            <button id="start-game-button" class= "hide">START</button>
+        </div>
+
+        <div id= "lobby">Players:</div>
         <br>
-        <br>
-        <button id="start-game-button" class= "hide">START</button>
-    </div>
+        
+        <div id="character-reveal" class="hide"> 
+            <h1>GAME HAS STARTED</h1>
+            <h2 id="role"></h2>
+            <button id="ready">READY</button>
+        </div>
 
-    <div id= "lobby">Players:</div>
-    <br>
-    
-    <div id="character-reveal" class="hide"> 
-        <h1>GAME HAS STARTED</h1>
-        <h2 id="role"></h2>
-        <button id="ready" class="hide">READY</button>
-    </div>
-    <div id="seer-menu" class="hide">
-        <input type="number" id="seer-input" placeholder="enter num">
-        <button id="seer-button" >CONFIRM</button>
-        <br>
-        <h2 id="seer-result"></h2>
-    </div>
+        <div id="seer-menu" class="hide">
+            <input type="number" id="seer-input" placeholder="enter num">
+            <button id="seer-button" >CONFIRM</button>
+            <br>
+            <h2 id="seer-result"></h2>
+        </div>
 
-    
-
-</body>
+    </body>
 </html>

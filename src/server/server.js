@@ -8,7 +8,7 @@ const socketio = require('socket.io');
 const Constants = require('../shared/constants');
 const Game = require('./game');
 
-// Setup an Express server
+// Sets up an Express server
 const app = express();
 app.use(express.static('public'));
 
@@ -33,15 +33,14 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.SEER_RESPONSE, verify_seer_choice);
 });
 
-// Setup the Game
+// Sets up the Game
 const game = new Game();
 
+// Calls the functions in the Game class to handle these server messages
+
 function joinGame(username) {
-    console.log("aloha");
-    console.log(username);
     game.addPlayer(this, username);
 }
-
   
 function onDisconnect() {
     game.removePlayer(this);
