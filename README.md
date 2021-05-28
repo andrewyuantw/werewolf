@@ -10,7 +10,7 @@
 * Players press “Ready”, moves on once all 9 are ready - DONE
 3) Night
 * Werewolf kills - take number input (add chat menu?) (All three agree to kill)
-* Seer looks - take number input
+* Seer looks - take number input - DONE
 * Witch decides whether to poison or heal - take number input
 4) Run for mayor
 * Hold elections
