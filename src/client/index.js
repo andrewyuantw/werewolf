@@ -68,7 +68,7 @@ Promise.all([
     // When the wolf has clicked confirm after inputting a player number 
     chatButton.onclick = () => {
 
-        // We get the number from the input box, and check if it is valid
+        // We get the message from the input box
        
         var textInput = document.getElementById('chat-input').value;
         wolfChatMessage(textInput);
@@ -137,8 +137,8 @@ export function wolfNight(){
 export function wolfChat(message){
 
     // shows the wolf menu
-    var wolf_display = document.getElementById("chat");
-    wolf_display.innerHTML = message;
+
+    document.getElementById("chat").innerHTML = message;
 }
 
 export function gotKillResult(bad){

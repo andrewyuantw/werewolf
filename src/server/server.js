@@ -60,5 +60,5 @@ function verify_seer_choice(num){
 }
 
 function display_message(message){
-    game.display_message(message);
+    game.display_message(this, message);
 }

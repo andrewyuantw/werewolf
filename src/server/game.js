@@ -31,6 +31,9 @@ class Game {
 
         // Array that stores the IDs for wolves
         this.wolfIDs = [];
+
+        // Holds a string to be displayed in werewolves' chat
+        this.wolf_chat = "Chat: <br>";
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -168,11 +171,12 @@ class Game {
         seer_socket.emit(Constants.MSG_TYPES.SEER_RESULT, bad);
     }
 
-    display_message(message){
+    display_message(socket, message){
         var text = message;
+        this.wolf_chat += `${this.players[socket.id].playerNum}. ${this.players[socket.id].username}:  ${text} <br>`;
         this.wolfIDs.forEach(playerID => {
             const wolf_socket = this.sockets[playerID];
-            wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, text);
+            wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, this.wolf_chat);
         })
     }
 }
