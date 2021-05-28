@@ -1,8 +1,34 @@
+body {
+    font-family: "Inter", sans-serif;
+    background-color: rgb(255, 255, 255);
+    background-color: black;
+}
+
+#play-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: gray;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    border-radius: 50px;
+    visibility: visible;
+}
+
 #lobby {
-    float: left;
-    margin-left: 500px;
-    top: 0;
-    left: 0;
+    float: right;
+    margin-left: 10px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    padding: 10px;
+    width: 150px;
+    color: white;
+    background-color: gray;
+    border-radius: 3px;
 }
 
 #start-game-button {
@@ -14,15 +40,21 @@
     visibility: hidden;
 }
 
-#play-menu {
-    visibility: visible;
-}
-
 #play-menu.hide {
     visibility: hidden;
 }
 
 #character-reveal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background-color: gray;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    border-radius: 50px;
     visibility: visible;
 }
 
@@ -35,5 +67,14 @@
 }
 
 #ready.hide {
+    visibility: hidden;
+}
+
+#seer-menu{
+    visibility: visible;
+    color: white;
+}
+
+#seer-menu.hide{
     visibility: hidden;
 }

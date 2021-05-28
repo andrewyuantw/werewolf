@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Werewolf!</title>
+    <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
 </head>
 
 <body>
@@ -11,18 +12,27 @@
         <h3>Enter your desired display name...</h3>
         <input type="text" id="username-input" placeholder="Username" />
         <button id="play-button">PLAY</button>
-        
+        <br>
+        <br>
+        <button id="start-game-button" class= "hide">START</button>
     </div>
+
+    <div id= "lobby">Players:</div>
     <br>
-    <button id="start-game-button" class= "hide">START</button>
+    
     <div id="character-reveal" class="hide"> 
         <h1>GAME HAS STARTED</h1>
         <h2 id="role"></h2>
         <button id="ready" class="hide">READY</button>
     </div>
+    <div id="seer-menu" class="hide">
+        <input type="number" id="seer-input" placeholder="enter num">
+        <button id="seer-button" >CONFIRM</button>
+        <br>
+        <h2 id="seer-result"></h2>
+    </div>
 
-    <br>
-    <div id= "lobby">Lobby:</div>
+    
 
 </body>
 </html>

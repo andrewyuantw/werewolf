@@ -1,6 +1,7 @@
 class Player {
-    constructor(id, username) {
+    constructor(id, username, playerNum) {
         this.username = username;
+        this.playerNum = playerNum;
         this.roleNumber = 0;
         this.role = "";
     }
@@ -44,6 +45,10 @@ class Player {
 
     getWolfOrNot(){
         return false;
+    }
+
+    getPlayerNum(){
+        return this.playerNum;
     }
 }
 

@@ -12,8 +12,3 @@ JOIN_LOBBY - whenever a new person submits their display name (every person's lo
 ENOUGH_PEOPLE - whenever we reach enough people in the lobby for a game to start, we send this message to the host
 START_GAME - tells every player that the game has now started
 GO_TO_NIGHT - goes into night
-
-
-
-
-asdfasdf asdf asdf 

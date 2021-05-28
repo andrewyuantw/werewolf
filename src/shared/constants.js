@@ -7,6 +7,9 @@ module.exports = Object.freeze({
         ENOUGH_PEOPLE: 'enough_people',
         START_GAME: 'start_game',
         READY_TO_START: 'ready_to_start',
-        GO_TO_NIGHT: 'gp_to_night'
+        GO_TO_NIGHT: 'go_to_night',
+        SEER_NIGHT: 'seer_night',
+        SEER_RESPONSE: 'seer_response',
+        SEER_RESULT: "seer_result"
     },
 });

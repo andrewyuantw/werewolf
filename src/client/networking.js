@@ -1,7 +1,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, showStartGameButton, startGameForAll } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, showStartGameButton, startGameForAll } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -14,6 +14,8 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.JOIN_LOBBY, changeDisplay);
     socket.on(Constants.MSG_TYPES.ENOUGH_PEOPLE, showStartGameButton);
     socket.on(Constants.MSG_TYPES.START_GAME, startGameForAll);
+    socket.on(Constants.MSG_TYPES.SEER_NIGHT, seerNight);
+    socket.on(Constants.MSG_TYPES.SEER_RESULT, gotSeerResult);
 });
 
 export const play = username => {
@@ -26,4 +28,8 @@ export function startGame(){
 
 export function readyToStart(){
     socket.emit(Constants.MSG_TYPES.READY_TO_START);
+}
+
+export const seerLook = num => {
+    socket.emit(Constants.MSG_TYPES.SEER_RESPONSE, num);
 }

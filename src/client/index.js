@@ -1,5 +1,5 @@
 
-import { connect, play, readyToStart, startGame } from "./networking"
+import { connect, play, readyToStart, seerLook, startGame } from "./networking"
 import './style.css';
 
 const playMenu = document.getElementById('play-menu');
@@ -7,6 +7,7 @@ const playButton = document.getElementById('play-button');
 const usernameInput = document.getElementById('username-input');
 const startGameButton = document.getElementById('start-game-button');
 const readyButton = document.getElementById('ready');
+const seerButton = document.getElementById('seer-button');
 
 Promise.all([
     
@@ -27,6 +28,12 @@ Promise.all([
             readyButton.classList.toggle("hide");
         console.log("im ready to start");
     }
+    seerButton.onclick = () => {
+        var numInput = document.getElementById('seer-input').value;
+        seerLook(numInput);
+        console.log(numInput);
+    }
+
     
 })
 
@@ -54,4 +61,17 @@ export function startGameForAll(role){
     document.getElementById("role").innerHTML = `Your role is ${role}`;
     document.getElementById("ready").classList.toggle("hide");
     console.log(role);
+}
+
+export function seerNight(){
+    document.getElementById("seer-menu").classList.toggle("hide");
+}
+
+export function gotSeerResult(bad){
+    var seer_display = document.getElementById("seer-result");
+    if (bad){
+        seer_display.innerHTML = "This person is bad!";
+    } else {
+        seer_display.innerHTML = "This person is good!";
+    }
 }
