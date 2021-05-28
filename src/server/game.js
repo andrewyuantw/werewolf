@@ -133,6 +133,13 @@ class Game {
             const seer_socket = this.sockets[this.seerID];
             seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
 
+           
+            this.wolfIDs.forEach(playerID => {
+                const wolf_socket = this.sockets[playerID];
+                wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
+            })
+
+
             // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
@@ -159,6 +166,14 @@ class Game {
         // Send the result back to the seer with the result as an argument
         const seer_socket = this.sockets[this.seerID];
         seer_socket.emit(Constants.MSG_TYPES.SEER_RESULT, bad);
+    }
+
+    display_message(message){
+        var text = message;
+        this.wolfIDs.forEach(playerID => {
+            const wolf_socket = this.sockets[playerID];
+            wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, text);
+        })
     }
 }
 
