@@ -105,4 +105,5 @@ export function gotSeerResult(bad){
     // Displays message depending on whether the person is good or bad
     var seer_display = document.getElementById("seer-result");
     seer_display.innerHTML = (bad) ? "This person is bad!" : "This person is good!";
+    document.getElementById("seer-button").classList.toggle("hide");
 }
