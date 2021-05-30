@@ -257,8 +257,14 @@ class Game {
 
     mayor_vote(){
         Object.keys(this.sockets).forEach(playerID => {
-            const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
+            if (this.mayorNominees.includes(playerID)){
+                const nominee = this.sockets[playerID];
+                nominee.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE_CANDIDATE);
+            } else {
+                const voter = this.sockets[playerID];
+                voter.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
+            }
+            
         })
     }
 
@@ -287,7 +293,7 @@ class Game {
             this.mayorVote[num] = [];
         }
         this.mayorVoteCount++;
-        if (this.mayorVoteCount >= PLAYERNUM){
+        if (this.mayorVoteCount >= (PLAYERNUM - this.mayorNominees.length)){
             var maxLength = 0;
             var mayor = 0;
             Object.keys(this.mayorVote).forEach(playerNum => {
@@ -297,7 +303,7 @@ class Game {
                     mayor = playerNum;
                 }
             })
-            var returnString = "";
+            var returnString = "No one (b/c most people voted 0)";
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == mayor){
                     returnString = `${mayor}. ${this.players[playerID].username}`

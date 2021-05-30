@@ -17,7 +17,6 @@
         </div>
 
         <div id= "lobby">Players:</div>
-        <br>
         
         <div id="character-reveal" class="hide"> 
             <h1>GAME HAS STARTED</h1>
@@ -29,7 +28,6 @@
             <h2>Seer, who do you want to look at?</h2>
             <input type="number" id="seer-input" placeholder="enter num">
             <button id="seer-button" >CONFIRM</button>
-            <br>
             <h2 id="seer-result"></h2>
         </div>
 
@@ -42,9 +40,7 @@
             <h2>You will not able to send message after click confirm button.</h2>
             <input type="text" id="chat-input" placeholder="..." />
             <button id="chat-button">Send</button>
-            <br>
             <h2 id="chat"></h2>
-            <br>
             <input type="number" id="wolf-input" placeholder="enter num">
             <button id="wolf-button" >CONFIRM</button>
         </div>
@@ -71,8 +67,14 @@
 
         <div id="mayor-voting" class="hide">
             <h2>Time to Vote!</h2>
+            <h2>Vote 0 if you do not wish to vote for anyone</h2>
             <input type="number" id="mayor-input" placeholder="enter num">
             <button id="mayor-vote-button" >VOTE</button>
+        </div>
+
+        <div id="mayor-voting-candidate" class="hide">
+            <h2> Others are voting now</h2>
+            <h2> Results will come out once everyone votes.</h2>
         </div>
 
         <div id="mayor-reveal" class="hide">

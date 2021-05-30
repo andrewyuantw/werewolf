@@ -107,7 +107,7 @@ Promise.all([
     mayorVoteButton.onclick = () =>{
         mayorVoteButton.classList.toggle("hide");
         var numInput = document.getElementById('mayor-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (numInput >= 0 && numInput <= 9)
             mayorVote(numInput);
     }
 }) 
@@ -214,6 +214,11 @@ export function show_mayor_menu(){
     document.getElementById("mayor-voting").classList.toggle("hide");
 }
 
+export function show_mayor_menu_candidate(){
+    document.getElementById('election-speech-menu').classList.toggle("hide");
+    document.getElementById("mayor-voting-candidate").classList.toggle("hide");
+}
+
 export function show_drop_out_button(){
     document.getElementById('drop-out-button').classList.toggle("hide");
 }
@@ -223,7 +228,10 @@ export function update_candidates(candidateList){
 }
 
 export function mayor_reveal(mayor_num){
-    document.getElementById("mayor-voting").classList.toggle("hide");
+    if (!document.getElementById("mayor-voting").classList.contains("hide"))
+        document.getElementById("mayor-voting").classList.toggle("hide");
+    if (!document.getElementById("mayor-voting-candidate").classList.contains("hide"))
+        document.getElementById("mayor-voting-candidate").classList.toggle("hide");
     document.getElementById('mayor-reveal').classList.toggle("hide");
     document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
 }

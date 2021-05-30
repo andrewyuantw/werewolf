@@ -70,6 +70,8 @@ module.exports = Object.freeze({
         // MOVE_TO_MAYOR_VOTE is sent to everyone to move to the mayor voting screen
         MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote',
 
+        MOVE_TO_MAYOR_VOTE_CANDIDATE: 'move_to_mayor_vote_candidate',
+
         // sent to candidates only, shows the button that allows that to drop out
         SHOW_DROP_OUT_BUTTON: 'show_drop_out_button',
 
