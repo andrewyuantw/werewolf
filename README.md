@@ -4,13 +4,11 @@
 
 * Werewolf kill at night
 * Assign one wolf to have voting powers
-* Add a werewolf chat menu
 
 * Witch night menu (remember witch rules for using potions)
 
 * Add plain night menu for villagers and hunter
 
-* People can drop out of election
 * Election voting - people who ran cannot vote
 
 * Day menu - Announce death at the top
