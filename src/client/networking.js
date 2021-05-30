@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -31,6 +31,7 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON, show_drop_out_button);
     socket.on(Constants.MSG_TYPES.UPDATE_CANDIDATES, update_candidates);
     socket.on(Constants.MSG_TYPES.MAYOR_REVEAL, mayor_reveal);
+    socket.on(Constants.MSG_TYPES.YOUR_NUMBER, your_number);
 });
 
 

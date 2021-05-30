@@ -79,8 +79,9 @@ module.exports = Object.freeze({
         UPDATE_CANDIDATES: 'update_candidates',
 
         // sent to everyone, shows mayor election results
-        MAYOR_REVEAL: 'mayor_reveal'
+        MAYOR_REVEAL: 'mayor_reveal',
 
+        YOUR_NUMBER: 'your_number'
 
     },
 });

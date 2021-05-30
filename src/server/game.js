@@ -22,7 +22,7 @@ class Game {
         this.hostID = null;
 
         // Holds a string to be displayed in the "lobby" div
-        this.current_roster = "Players: <br>";
+        this.current_roster = {};
 
         // Counts the number of players that have hit the ready button after seeing their role
         this.ready_number = 0;
@@ -62,17 +62,25 @@ class Game {
         this.players[socket.id] = new Player(socket.id, username, this.playerInLobby);
         
         // Updates the string to be displayed in the "lobby" div 
-        this.current_roster += `${this.playerInLobby}. ${username} <br>`;
+        this.current_roster[this.playerInLobby] = username;
 
         // Sets this.hostID to be the first person to join the game
         if (this.hostID == null){
             this.hostID = socket.id;
         }
 
+        socket = this.sockets[socket.id];
+        socket.emit(Constants.MSG_TYPES.YOUR_NUMBER, this.playerInLobby);
+
         // Send a message to every player in the game so they can update their lobby display
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster);
+            Object.keys(this.current_roster).forEach(playerNum => {
+                console.log(playerNum);
+                console.log(this.current_roster[playerNum]);
+                each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[playerNum], playerNum);
+            });
+            
         })
 
         // If we have enough players, we send a message to the host only
@@ -98,8 +106,8 @@ class Game {
         // Sends a server message to everyone with their role in the form of a string
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
+            each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
         })
     }
 
@@ -230,8 +238,6 @@ class Game {
             }
             
             
-            console.log("everyone participated");
-            console.log(speakingOrder);
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_SPEECH_START, speakingOrder);
@@ -287,10 +293,11 @@ class Game {
 
     tally_mayor_vote(socket, num){
 
+        console.log("got a num" + num);
         if (Array.isArray(this.mayorVote[num])){
             this.mayorVote[num].push(socket.id);
         } else {
-            this.mayorVote[num] = [];
+            this.mayorVote[num] = [socket.id];
         }
         this.mayorVoteCount++;
         if (this.mayorVoteCount >= (PLAYERNUM - this.mayorNominees.length)){
@@ -303,6 +310,7 @@ class Game {
                     mayor = playerNum;
                 }
             })
+            console.log(`here is mayor ${mayor}`);
             var returnString = "No one (b/c most people voted 0)";
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == mayor){

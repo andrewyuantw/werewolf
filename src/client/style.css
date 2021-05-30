@@ -103,3 +103,15 @@ button:hover {
     border-style: solid;
     border-color:#3498db;
 }
+
+tr.me {
+    color:#0010f3;
+}
+
+tr.mayor {
+    color: gold;
+}
+
+tr.dead {
+    color:red;
+}

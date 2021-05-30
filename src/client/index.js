@@ -113,10 +113,10 @@ Promise.all([
 }) 
 
 // Handles server message indicating a new person has joined the lobby
-export function changeDisplay(username){
+export function changeDisplay(username, num){
 
     // Changes the "lobby" div display
-    document.getElementById("lobby").innerHTML = username;
+    document.getElementById(num.toString()).innerHTML = `<td>${num}.</td><td>${username}</td>`;
 }
 
 // Handles the server message sent to the host indicating there are enough players
@@ -191,10 +191,10 @@ export function electionStart(){
 
     // COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING
     // Hide welcome menu
-    /*
+    
     var welcomeMenu = document.getElementById("play-menu");
     welcomeMenu.classList.toggle("hide");
-    */
+    
 
     document.getElementById('election-choice-menu').classList.toggle("hide");
 }
@@ -234,4 +234,11 @@ export function mayor_reveal(mayor_num){
         document.getElementById("mayor-voting-candidate").classList.toggle("hide");
     document.getElementById('mayor-reveal').classList.toggle("hide");
     document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
+    var words = mayor_num.split(".");
+    document.getElementById(words[0].toString()).classList.toggle("mayor");
+}
+
+export function your_number(num){
+    console.log(num);
+    document.getElementById(num.toString()).classList.toggle("me");
 }
