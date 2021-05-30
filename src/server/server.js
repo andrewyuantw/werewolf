@@ -36,6 +36,8 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.WOLF_KILL, kill);
     socket.on(Constants.MSG_TYPES.RUN_FOR_MAYOR, run_for_mayor);
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
+    socket.on(Constants.MSG_TYPES.DROP_OUT_ELECTION, drop_out_election);
+    socket.on(Constants.MSG_TYPES.MAYOR_VOTE, tally_mayor_vote);
 });
 
 // Sets up the Game
@@ -77,4 +79,12 @@ function run_for_mayor(run){
 
 function mayor_vote(){
     game.mayor_vote();
+}
+
+function tally_mayor_vote(num){
+    game.tally_mayor_vote(this, num);
+}
+
+function drop_out_election(){
+    game.drop_out_election(this);
 }

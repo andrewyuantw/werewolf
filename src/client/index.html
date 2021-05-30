@@ -16,8 +16,53 @@
             <button id="start-game-button" class= "hide">START</button>
         </div>
 
-        <div id= "lobby">Players:</div>
-        <br>
+        <div id= "lobby">
+            Players
+            <table>
+                <tr >
+                    <th>Num.</th>
+                    <th>Name</th>
+                </tr>
+                <tr id="1">
+                    <td>1.</td>
+                    <td></td>
+                </tr>
+                <tr id="2">
+                    <td>2.</td>
+                    <td></td>
+                </tr>
+                <tr id="3">
+                    <td>3.</td>
+                    <td></td>
+                </tr>
+                <tr id="4">
+                    <td>4.</td>
+                    <td></td>
+                </tr>
+                <tr id="5">
+                    <td>5.</td>
+                    <td></td>
+                </tr>
+                <tr id="6">
+                    <td>6.</td>
+                    <td></td>
+                </tr>
+                <tr id="7">
+                    <td>7.</td>
+                    <td></td>
+                </tr>
+                <tr id="8">
+                    <td>8.</td>
+                    <td></td>
+                </tr>
+                <tr id="9">
+                    <td>9.</td>
+                    <td></td>
+                </tr>
+
+                
+            </table>
+        </div>
         
         <div id="character-reveal" class="hide"> 
             <h1>GAME HAS STARTED</h1>
@@ -29,7 +74,6 @@
             <h2>Seer, who do you want to look at?</h2>
             <input type="number" id="seer-input" placeholder="enter num">
             <button id="seer-button" >CONFIRM</button>
-            <br>
             <h2 id="seer-result"></h2>
         </div>
 
@@ -42,9 +86,7 @@
             <h2>You will not able to send message after click confirm button.</h2>
             <input type="text" id="chat-input" placeholder="..." />
             <button id="chat-button">Send</button>
-            <br>
             <h2 id="chat"></h2>
-            <br>
             <input type="number" id="wolf-input" placeholder="enter num">
             <button id="wolf-button" >CONFIRM</button>
         </div>
@@ -70,14 +112,27 @@
             <h2>Election Speeches</h2>
             <h3>Speaking Order</h3>
             <h3 id="speaking-order"></h3>
+            <h3>Candidates:</h3>
+            <h3 id="candidates"></h3>
             <button id="start-mayor-vote-button" class= "hide">MOVE TO VOTING</button>
-            <button id="drop-out-button" class= "hide">DROP OUT OF ELECTIOn</button>
+            <button id="drop-out-button" class= "hide">DROP OUT OF ELECTION</button>
         </div>
 
         <div id="mayor-voting" class="hide">
             <h2>Time to Vote!</h2>
+            <h2>Vote 0 if you do not wish to vote for anyone</h2>
             <input type="number" id="mayor-input" placeholder="enter num">
             <button id="mayor-vote-button" >VOTE</button>
+        </div>
+
+        <div id="mayor-voting-candidate" class="hide">
+            <h2> Others are voting now</h2>
+            <h2> Results will come out once everyone votes.</h2>
+        </div>
+
+        <div id="mayor-reveal" class="hide">
+            <h2>Congratulations!</h2>
+            <h2 id="mayor-name"></h2>
         </div>
 
     </body>

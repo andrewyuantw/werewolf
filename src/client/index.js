@@ -1,5 +1,4 @@
-
-import { connect, enterUsername, getSeerChoice, hostStartGame, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, wolfChatMessage, kill } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, wolfChatMessage } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -12,6 +11,8 @@ const chatButton = document.getElementById('chat-button');
 const yesMayorButton = document.getElementById('yes-mayor');
 const noMayorButton = document.getElementById('no-mayor');
 const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
+const dropoutButton = document.getElementById('drop-out-button');
+const mayorVoteButton = document.getElementById('mayor-vote-button');
 
 
 // Handle HTML button onclick functions
@@ -35,6 +36,7 @@ Promise.all([
     // When the host clicks the START game button
     startGameButton.onclick = () => {
         hostStartGame();
+        startGameButton.classList.toggle("hide");
     };
 
     // When players press READY after seeing their assigned role
@@ -96,13 +98,25 @@ Promise.all([
         startMayorVoteButton.classList.toggle("hide");
         moveToMayorVote();
     }
+
+    dropoutButton.onclick = () =>{
+        dropoutButton.classList.toggle("hide");
+        dropOutElection();
+    }
+
+    mayorVoteButton.onclick = () =>{
+        mayorVoteButton.classList.toggle("hide");
+        var numInput = document.getElementById('mayor-input').value;
+        if (numInput >= 0 && numInput <= 9)
+            mayorVote(numInput);
+    }
 }) 
 
 // Handles server message indicating a new person has joined the lobby
-export function changeDisplay(username){
+export function changeDisplay(username, num){
 
     // Changes the "lobby" div display
-    document.getElementById("lobby").innerHTML = username;
+    document.getElementById(num.toString()).innerHTML = `<td>${num}.</td><td>${username}</td>`;
 }
 
 // Handles the server message sent to the host indicating there are enough players
@@ -177,10 +191,10 @@ export function electionStart(){
 
     // COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING
     // Hide welcome menu
-    /*
+    
     var welcomeMenu = document.getElementById("play-menu");
     welcomeMenu.classList.toggle("hide");
-    */
+    
 
     document.getElementById('election-choice-menu').classList.toggle("hide");
 }
@@ -196,6 +210,35 @@ export function show_mayor_button(){
 }
 
 export function show_mayor_menu(){
-    document.getElementById('election-choice-menu').classList.toggle("hide");
+    document.getElementById('election-speech-menu').classList.toggle("hide");
     document.getElementById("mayor-voting").classList.toggle("hide");
+}
+
+export function show_mayor_menu_candidate(){
+    document.getElementById('election-speech-menu').classList.toggle("hide");
+    document.getElementById("mayor-voting-candidate").classList.toggle("hide");
+}
+
+export function show_drop_out_button(){
+    document.getElementById('drop-out-button').classList.toggle("hide");
+}
+
+export function update_candidates(candidateList){
+    document.getElementById('candidates').innerHTML = candidateList;
+}
+
+export function mayor_reveal(mayor_num){
+    if (!document.getElementById("mayor-voting").classList.contains("hide"))
+        document.getElementById("mayor-voting").classList.toggle("hide");
+    if (!document.getElementById("mayor-voting-candidate").classList.contains("hide"))
+        document.getElementById("mayor-voting-candidate").classList.toggle("hide");
+    document.getElementById('mayor-reveal').classList.toggle("hide");
+    document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
+    var words = mayor_num.split(".");
+    document.getElementById(words[0].toString()).classList.toggle("mayor");
+}
+
+export function your_number(num){
+    console.log(num);
+    document.getElementById(num.toString()).classList.toggle("me");
 }
