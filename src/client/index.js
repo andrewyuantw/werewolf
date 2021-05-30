@@ -1,5 +1,5 @@
 
-import { connect, enterUsername, getSeerChoice, hostStartGame, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, wolfChatMessage } from "./networking"
+import { connect, enterUsername, getSeerChoice, hostStartGame, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, wolfChatMessage, kill } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -67,7 +67,8 @@ Promise.all([
         // We get the number from the input box, and check if it is valid
        
         var numInput = document.getElementById('wolf-input').value;
-        
+        if (numInput >= 1 && numInput <= 9)
+            kill(numInput);
     }
 
     // When the wolf has clicked confirm after inputting a player number 

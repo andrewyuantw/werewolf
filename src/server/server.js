@@ -7,6 +7,7 @@ const socketio = require('socket.io');
 
 const Constants = require('../shared/constants');
 const Game = require('./game');
+const { kill } = require('../client/networking.js');
 
 // Sets up an Express server
 const app = express();
@@ -32,6 +33,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.READY_TO_START, playerIsReady);
     socket.on(Constants.MSG_TYPES.SEER_RESPONSE, verify_seer_choice);
     socket.on(Constants.MSG_TYPES.WOLF_RESPONSE, display_message);
+    socket.on(Constants.MSG_TYPES.WOLF_KILL, kill);
     socket.on(Constants.MSG_TYPES.RUN_FOR_MAYOR, run_for_mayor);
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
 });
@@ -63,6 +65,10 @@ function verify_seer_choice(num){
 
 function display_message(message){
     game.display_message(this, message);
+}
+
+function kill(num){
+    game.kill(num);
 }
 
 function run_for_mayor(run){

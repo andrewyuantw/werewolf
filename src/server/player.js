@@ -17,6 +17,9 @@ class Player {
 
         // Stores string value of their role
         this.role = "";
+
+        // Stores alive status of the player
+        this.alive = true;
     }
 
     // Sets the role with the passed in randomized integer value
@@ -66,6 +69,14 @@ class Player {
 
     getPlayerNum(){
         return this.playerNum;
+    }
+
+    getAliveStatus(){
+        return this.alive;
+    }
+
+    changeAliveStatus(){
+        this.alive = !this.alive;
     }
 }
 

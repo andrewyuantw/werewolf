@@ -52,6 +52,10 @@ export function wolfChatMessage(message){
     socket.emit(Constants.MSG_TYPES.WOLF_RESPONSE, message);
 }
 
+export function kill(numInput){
+    socket.emit(Constants.MSG_TYPES.WOLF_KILL, message);
+}
+
 export function runForMayorOrNot(run){
     socket.emit(Constants.MSG_TYPES.RUN_FOR_MAYOR, run);
 }

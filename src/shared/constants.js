@@ -18,9 +18,12 @@ module.exports = Object.freeze({
         // WOLF_RESPONSE sent whenever a wolf presses send to chat
         WOLF_RESPONSE: 'wolf_response',
 
-        // CHAT_MESSAGE sent whenever a wolf presses send to chat
+        // CHAT_MESSAGE is sent to werewolves
         CHAT_MESSAGE: 'chat_message',
-        
+
+        // WOLF_KILL sent whenever the wolf leader has submitted the player number they want to kill
+        WOLF_KILL: 'wolf_kill',
+
         // RUN_FOR_MAYOR sent whenever someone presses YES or NO to running for mayor
         RUN_FOR_MAYOR: 'run_for_mayor',
 
