@@ -151,7 +151,7 @@ class Game {
             const seer_socket = this.sockets[this.seerID];
             seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
 
-           
+           // For werewolves, we send WOLF_NIGHT
             this.wolfIDs.forEach(playerID => {
                 const wolf_socket = this.sockets[playerID];
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
@@ -188,7 +188,11 @@ class Game {
 
     display_message(socket, message){
         var text = message;
+
+        // Send the message in the format of "[NUMBER]. [USERNAME]: [CONTENT]"
         this.wolf_chat += `${this.players[socket.id].playerNum}. ${this.players[socket.id].username}:  ${text} <br>`;
+
+        // Send it to only werewolves
         this.wolfIDs.forEach(playerID => {
             const wolf_socket = this.sockets[playerID];
             wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, this.wolf_chat);

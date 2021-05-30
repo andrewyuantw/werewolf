@@ -10,9 +10,7 @@
 
 * Add plain night menu for villagers and hunter
 
-* "Do you want to vote for mayor" screen
-* Server randomly assigns speaking order of mayor election
-* Election speech menu - host has button to move into voting - people can drop out of election
+* People can drop out of election
 * Election voting - people who ran cannot vote
 
 * Day menu - Announce death at the top
