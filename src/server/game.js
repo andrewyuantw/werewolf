@@ -44,6 +44,10 @@ class Game {
 
         // Counts how many people have submitted whether to run for mayor
         this.mayorCount = 0;
+
+        this.mayorVote = {};
+
+        this.mayorVoteCount = 0;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -95,7 +99,7 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            //ach_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
         })
     }
 
@@ -230,7 +234,18 @@ class Game {
             })
             const host_socket = this.sockets[this.hostID];
             host_socket.emit(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON);
-
+            this.mayorNominees.forEach(playerID => {
+                const nominee_socket = this.sockets[playerID];
+                nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
+            })
+            var nomineeList = "";
+            this.activeNominees.forEach(playerID => {
+                nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+            }) 
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+            })
 
         }
 
@@ -241,6 +256,57 @@ class Game {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
         })
+    }
+
+    drop_out_election(socket){
+        var nomineeList = "";
+        for (var i = 0; i < this.activeNominees.length; i ++){
+            if (this.activeNominees[i] == socket.id){
+                this.activeNominees.splice(i, 1);
+                i--;
+            } else {
+                nomineeList += `${this.players[this.activeNominees[i]].playerNum}. ${this.players[this.activeNominees[i]].username}<br>`;
+            }
+        }
+        
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+        })
+    }
+
+    tally_mayor_vote(socket, num){
+
+        if (Array.isArray(this.mayorVote[num])){
+            this.mayorVote[num].push(socket.id);
+        } else {
+            this.mayorVote[num] = [];
+        }
+        this.mayorVoteCount++;
+        if (this.mayorVoteCount >= PLAYERNUM){
+            var maxLength = 0;
+            var mayor = 0;
+            Object.keys(this.mayorVote).forEach(playerNum => {
+                var length = this.mayorVote[playerNum].length;
+                if (length > maxLength){
+                    maxLength = length;
+                    mayor = playerNum;
+                }
+            })
+            var returnString = "";
+            Object.keys(this.players).forEach(playerID =>{
+                if (this.players[playerID].getPlayerNum() == mayor){
+                    returnString = `${mayor}. ${this.players[playerID].username}`
+                }
+            })
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString);
+            })
+        }
+        
+
+        
     }
 }
 
