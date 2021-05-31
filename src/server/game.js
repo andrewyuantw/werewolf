@@ -35,9 +35,6 @@ class Game {
 
         // Holds a string to be displayed in werewolves' chat
         this.wolf_chat = "Chat: <br>";
-
-        // Stores the ID for the player got killed
-        this.victim = null;
         
         // People who have run for mayor
         this.mayorNominees = [];
@@ -196,13 +193,6 @@ class Game {
             const wolf_socket = this.sockets[playerID];
             wolf_socket.emit(Constants.MSG_TYPES.CHAT_MESSAGE, this.wolf_chat);
         })
-    }
-
-    kill(numInput){
-        var player = this.player[numInput];
-        player.changeAliveStatus();
-        this.victim = player.playerID;
-        
     }
 
     run_for_mayor(socket, run){
