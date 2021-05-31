@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -32,6 +32,8 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.UPDATE_CANDIDATES, update_candidates);
     socket.on(Constants.MSG_TYPES.MAYOR_REVEAL, mayor_reveal);
     socket.on(Constants.MSG_TYPES.YOUR_NUMBER, your_number);
+    socket.on(Constants.MSG_TYPES.START_VOTE, start_vote);
+    socket.on(Constants.MSG_TYPES.VOTE_REVEAL, vote_reveal);
 });
 
 
@@ -71,4 +73,8 @@ export function dropOutElection(){
 
 export function mayorVote(num){
     socket.emit(Constants.MSG_TYPES.MAYOR_VOTE, num)
+}
+
+export function vote(num){
+    socket.emit(Constants.MSG_TYPES.SUBMIT_VOTE, num)
 }

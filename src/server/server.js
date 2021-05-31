@@ -36,6 +36,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
     socket.on(Constants.MSG_TYPES.DROP_OUT_ELECTION, drop_out_election);
     socket.on(Constants.MSG_TYPES.MAYOR_VOTE, tally_mayor_vote);
+    socket.on(Constants.MSG_TYPES.SUBMIT_VOTE, submit_vote);
 });
 
 // Sets up the Game
@@ -81,4 +82,8 @@ function tally_mayor_vote(num){
 
 function drop_out_election(){
     game.drop_out_election(this);
+}
+
+function submit_vote(num){
+    game.tally_vote(this, num);
 }

@@ -33,6 +33,9 @@ module.exports = Object.freeze({
         // sent when players vote for a mayor
         MAYOR_VOTE: 'mayor_vote',
 
+        // sent when players vote for someone to be voted out
+        SUBMIT_VOTE: 'submit_vote',
+
         // Server to Client
 
         // JOIN_LOBBY sent whenever someone else has joined the lobby
@@ -81,7 +84,14 @@ module.exports = Object.freeze({
         // sent to everyone, shows mayor election results
         MAYOR_REVEAL: 'mayor_reveal',
 
-        YOUR_NUMBER: 'your_number'
+        // sent to the newest player that joined, gives them their number so they can turn their name blue
+        YOUR_NUMBER: 'your_number',
+
+        // sent to everyone to start voting
+        START_VOTE: 'start_vote',
+
+        // sent to everyone once server has tallied all the votes
+        VOTE_REVEAL: 'vote_reveal'
 
     },
 });
