@@ -24,21 +24,6 @@ module.exports = Object.freeze({
         // WOLF_KILL sent whenever the wolf leader has submitted the player number they want to kill
         WOLF_KILL: 'wolf_kill',
 
-        //
-        KILL_RESULT: 'kill_result',
-
-        //
-        WITCH_NIGHT: 'witch_night',
-
-        //
-        HEAL: 'heal',
-
-        //
-        POISON: 'poison',
-        
-        //
-        WITCH_SKIP: 'witch_skip',
-
         // RUN_FOR_MAYOR sent whenever someone presses YES or NO to running for mayor
         RUN_FOR_MAYOR: 'run_for_mayor',
 

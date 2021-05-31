@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, gotKillResult, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -20,11 +20,9 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.ENOUGH_PEOPLE, showStartGameButton);
     socket.on(Constants.MSG_TYPES.START_GAME, startGameForAll);
     socket.on(Constants.MSG_TYPES.SEER_NIGHT, seerNight);
-    //socket.on(Constants.MSG_TYPES.WITCH_NIGHT, witchNight);
     socket.on(Constants.MSG_TYPES.WOLF_NIGHT, wolfNight);
     socket.on(Constants.MSG_TYPES.SEER_RESULT, gotSeerResult);
     socket.on(Constants.MSG_TYPES.CHAT_MESSAGE, wolfChat);
-    socket.on(Constants.MSG_TYPES.KILL_RESULT, gotKillResult);
     socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);
     socket.on(Constants.MSG_TYPES.ELECTION_SPEECH_START, electionSpeechStart)
     socket.on(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON, show_mayor_button);
@@ -60,19 +58,7 @@ export function wolfChatMessage(message){
 }
 
 export function kill(numInput){
-    socket.emit(Constants.MSG_TYPES.WOLF_KILL, numInput);
-}
-
-export function heal(){
-    socket.emit(Constants.MSG_TYPES.HEAL);
-}
-
-export function poison(numInput){
-    socket.emit(Constants.MSG_TYPES.POISON, numInput);
-}
-
-export function witchSkip(){
-    socket.emit(Constants.MSG_TYPES.WITCH_SKIP);
+    socket.emit(Constants.MSG_TYPES.WOLF_KILL, message);
 }
 
 export function runForMayorOrNot(run){
