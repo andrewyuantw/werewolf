@@ -75,6 +75,9 @@ class Player {
         return this.alive;
     }
 
+    dead(){
+        this.alive = false;
+    }
     changeAliveStatus(){
         this.alive = !this.alive;
     }
