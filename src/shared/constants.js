@@ -21,6 +21,24 @@ module.exports = Object.freeze({
         // CHAT_MESSAGE sent whenever a wolf presses send to chat
         CHAT_MESSAGE: 'chat_message',
         
+        // WOLF_KILL sent whenever the wolf leader has submitted the player number they want to kill
+        WOLF_KILL: 'wolf_kill',
+
+        //
+        KILL_RESULT: 'kill_result',
+
+        //
+        WITCH_NIGHT: 'witch_night',
+
+        //
+        HEAL: 'heal',
+
+        //
+        POISON: 'poison',
+        
+        //
+        WITCH_SKIP: 'witch_skip',
+
         // RUN_FOR_MAYOR sent whenever someone presses YES or NO to running for mayor
         RUN_FOR_MAYOR: 'run_for_mayor',
 
@@ -60,6 +78,9 @@ module.exports = Object.freeze({
 
         // SEER_NIGHT is sent to the seer when night starts
         WOLF_NIGHT: 'wolf_night',
+
+        //
+        WOLF_END: 'wolf_end',
 
         // ELECTION_START is sent at the end of the first night
         ELECTION_START: 'election_start',

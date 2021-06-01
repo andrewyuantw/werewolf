@@ -32,6 +32,10 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.READY_TO_START, playerIsReady);
     socket.on(Constants.MSG_TYPES.SEER_RESPONSE, verify_seer_choice);
     socket.on(Constants.MSG_TYPES.WOLF_RESPONSE, display_message);
+    socket.on(Constants.MSG_TYPES.WOLF_KILL, kill);
+    socket.on(Constants.MSG_TYPES.HEAL, heal);
+    socket.on(Constants.MSG_TYPES.POISON, poison);
+    socket.on(Constants.MSG_TYPES.WITCH_SKIP, witch_skip);
     socket.on(Constants.MSG_TYPES.RUN_FOR_MAYOR, run_for_mayor);
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
     socket.on(Constants.MSG_TYPES.DROP_OUT_ELECTION, drop_out_election);
@@ -67,6 +71,23 @@ function verify_seer_choice(num){
 function display_message(message){
     game.display_message(this, message);
 }
+
+function kill(num){
+    game.kill(num);
+}
+
+function heal(){
+    game.heal;
+}
+
+function poison(num){
+    game.poison(num);
+}
+
+function witch_skip(){
+    game.witch_skip();
+}
+
 
 function run_for_mayor(run){
     game.run_for_mayor(this, run);

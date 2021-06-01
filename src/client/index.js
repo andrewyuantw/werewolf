@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -9,6 +9,9 @@ const readyButton = document.getElementById('ready');
 const seerButton = document.getElementById('seer-button');
 const wolfButton = document.getElementById('wolf-button');
 const chatButton = document.getElementById('chat-button');
+const healButton = document.getElementById('heal-button');
+const poisonButton = document.getElementById('poison-button');
+const skipButton = document.getElementById('skip-button');
 const yesMayorButton = document.getElementById('yes-mayor');
 const noMayorButton = document.getElementById('no-mayor');
 const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
@@ -70,7 +73,8 @@ Promise.all([
         // We get the number from the input box, and check if it is valid
        
         var numInput = document.getElementById('wolf-input').value;
-        
+        if (numInput >= 1 && numInput <= 9)
+            getKillChoice(numInput);
     }
 
     // When the wolf has clicked confirm after inputting a player number 
@@ -80,6 +84,37 @@ Promise.all([
         var textInput = document.getElementById('chat-input').value;
         wolfChatMessage(textInput);
     }
+
+    // When the witch has clicked heal
+    healButton.onclick = () => {
+
+        //
+       
+        healButton.classList.toggle("hide");
+        document.getElementById("witch-menu").classList.toggle("hide");
+        heal();
+    }
+
+    // When the witch has clicked poison after inputting a player number 
+    poisonButton.onclick = () => {
+
+        // We get the number from the input box, and check if it is valid
+        poisonButton.classList.toggle("hide");
+        document.getElementById("witch-menu").classList.toggle("hide");
+        var numInput = document.getElementById('witch-input').value;
+        if (numInput >= 1 && numInput <= 9)
+            poison(numInput);
+        
+    }
+
+    // When the witch has clicked skip
+    skipButton.onclick = () => {
+
+        // 
+        document.getElementById("witch-menu").classList.toggle("hide");
+        witchSkip();
+    }
+
 
     yesMayorButton.onclick = () =>{
         runForMayorOrNot(true);
@@ -185,13 +220,27 @@ export function wolfChat(message){
     document.getElementById("chat").innerHTML = message;
 }
 
-export function gotKillResult(bad){
+export function wolfNightEnd(){
 
     // 
     document.getElementById("wolf-menu").classList.toggle("hide");
 }
 
+export function gotKillResult(result, heal, poison){
 
+    var potion_display = document.getElementById("potion");
+    var potion_num = `You have ${heal} heal potion and ${poison} poison.`;
+    potion_display.innerHTML = potion_num;
+
+    var witch_display = document.getElementById("player-killed");
+    witch_display.innerHTML = result;
+    document.getElementById("witch-menu").classList.toggle("hide");
+}
+
+export function witchNightEnd(){
+
+    document.getElementById("witch-menu").classList.toggle("hide");
+}
 
 export function electionStart(){
 

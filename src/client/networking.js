@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfChat, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -23,6 +23,8 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.WOLF_NIGHT, wolfNight);
     socket.on(Constants.MSG_TYPES.SEER_RESULT, gotSeerResult);
     socket.on(Constants.MSG_TYPES.CHAT_MESSAGE, wolfChat);
+    socket.on(Constants.MSG_TYPES.WOLF_END, wolfNightEnd);
+    socket.on(Constants.MSG_TYPES.KILL_RESULT, gotKillResult);
     socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);
     socket.on(Constants.MSG_TYPES.ELECTION_SPEECH_START, electionSpeechStart)
     socket.on(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON, show_mayor_button);
@@ -58,6 +60,23 @@ export function getSeerChoice(numInput){
 export function wolfChatMessage(message){
     socket.emit(Constants.MSG_TYPES.WOLF_RESPONSE, message);
 }
+
+export function getKillChoice(numInput){
+    socket.emit(Constants.MSG_TYPES.WOLF_KILL, numInput);
+}
+
+export function heal(){
+    socket.emit(Constants.MSG_TYPES.HEAL);
+}
+
+export function poison(numInput){
+    socket.emit(Constants.MSG_TYPES.POISON, numInput);
+}
+
+export function witchSkip(){
+    socket.emit(Constants.MSG_TYPES.WITCH_SKIP);
+}
+
 
 export function runForMayorOrNot(run){
     socket.emit(Constants.MSG_TYPES.RUN_FOR_MAYOR, run);
