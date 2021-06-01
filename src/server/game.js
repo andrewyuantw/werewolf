@@ -22,7 +22,7 @@ class Game {
         this.hostID = null;
 
         // Holds a string to be displayed in the "lobby" div
-        this.current_roster = "Players: <br>";
+        this.current_roster = {};
 
         // Counts the number of players that have hit the ready button after seeing their role
         this.ready_number = 0;
@@ -44,6 +44,21 @@ class Game {
 
         // Counts how many people have submitted whether to run for mayor
         this.mayorCount = 0;
+
+        // Contains the mayor votes; structure like mayorVote[socket.id] = playerNum_they_voted_for
+        this.mayorVote = {};
+
+        // Counts how many mayor votes have been received
+        this.mayorVoteCount = 0;
+
+        // Contains the player votes; structure like vote[socket.id] = playerNum_they_voted_for
+        this.vote = {};
+
+        // Counts how many player votes have been received
+        this.voteCount = 0;
+
+        // Counts the amount of alive players in the game
+        this.alivePlayers = 0;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -54,21 +69,31 @@ class Game {
 
         this.playerInLobby++;
 
+        this.alivePlayers++;
+
         // Creates new Player object and stores in this.players
         this.players[socket.id] = new Player(socket.id, username, this.playerInLobby);
         
         // Updates the string to be displayed in the "lobby" div 
-        this.current_roster += `${this.playerInLobby}. ${username} <br>`;
+        this.current_roster[this.playerInLobby] = username;
 
         // Sets this.hostID to be the first person to join the game
         if (this.hostID == null){
             this.hostID = socket.id;
         }
 
+        socket = this.sockets[socket.id];
+        socket.emit(Constants.MSG_TYPES.YOUR_NUMBER, this.playerInLobby);
+
         // Send a message to every player in the game so they can update their lobby display
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster);
+            Object.keys(this.current_roster).forEach(playerNum => {
+                console.log(playerNum);
+                console.log(this.current_roster[playerNum]);
+                each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[playerNum], playerNum);
+            });
+            
         })
 
         // If we have enough players, we send a message to the host only
@@ -95,7 +120,8 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            //ach_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.START_VOTE);
         })
     }
 
@@ -195,20 +221,28 @@ class Game {
         })
     }
 
+    // Takes in the socket and whether this player is going to run for mayor
     run_for_mayor(socket, run){
+
+        // If they are running, we add their IDs to both mayorNominees and activeNominees
         if (run){
             this.mayorNominees.push(socket.id)
             this.activeNominees.push(socket.id)
         }
+
+        // Increment num of responses received
         this.mayorCount++;
         
+        // Once we have everyone's responses
         if (this.mayorCount >= PLAYERNUM){
+
+            // Randomly assign speaking order
             var array = this.mayorNominees;
             var rand = Math.floor(Math.random() * array.length);
             var direction = Math.round(Math.random());
-
             var speakingOrder = "";
 
+            // Randomly assign speaking direction (1 -> 9 or 9 -> 1)
             if (direction == 0){
                 for (var i = 0; i < array.length; i ++){
                     var index = (rand + i) % array.length; 
@@ -225,26 +259,157 @@ class Game {
                 }
             }
             
-            
-            console.log("everyone participated");
-            console.log(speakingOrder);
+            // Tell everyone election speeches have started
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_SPEECH_START, speakingOrder);
             })
+
+            // For the host, they get an extra "MOVE TO VOTING" button
             const host_socket = this.sockets[this.hostID];
             host_socket.emit(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON);
 
+            // For mayor nominees, they have an extra "DROP OUT ELECTION" button
+            this.mayorNominees.forEach(playerID => {
+                const nominee_socket = this.sockets[playerID];
+                nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
+            })
 
+            // Show current nominee list 
+            var nomineeList = "";
+            this.activeNominees.forEach(playerID => {
+                nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+            }) 
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+            })
         }
-
     }
 
+    // Shows different screens during mayor voting phase
     mayor_vote(){
         Object.keys(this.sockets).forEach(playerID => {
-            const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
+
+            // If you had run (even if you then dropped out), you cannot vote
+            if (this.mayorNominees.includes(playerID)){
+                const nominee = this.sockets[playerID];
+                nominee.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE_CANDIDATE);
+            } else {
+                // All other players can vote
+                const voter = this.sockets[playerID];
+                voter.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE);
+            }
         })
+    }
+
+    // Handles situation when players drop out of election
+    drop_out_election(socket){
+        var nomineeList = "";
+
+        for (var i = 0; i < this.activeNominees.length; i ++){
+            if (this.activeNominees[i] == socket.id){
+                
+                // Remove the player from this.activeNominees
+                this.activeNominees.splice(i, 1);
+                i--;
+            } else {
+
+                // Append players still in the election to nomineeList
+                nomineeList += `${this.players[this.activeNominees[i]].playerNum}. ${this.players[this.activeNominees[i]].username}<br>`;
+            }
+        }
+        
+        // Send nomineeList to everyone
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+        })
+    }
+
+    // Tallies the mayor votes
+    tally_mayor_vote(socket, num){
+
+        // Pushes socket.id if array exists; if not, initialize it
+        if (Array.isArray(this.mayorVote[num])){
+            this.mayorVote[num].push(socket.id);
+        } else {
+            this.mayorVote[num] = [socket.id];
+        }
+
+        // Increment number of responses received
+        this.mayorVoteCount++;
+
+        // Once we get all responses
+        if (this.mayorVoteCount >= (PLAYERNUM - this.mayorNominees.length)){
+            
+            var maxLength = 0;
+            var mayor = 0;
+
+            // Look at which player's array has the most elements (most votes)
+            Object.keys(this.mayorVote).forEach(playerNum => {
+                
+                // Ignore if player voted for is 0
+                if (playerNum != 0){
+                    var length = this.mayorVote[playerNum].length;
+                    if (length > maxLength){
+                        maxLength = length;
+                        mayor = playerNum;
+                    }
+                }
+            })
+            
+            // Default is "no one", if there is even a single vote for a numbered player, the string will be overwritten
+            var returnString = "No one (b/c most people voted 0)";
+
+            // Find the player username associated with the number
+            Object.keys(this.players).forEach(playerID =>{
+                if (this.players[playerID].getPlayerNum() == mayor){
+                    returnString = `${mayor}. ${this.players[playerID].username}`
+                }
+            })
+
+            // Send mayor reveal info to everyone
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString);
+            })
+        }
+    }
+
+    // Same as mayor_tally_vote except we check for alivePlayers
+    tally_vote(socket, num){
+        if (Array.isArray(this.vote[num])){
+            this.vote[num].push(socket.id);
+        } else {
+            this.vote[num] = [socket.id];
+        }
+
+        this.voteCount++;
+        if (this.voteCount >= (this.alivePlayers)){
+            var maxLength = 0;
+            var dead = 0;
+            Object.keys(this.vote).forEach(playerNum => {
+                if (playerNum != 0){
+                    var length = this.vote[playerNum].length;
+                    if (length > maxLength){
+                        maxLength = length;
+                        dead = playerNum;
+                    }
+                }
+            })
+            console.log(`here is dead ${dead}`);
+            var returnString = "No one (b/c most people voted 0)";
+            Object.keys(this.players).forEach(playerID =>{
+                if (this.players[playerID].getPlayerNum() == dead){
+                    returnString = `${dead}. ${this.players[playerID].username}`
+                }
+            })
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, returnString);
+            })
+        }
     }
 }
 

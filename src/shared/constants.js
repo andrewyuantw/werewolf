@@ -27,6 +27,14 @@ module.exports = Object.freeze({
         // MOVE_TO_MAYOR_VOTE sent when host presses move to mayor vote
         MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote',
         
+        // sent when candidates no longer want to stay in the election
+        DROP_OUT_ELECTION: 'drop_out_election',
+
+        // sent when players vote for a mayor
+        MAYOR_VOTE: 'mayor_vote',
+
+        // sent when players vote for someone to be voted out
+        SUBMIT_VOTE: 'submit_vote',
 
         // Server to Client
 
@@ -53,7 +61,6 @@ module.exports = Object.freeze({
         // SEER_NIGHT is sent to the seer when night starts
         WOLF_NIGHT: 'wolf_night',
 
-
         // ELECTION_START is sent at the end of the first night
         ELECTION_START: 'election_start',
 
@@ -63,6 +70,28 @@ module.exports = Object.freeze({
         // SHOW_MAYOR_BUTTON is sent to the host when mayor speeches begin
         SHOW_MAYOR_BUTTON: 'show_mayor_button',
 
-        MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote'
+        // MOVE_TO_MAYOR_VOTE is sent to everyone to move to the mayor voting screen
+        MOVE_TO_MAYOR_VOTE: 'move_to_mayor_vote',
+
+        MOVE_TO_MAYOR_VOTE_CANDIDATE: 'move_to_mayor_vote_candidate',
+
+        // sent to candidates only, shows the button that allows that to drop out
+        SHOW_DROP_OUT_BUTTON: 'show_drop_out_button',
+
+        // sent to everyone, updates active candidate list
+        UPDATE_CANDIDATES: 'update_candidates',
+
+        // sent to everyone, shows mayor election results
+        MAYOR_REVEAL: 'mayor_reveal',
+
+        // sent to the newest player that joined, gives them their number so they can turn their name blue
+        YOUR_NUMBER: 'your_number',
+
+        // sent to everyone to start voting
+        START_VOTE: 'start_vote',
+
+        // sent to everyone once server has tallied all the votes
+        VOTE_REVEAL: 'vote_reveal'
+
     },
 });
