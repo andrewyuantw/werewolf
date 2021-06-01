@@ -289,6 +289,7 @@ class Game {
         this.victim.changeAliveStatus();
         this.victim = null;
         delete this.deadPlayers[0];
+        this.deadCount--;
     }
 
     poison(numInput){
