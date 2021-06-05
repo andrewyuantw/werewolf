@@ -137,7 +137,9 @@ module.exports = Object.freeze({
         REVEAL_MOVE_TO_VOTE_BUTTON: 'reveal_move_to_vote_button',
 
         // sent to wolves
-        WOLF_VOTE_REVEAL: 'wolf_vote_reveal'
+        WOLF_VOTE_REVEAL: 'wolf_vote_reveal',
+
+        WOLF_IN_CHARGE_OF_KILLING: 'wolf_in_charge_of_killing'
 
     },
 });

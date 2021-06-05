@@ -43,13 +43,13 @@ class Game {
         this.wolf_chat = "Chat: <br>";
         
         // Counts the number of villagers alive
-        this.villagerCount = 0;
+        this.villagerCount = 3;
 
         // Counts the number of gods alive
-        this.godCount = 0;
+        this.godCount = 3;
         
         // Counts the number of werewolves alive
-        this.wolfCount = 0;
+        this.wolfCount = 3;
 
         // Stores the ID for the player got killed by werewolves
         this.victim = null;
@@ -209,7 +209,7 @@ class Game {
 
             // We send different messages depending on the role
 
-            /*
+            
 
 
 
@@ -226,6 +226,9 @@ class Game {
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
             })
 
+            var randomWolfID = this.wolfIDs[Math.floor(Math.random() * this.wolfIDs.length)];
+            const randomWolfSocket = this.sockets[randomWolfID];
+            randomWolfSocket.emit(Constants.MSG_TYPES.WOLF_IN_CHARGE_OF_KILLING);
 
             // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {
@@ -238,12 +241,12 @@ class Game {
 
 
 
-            */
+            /*
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
             })
-            
+            */
         }
     }
 
