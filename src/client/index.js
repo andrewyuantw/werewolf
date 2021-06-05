@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, wolfMayorReveal, moveToDay, moveToVote, wolfReveal } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -18,6 +18,15 @@ const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
 const dropoutButton = document.getElementById('drop-out-button');
 const mayorVoteButton = document.getElementById('mayor-vote-button');
 const voteButton = document.getElementById('vote-button');
+const wolfMayorRevealButton = document.getElementById('wolf-mayor-reveal-button');
+const moveToDayButton = document.getElementById('move-to-day-button');
+const moveToVoteButton = document.getElementById('move-to-vote-button');
+const wolfRevealButton = document.getElementById('wolf-reveal-button');
+
+
+
+
+
 
 // Handle HTML button onclick functions
 Promise.all([
@@ -73,7 +82,7 @@ Promise.all([
         // We get the number from the input box, and check if it is valid
        
         var numInput = document.getElementById('wolf-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (numInput >= 0 && numInput <= 9)
             getKillChoice(numInput);
     }
 
@@ -87,10 +96,6 @@ Promise.all([
 
     // When the witch has clicked heal
     healButton.onclick = () => {
-
-        //
-       
-        healButton.classList.toggle("hide");
         document.getElementById("witch-menu").classList.toggle("hide");
         heal();
     }
@@ -99,7 +104,6 @@ Promise.all([
     poisonButton.onclick = () => {
 
         // We get the number from the input box, and check if it is valid
-        poisonButton.classList.toggle("hide");
         document.getElementById("witch-menu").classList.toggle("hide");
         var numInput = document.getElementById('witch-input').value;
         if (numInput >= 1 && numInput <= 9)
@@ -110,7 +114,6 @@ Promise.all([
     // When the witch has clicked skip
     skipButton.onclick = () => {
 
-        // 
         document.getElementById("witch-menu").classList.toggle("hide");
         witchSkip();
     }
@@ -150,6 +153,26 @@ Promise.all([
         var numInput = document.getElementById('vote-input').value;
         if (numInput >= 0 && numInput <= 9)
             vote(numInput);
+    }
+
+    wolfMayorRevealButton.onclick = () => {
+        wolfMayorRevealButton.classList.toggle("hide");
+        wolfMayorReveal();
+    }
+
+    moveToDayButton.onclick = () =>{
+        moveToDayButton.classList.toggle("hide");
+        moveToDay();
+    }
+
+    moveToVoteButton.onclick = () =>{
+        moveToVoteButton.classList.toggle("hide");
+        moveToVote();
+    }
+
+    wolfRevealButton.onclick = () =>{
+        wolfRevealButton.classList.toggle("hide");
+        wolfReveal();
     }
 }) 
 
@@ -273,11 +296,15 @@ export function show_mayor_button(){
 export function show_mayor_menu(){
     document.getElementById('election-speech-menu').classList.toggle("hide");
     document.getElementById("mayor-voting").classList.toggle("hide");
+    if (!document.getElementById("wolf-mayor-reveal-button").classList.contains("hide"))
+        document.getElementById("wolf-mayor-reveal-button").classList.toggle("hide");
 }
 
 export function show_mayor_menu_candidate(){
     document.getElementById('election-speech-menu').classList.toggle("hide");
     document.getElementById("mayor-voting-candidate").classList.toggle("hide");
+    if (!document.getElementById("wolf-mayor-reveal-button").classList.contains("hide"))
+        document.getElementById("wolf-mayor-reveal-button").classList.toggle("hide");
 }
 
 export function show_drop_out_button(){
@@ -288,22 +315,29 @@ export function update_candidates(candidateList){
     document.getElementById('candidates').innerHTML = candidateList;
 }
 
-export function mayor_reveal(mayor_num){
+export function mayor_reveal(mayor_num, dead_num){
 
     // make sure both mayor-voting and mayor-voting-candidate is hidden
     if (!document.getElementById("mayor-voting").classList.contains("hide"))
         document.getElementById("mayor-voting").classList.toggle("hide");
     if (!document.getElementById("mayor-voting-candidate").classList.contains("hide"))
         document.getElementById("mayor-voting-candidate").classList.toggle("hide");
+    if (!document.getElementById("election-speech-menu").classList.contains("hide"))
+        document.getElementById("election-speech-menu").classList.toggle("hide");
+    if (!document.getElementById("wolf-mayor-reveal-button").classList.contains("hide"))
+        document.getElementById("wolf-mayor-reveal-button").classList.toggle("hide");
     
     // show mayor-reveal
     document.getElementById('mayor-reveal').classList.toggle("hide");
     document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
     var words = mayor_num.split(".");
 
-    // Updates lobby table, makes mayor gold
-    if (parseInt(words)!= 0)
+    if (dead_num != 0){
+        document.getElementById(dead_num.toString()).classList.toggle("dead");
+    } else if (parseInt(words)!= 0) {
         document.getElementById(words[0].toString()).classList.toggle("mayor");
+    }
+    
 }
 
 export function your_number(num){
@@ -317,7 +351,8 @@ export function start_vote(){
 }
 
 export function vote_reveal(reveal){
-    document.getElementById('vote-menu').classList.toggle("hide");
+    if (!document.getElementById('day-screen').classList.contains("hide"))
+        document.getElementById('day-screen').classList.toggle("hide");
     document.getElementById('vote-reveal').classList.toggle("hide");
     document.getElementById('reveal').innerHTML = reveal + " is now DEAD...";
     var words = reveal.split(".");
@@ -325,4 +360,30 @@ export function vote_reveal(reveal){
     // Updates lobby table, makes dead people red
     if (parseInt(words) != 0)
         document.getElementById(words[0].toString()).classList.toggle("dead");
+}
+
+export function wolf_mayor_reveal_button(){
+    document.getElementById('wolf-mayor-reveal-button').classList.toggle("hide");
+}
+
+export function reveal_move_to_day_button(){
+    document.getElementById('move-to-day-button').classList.toggle("hide");
+}
+
+export function move_to_day(){
+    document.getElementById('mayor-reveal').classList.toggle("hide");
+    document.getElementById('day-screen').classList.toggle("hide");
+}
+
+export function reveal_move_to_vote_button(){
+    document.getElementById('move-to-vote-button').classList.toggle("hide");
+}
+
+export function wolf_reveal_button(){
+    document.getElementById('wolf-reveal-button').classList.toggle("hide");
+}
+
+export function move_to_vote(){
+    document.getElementById('day-screen').classList.toggle("hide");
+    document.getElementById('vote-menu').classList.toggle("hide");
 }

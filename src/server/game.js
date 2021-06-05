@@ -123,8 +123,6 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             Object.keys(this.current_roster).forEach(playerNum => {
-                console.log(playerNum);
-                console.log(this.current_roster[playerNum]);
                 each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[playerNum], playerNum);
             });
             
@@ -211,11 +209,18 @@ class Game {
 
             // We send different messages depending on the role
 
+            /*
+
+
+
+
+
+
             // For the seer, we send SEER_NIGHT
             const seer_socket = this.sockets[this.seerID];
             seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
 
-           // For werewolves, we send WOLF_NIGHT
+            // For werewolves, we send WOLF_NIGHT
             this.wolfIDs.forEach(playerID => {
                 const wolf_socket = this.sockets[playerID];
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
@@ -227,6 +232,18 @@ class Game {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
             })
+
+
+
+
+
+
+            */
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
+            })
+            
         }
     }
 
@@ -367,9 +384,13 @@ class Game {
         
         // Once we have everyone's responses
         if (this.mayorCount >= PLAYERNUM){
-
+            var array = [];
             // Randomly assign speaking order
-            var array = this.mayorNominees;
+            this.mayorNominees.forEach( playerID => {
+                array.push(this.players[playerID].playerNum);
+            })
+            array.sort();
+
             var rand = Math.floor(Math.random() * array.length);
             var direction = Math.round(Math.random());
             var speakingOrder = "";
@@ -378,15 +399,13 @@ class Game {
             if (direction == 0){
                 for (var i = 0; i < array.length; i ++){
                     var index = (rand + i) % array.length; 
-                    var player = this.players[array[index]];
-                    var playerNum = player.getPlayerNum();
+                    var playerNum = array[index]
                     speakingOrder += playerNum.toString() + " ";
                 }
             } else {
                 for (var i = array.length; i > 0; i --){
                     var index = (rand + i) % array.length; 
-                    var player = this.players[array[index]];
-                    var playerNum = player.getPlayerNum();
+                    var playerNum = array[index]
                     speakingOrder += playerNum.toString() + " ";
                 }
             }
@@ -407,11 +426,21 @@ class Game {
                 nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
             })
 
+            this.wolfIDs.forEach(playerID => {
+                const wolf_socket = this.sockets[playerID];
+                wolf_socket.emit(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON);
+            })
+
             // Show current nominee list 
             var nomineeList = "";
-            this.activeNominees.forEach(playerID => {
-                nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
-            }) 
+
+            array.forEach(playerNum => {
+                Object.keys(this.players).forEach(playerID => {
+                    if (this.players[playerID].getPlayerNum() == playerNum){
+                        nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                    }
+                })
+            })
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
@@ -439,6 +468,8 @@ class Game {
     drop_out_election(socket){
         var nomineeList = "";
 
+        var array = [];
+
         for (var i = 0; i < this.activeNominees.length; i ++){
             if (this.activeNominees[i] == socket.id){
                 
@@ -446,12 +477,21 @@ class Game {
                 this.activeNominees.splice(i, 1);
                 i--;
             } else {
-
-                // Append players still in the election to nomineeList
-                nomineeList += `${this.players[this.activeNominees[i]].playerNum}. ${this.players[this.activeNominees[i]].username}<br>`;
+                array.push(this.players[this.activeNominees[i]].playerNum);
             }
         }
         
+        array.sort();
+
+
+        array.forEach(playerNum => {
+            Object.keys(this.players).forEach(playerID => {
+                if (this.players[playerID].getPlayerNum() == playerNum){
+                    nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                }
+            })
+        })
+
         // Send nomineeList to everyone
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
@@ -504,9 +544,45 @@ class Game {
             // Send mayor reveal info to everyone
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString);
+                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString, 0);
             })
+
+            // Host gets additional MOVE TO DAY button
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
         }
+    }
+
+    move_to_day(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
+        })
+
+        const host_socket = this.sockets[this.hostID];
+        host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+
+        this.wolfIDs.forEach(playerID => {
+            const wolf_socket = this.sockets[playerID];
+            wolf_socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
+        })
+
+    }
+
+    move_to_vote(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+        })
+    }
+
+    wolf_vote_reveal(socket){
+        var message = `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} `;
+        message = message + "has revealed themselves!<br>" + message;
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, message);
+        })
     }
 
     // Same as mayor_tally_vote except we check for alivePlayers
@@ -530,7 +606,6 @@ class Game {
                     }
                 }
             })
-            console.log(`here is dead ${dead}`);
             var returnString = "No one (b/c most people voted 0)";
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == dead){
@@ -542,6 +617,17 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, returnString);
             })
         }
+    }
+
+    wolf_mayor_reveal(socket){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! <br>No one (b/c wolf reveal)`, this.players[socket.id].playerNum);
+        })
+
+        // Host gets additional MOVE TO DAY button
+        const host_socket = this.sockets[this.hostID];
+        host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
     }
 }
 
