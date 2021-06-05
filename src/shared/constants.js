@@ -54,6 +54,8 @@ module.exports = Object.freeze({
         // sent when players vote for someone to be voted out
         SUBMIT_VOTE: 'submit_vote',
 
+        WOLF_MAYOR_REVEAL: 'wolf_mayor_reveal',
+
         // Server to Client
 
         // JOIN_LOBBY sent whenever someone else has joined the lobby
@@ -112,7 +114,11 @@ module.exports = Object.freeze({
         START_VOTE: 'start_vote',
 
         // sent to everyone once server has tallied all the votes
-        VOTE_REVEAL: 'vote_reveal'
+        VOTE_REVEAL: 'vote_reveal',
+
+        WOLF_MAYOR_REVEAL: 'wolf_mayor_reveal',
+
+        WOLF_MAYOR_BUTTON: 'wolf_mayor_button'
 
     },
 });

@@ -108,8 +108,6 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             Object.keys(this.current_roster).forEach(playerNum => {
-                console.log(playerNum);
-                console.log(this.current_roster[playerNum]);
                 each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[playerNum], playerNum);
             });
             
@@ -212,6 +210,8 @@ class Game {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
             })
+
+            
         }
     }
 
@@ -325,9 +325,13 @@ class Game {
         
         // Once we have everyone's responses
         if (this.mayorCount >= PLAYERNUM){
-
+            var array = [];
             // Randomly assign speaking order
-            var array = this.mayorNominees;
+            this.mayorNominees.forEach( playerID => {
+                array.push(this.players[playerID].playerNum);
+            })
+            array.sort();
+
             var rand = Math.floor(Math.random() * array.length);
             var direction = Math.round(Math.random());
             var speakingOrder = "";
@@ -336,15 +340,13 @@ class Game {
             if (direction == 0){
                 for (var i = 0; i < array.length; i ++){
                     var index = (rand + i) % array.length; 
-                    var player = this.players[array[index]];
-                    var playerNum = player.getPlayerNum();
+                    var playerNum = array[index]
                     speakingOrder += playerNum.toString() + " ";
                 }
             } else {
                 for (var i = array.length; i > 0; i --){
                     var index = (rand + i) % array.length; 
-                    var player = this.players[array[index]];
-                    var playerNum = player.getPlayerNum();
+                    var playerNum = array[index]
                     speakingOrder += playerNum.toString() + " ";
                 }
             }
@@ -365,11 +367,21 @@ class Game {
                 nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
             })
 
+            this.wolfIDs.forEach(playerID => {
+                const wolf_socket = this.sockets[playerID];
+                wolf_socket.emit(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON);
+            })
+
             // Show current nominee list 
             var nomineeList = "";
-            this.activeNominees.forEach(playerID => {
-                nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
-            }) 
+
+            array.forEach(playerNum => {
+                Object.keys(this.players).forEach(playerID => {
+                    if (this.players[playerID].getPlayerNum() == playerNum){
+                        nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                    }
+                })
+            })
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
@@ -462,7 +474,7 @@ class Game {
             // Send mayor reveal info to everyone
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString);
+                each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString, 0);
             })
         }
     }
@@ -488,7 +500,6 @@ class Game {
                     }
                 }
             })
-            console.log(`here is dead ${dead}`);
             var returnString = "No one (b/c most people voted 0)";
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == dead){
@@ -500,6 +511,16 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, returnString);
             })
         }
+    }
+
+    wolf_mayor_reveal(socket){
+
+
+
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! \nNo one (b/c wolf reveal)`, this.players[socket.id].playerNum);
+        })
     }
 }
 
