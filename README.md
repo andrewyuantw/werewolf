@@ -2,8 +2,6 @@
 
 ### Minimum To Do
 
-* Werewolf kill at night
-* Assign one wolf to have voting powers
 
 * Witch night menu (remember witch rules for using potions)
 
