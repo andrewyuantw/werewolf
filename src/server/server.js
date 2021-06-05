@@ -42,6 +42,9 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.MAYOR_VOTE, tally_mayor_vote);
     socket.on(Constants.MSG_TYPES.SUBMIT_VOTE, submit_vote);
     socket.on(Constants.MSG_TYPES.WOLF_MAYOR_REVEAL, wolf_mayor_reveal);
+    socket.on(Constants.MSG_TYPES.MOVE_TO_DAY, moveToDay);
+    socket.on(Constants.MSG_TYPES.MOVE_TO_VOTING, moveToVote);
+    socket.on(Constants.MSG_TYPES.WOLF_VOTE_REVEAL, wolfVoteReveal);
 });
 
 // Sets up the Game
@@ -112,4 +115,16 @@ function submit_vote(num){
 
 function wolf_mayor_reveal(){
     game.wolf_mayor_reveal(this);
+}
+
+function moveToDay(){
+    game.move_to_day();
+}
+
+function moveToVote(){
+    game.move_to_vote();
+}
+
+function wolfVoteReveal(){
+    game.wolf_vote_reveal(this);
 }

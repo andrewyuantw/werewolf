@@ -3,7 +3,7 @@
 
 import io from 'socket.io-client';
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolfMayorRevealButton, wolf_mayor_reveal_button } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolfMayorRevealButton, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day } from "./index";
 const Constants = require('../shared/constants');
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
@@ -37,6 +37,11 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.START_VOTE, start_vote);
     socket.on(Constants.MSG_TYPES.VOTE_REVEAL, vote_reveal);
     socket.on(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON, wolf_mayor_reveal_button);
+    socket.on(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON, reveal_move_to_day_button);
+    socket.on(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON, reveal_move_to_vote_button);
+    socket.on(Constants.MSG_TYPES.MOVE_TO_VOTING, move_to_vote);
+    socket.on(Constants.MSG_TYPES.WOLF_VOTE_REVEAL, wolf_reveal_button);
+    socket.on(Constants.MSG_TYPES.MOVE_TO_DAY, move_to_day)
 });
 
 
@@ -101,4 +106,16 @@ export function vote(num){
 
 export function wolfMayorReveal(){
     socket.emit(Constants.MSG_TYPES.WOLF_MAYOR_REVEAL);
+}
+
+export function moveToDay(){
+    socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
+}
+
+export function moveToVote(){
+    socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+}
+
+export function wolfReveal(){
+    socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
 }

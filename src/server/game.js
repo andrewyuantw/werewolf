@@ -194,11 +194,18 @@ class Game {
 
             // We send different messages depending on the role
 
+            /*
+
+
+
+
+
+
             // For the seer, we send SEER_NIGHT
             const seer_socket = this.sockets[this.seerID];
             seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
 
-           // For werewolves, we send WOLF_NIGHT
+            // For werewolves, we send WOLF_NIGHT
             this.wolfIDs.forEach(playerID => {
                 const wolf_socket = this.sockets[playerID];
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
@@ -211,6 +218,16 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
             })
 
+
+
+
+
+
+            */
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
+            })
             
         }
     }
@@ -409,6 +426,8 @@ class Game {
     drop_out_election(socket){
         var nomineeList = "";
 
+        var array = [];
+
         for (var i = 0; i < this.activeNominees.length; i ++){
             if (this.activeNominees[i] == socket.id){
                 
@@ -416,12 +435,21 @@ class Game {
                 this.activeNominees.splice(i, 1);
                 i--;
             } else {
-
-                // Append players still in the election to nomineeList
-                nomineeList += `${this.players[this.activeNominees[i]].playerNum}. ${this.players[this.activeNominees[i]].username}<br>`;
+                array.push(this.players[this.activeNominees[i]].playerNum);
             }
         }
         
+        array.sort();
+
+
+        array.forEach(playerNum => {
+            Object.keys(this.players).forEach(playerID => {
+                if (this.players[playerID].getPlayerNum() == playerNum){
+                    nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                }
+            })
+        })
+
         // Send nomineeList to everyone
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
@@ -476,7 +504,43 @@ class Game {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, returnString, 0);
             })
+
+            // Host gets additional MOVE TO DAY button
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
         }
+    }
+
+    move_to_day(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
+        })
+
+        const host_socket = this.sockets[this.hostID];
+        host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+
+        this.wolfIDs.forEach(playerID => {
+            const wolf_socket = this.sockets[playerID];
+            wolf_socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
+        })
+
+    }
+
+    move_to_vote(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+        })
+    }
+
+    wolf_vote_reveal(socket){
+        var message = `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} `;
+        message = message + "has revealed themselves!<br>" + message;
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, message);
+        })
     }
 
     // Same as mayor_tally_vote except we check for alivePlayers
@@ -514,13 +578,14 @@ class Game {
     }
 
     wolf_mayor_reveal(socket){
-
-
-
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! \nNo one (b/c wolf reveal)`, this.players[socket.id].playerNum);
+            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! <br>No one (b/c wolf reveal)`, this.players[socket.id].playerNum);
         })
+
+        // Host gets additional MOVE TO DAY button
+        const host_socket = this.sockets[this.hostID];
+        host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
     }
 }
 

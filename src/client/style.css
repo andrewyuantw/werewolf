@@ -104,6 +104,14 @@ button:hover {
     border-color: #2ecc71;
 }
 
+button#wolf-mayor-reveal-button{
+    background-color: red;
+}
+
+button#wolf-reveal-button{
+    background-color: red;
+}
+
 #chat {
     height: 200px;
     overflow-y: auto;

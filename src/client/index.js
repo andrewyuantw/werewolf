@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, wolfMayorReveal } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, wolfMayorReveal, moveToDay, moveToVote, wolfReveal } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -19,6 +19,14 @@ const dropoutButton = document.getElementById('drop-out-button');
 const mayorVoteButton = document.getElementById('mayor-vote-button');
 const voteButton = document.getElementById('vote-button');
 const wolfMayorRevealButton = document.getElementById('wolf-mayor-reveal-button');
+const moveToDayButton = document.getElementById('move-to-day-button');
+const moveToVoteButton = document.getElementById('move-to-vote-button');
+const wolfRevealButton = document.getElementById('wolf-reveal-button');
+
+
+
+
+
 
 // Handle HTML button onclick functions
 Promise.all([
@@ -150,6 +158,21 @@ Promise.all([
     wolfMayorRevealButton.onclick = () => {
         wolfMayorRevealButton.classList.toggle("hide");
         wolfMayorReveal();
+    }
+
+    moveToDayButton.onclick = () =>{
+        moveToDayButton.classList.toggle("hide");
+        moveToDay();
+    }
+
+    moveToVoteButton.onclick = () =>{
+        moveToVoteButton.classList.toggle("hide");
+        moveToVote();
+    }
+
+    wolfRevealButton.onclick = () =>{
+        wolfRevealButton.classList.toggle("hide");
+        wolfReveal();
     }
 }) 
 
@@ -322,7 +345,8 @@ export function start_vote(){
 }
 
 export function vote_reveal(reveal){
-    document.getElementById('vote-menu').classList.toggle("hide");
+    if (!document.getElementById('day-screen').classList.contains("hide"))
+        document.getElementById('day-screen').classList.toggle("hide");
     document.getElementById('vote-reveal').classList.toggle("hide");
     document.getElementById('reveal').innerHTML = reveal + " is now DEAD...";
     var words = reveal.split(".");
@@ -334,4 +358,26 @@ export function vote_reveal(reveal){
 
 export function wolf_mayor_reveal_button(){
     document.getElementById('wolf-mayor-reveal-button').classList.toggle("hide");
+}
+
+export function reveal_move_to_day_button(){
+    document.getElementById('move-to-day-button').classList.toggle("hide");
+}
+
+export function move_to_day(){
+    document.getElementById('mayor-reveal').classList.toggle("hide");
+    document.getElementById('day-screen').classList.toggle("hide");
+}
+
+export function reveal_move_to_vote_button(){
+    document.getElementById('move-to-vote-button').classList.toggle("hide");
+}
+
+export function wolf_reveal_button(){
+    document.getElementById('wolf-reveal-button').classList.toggle("hide");
+}
+
+export function move_to_vote(){
+    document.getElementById('day-screen').classList.toggle("hide");
+    document.getElementById('vote-menu').classList.toggle("hide");
 }
