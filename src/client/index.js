@@ -388,7 +388,3 @@ export function move_to_vote(){
     document.getElementById('vote-menu').classList.toggle("hide");
 }
 
-export function wolf_in_charge_of_killing(){
-    document.getElementById('wolf-input').classList.toggle("hide");
-    document.getElementById('wolf-button').classList.toggle("hide");
-}

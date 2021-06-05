@@ -226,9 +226,7 @@ class Game {
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
             })
 
-            var randomWolfID = this.wolfIDs[Math.floor(Math.random() * this.wolfIDs.length)];
-            const randomWolfSocket = this.sockets[randomWolfID];
-            randomWolfSocket.emit(Constants.MSG_TYPES.WOLF_IN_CHARGE_OF_KILLING);
+            
 
             // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {

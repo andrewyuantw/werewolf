@@ -139,7 +139,6 @@ module.exports = Object.freeze({
         // sent to wolves
         WOLF_VOTE_REVEAL: 'wolf_vote_reveal',
 
-        WOLF_IN_CHARGE_OF_KILLING: 'wolf_in_charge_of_killing'
 
     },
 });
