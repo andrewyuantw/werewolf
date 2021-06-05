@@ -242,6 +242,12 @@ export function witchNightEnd(){
     document.getElementById("witch-menu").classList.toggle("hide");
 }
 
+export function gameover(winner){
+    var display = document.getElementById("game-result");
+    display.innerHTML = `${winner} wins.`;
+    document.getElementById("game-over").classList.toggle("hide");
+}
+
 export function electionStart(){
 
     /* COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING

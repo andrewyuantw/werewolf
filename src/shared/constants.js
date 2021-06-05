@@ -39,6 +39,9 @@ module.exports = Object.freeze({
         //
         WITCH_SKIP: 'witch_skip',
 
+        // GAME_OVER sent to every player whenever the game is over
+        GAME_OVER: 'game_over',
+
         // RUN_FOR_MAYOR sent whenever someone presses YES or NO to running for mayor
         RUN_FOR_MAYOR: 'run_for_mayor',
 
