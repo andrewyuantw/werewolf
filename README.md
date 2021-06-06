@@ -2,19 +2,15 @@
 
 ### Minimum To Do
 
-
 * Witch night menu (remember witch rules for using potions)
-
-* Add plain night menu for villagers and hunter
 
 * Day menu - Announce death at the top
 * Check if game has ended, also check if hunter wants to shoot
 * If Mayor dead, who is next mayor?
 
-* Mayor has button to move into voting, wolves have button to reveal themselves
-
 * Check if game has ended, also check if hunter wants to shoot
 * If mayor dead, who is next mayor?
+* Display voting history (who voted for who)
 
 ### Further Goals
 
