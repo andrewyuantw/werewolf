@@ -418,3 +418,4 @@ export function move_to_vote(){
     document.getElementById('day-screen').classList.toggle("hide");
     document.getElementById('vote-menu').classList.toggle("hide");
 }
+

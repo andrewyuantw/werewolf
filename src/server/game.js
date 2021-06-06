@@ -229,6 +229,7 @@ class Game {
                 wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
             })
 
+            
 
             // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {
@@ -236,7 +237,9 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
             })
 
-            /*Object.keys(this.sockets).forEach(playerID => {
+
+            /*
+            Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
             })
