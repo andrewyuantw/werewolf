@@ -39,6 +39,21 @@ module.exports = Object.freeze({
         //
         WITCH_SKIP: 'witch_skip',
 
+        // HUNTER_RESPONSE whenever a hunter has submitted the player number they want to shoot
+        HUNTER_RESPONSE: 'hunter_response',
+        
+        // HUNTER_SHOOT sent to hunter when hunter is dead
+        HUNTER_SHOOT: 'hunter_shoot',
+
+        // SHOOT_RESULT sent to everyone when hunter shoots someone
+        SHOOT_RESULT: 'shoot_result',
+
+        // MAYOR_SUCCESSOR sent to mayor when mayor is dead
+        MAYOR_SUCCESSOR: 'mayor_successor',
+
+        // NEW_MAYOR sent to everyone
+        NEW_MAYOR: 'new_mayor',
+
         // GAME_OVER sent to every player whenever the game is over
         GAME_OVER: 'game_over',
 

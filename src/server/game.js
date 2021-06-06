@@ -43,19 +43,22 @@ class Game {
         this.wolf_chat = "Chat: <br>";
         
         // Counts the number of villagers alive
-        this.villagerCount = 0;
+        this.villagerCount = 3;
 
         // Counts the number of gods alive
-        this.godCount = 0;
+        this.godCount = 3;
         
         // Counts the number of werewolves alive
-        this.wolfCount = 0;
+        this.wolfCount = 3;
 
         // Stores the ID for the player got killed by werewolves
         this.victim = null;
 
         // Counts the number of players died
         this.deadCount = 0;
+
+        // Array that stores the IDs for dead players
+        this.deadIDs = [];
 
         // Holds an array of players died at night (0, 1, 2 players)
         this.deadAtNightPlayers = [];
@@ -209,11 +212,11 @@ class Game {
 
             // We send different messages depending on the role
 
-            /*
+            
 
-
-
-
+            // this is for testing purposes
+            // const hunter_socket = this.sockets[this.hunterID];
+            // hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, false);
 
 
             // For the seer, we send SEER_NIGHT
@@ -233,17 +236,11 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
             })
 
-
-
-
-
-
-            */
-            Object.keys(this.sockets).forEach(playerID => {
+            /*Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
             })
-            
+            */
         }
     }
 
@@ -297,7 +294,6 @@ class Game {
         }
     }
 
-
     kill(numInput){
         Object.keys(this.players).forEach(playerID => {
 
@@ -307,8 +303,9 @@ class Game {
             if(playerNum == numInput){
                 player.dead();
                 this.victim = player;
-                this.deadAtNightPlayers[this.deadCount] = player;
+                this.deadAtNightPlayers[0] = player;
                 this.deadCount++;
+                this.deadIDs.push(playerID);
             }
         })  
         this.wolfIDs.forEach(playerID => {
@@ -316,11 +313,11 @@ class Game {
             wolf_socket.emit(Constants.MSG_TYPES.WOLF_END);
         })
         this.check_game_over();
-        this.killResultForWitch();
+        this.kill_result_for_witch();
     }
 
-    killResultForWitch(){
-        const witch_socket = this.sockets[this.witchID];
+    kill_result_for_witch(){
+        var witch_socket = this.sockets[this.witchID];
         var resultToWitch = '';
         if(this.heal == 1){
             resultToWitch += `${this.victim.playerNum}. ${this.victim.username} was killed tonight, do you want to use the heal potion? <br>`;
@@ -338,14 +335,64 @@ class Game {
         witch_socket.emit(Constants.MSG_TYPES.KILL_RESULT, resultToWitch, this.heal, this.poison);
     }
 
-    heal(){
+    witch_heal(){
         this.victim.changeAliveStatus();
         this.victim = null;
         delete this.deadAtNightPlayers[0];
         this.deadCount--;
+        this.heal--;
+        this.check_hunter();
     }
 
-    poison(numInput){
+    witch_poison(numInput){
+        Object.keys(this.players).forEach(playerID => {
+
+            // If the player num is equal to the passed in argument, this player is killed
+            const playerNum = this.players[playerID].getPlayerNum();
+            const player = this.players[playerID];
+            if(playerNum == numInput){
+                player.dead();
+                this.deadAtNightPlayers[1] = player;
+                this.deadCount++;
+                this.deadIDs.push(playerID);
+            }
+        })
+
+        var hunterNum = this.players[this.hunterID].getPlayerNum();
+        if(hunterNum == numInput){
+            this.poisonedHunter = true;
+            // hunter gets notice about being poisoned by witch
+        }
+
+        this.poison--;
+        this.check_hunter();
+    }
+
+    witch_skip(){
+        this.check_hunter();
+    }
+
+    check_hunter(){
+        
+        // var hunterNum = this.players[this.hunterID].getPlayerNum();
+        this.deadIDs.forEach(playerID => {
+            // const playerNum = this.players[playerID].getPlayerNum();
+            if(playerID == this.hunterID){
+                const hunter_socket = this.sockets[this.hunterID];
+                hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, this.poisonedHunter);
+
+            }
+        })
+    
+        
+    }
+
+    hunter_skip(){
+
+    }
+
+    hunter_shoot(numInput){
+        var shootResult = '';
 
         Object.keys(this.players).forEach(playerID => {
 
@@ -354,22 +401,19 @@ class Game {
             const player = this.players[playerID];
             if(playerNum == numInput){
                 player.dead();
-                this.deadAtNightPlayers[this.deadCount] = player;
                 this.deadCount++;
+                this.deadIDs = playerID;
+                shootResult += `${playerNum}. ${player.username} is shot by hunter.`;
             }
         })
 
-        var hunterNum = this.players[this.hunterID].getPlayerNum();
-        if(hunterNum == numInput){
-            this.poisonedHunter = true;
-        }
+        
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.SHOOT_RESULT, shootResult);
+        })
 
     }
-
-    witch_skip(){
-
-    }
-
     // Takes in the socket and whether this player is going to run for mayor
     run_for_mayor(socket, run){
 

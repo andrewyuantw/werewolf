@@ -4,7 +4,7 @@
 import io from 'socket.io-client';
 
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolfMayorRevealButton, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolfMayorRevealButton, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day } from "./index";
 
 const Constants = require('../shared/constants');
 
@@ -28,6 +28,8 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.WOLF_END, wolfNightEnd);
     socket.on(Constants.MSG_TYPES.KILL_RESULT, gotKillResult);
     socket.on(Constants.MSG_TYPES.GAME_OVER, gameover);
+    socket.on(Constants.MSG_TYPES.HUNTER_SHOOT, shoot);
+    socket.on(Constants.MSG_TYPES.SHOOT_RESULT, shootResult);
     socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);
     socket.on(Constants.MSG_TYPES.ELECTION_SPEECH_START, electionSpeechStart)
     socket.on(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON, show_mayor_button);
@@ -86,6 +88,9 @@ export function witchSkip(){
     socket.emit(Constants.MSG_TYPES.WITCH_SKIP);
 }
 
+export function getHunterChoice(numInput){
+    socket.emit(Constants.MSG_TYPES.HUNTER_RESPONSE, numInput);
+}
 
 export function runForMayorOrNot(run){
     socket.emit(Constants.MSG_TYPES.RUN_FOR_MAYOR, run);

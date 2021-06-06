@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, wolfMayorReveal, moveToDay, moveToVote, wolfReveal } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -12,6 +12,8 @@ const chatButton = document.getElementById('chat-button');
 const healButton = document.getElementById('heal-button');
 const poisonButton = document.getElementById('poison-button');
 const skipButton = document.getElementById('skip-button');
+const hunterNoButton = document.getElementById('hunter-no-button');
+const hunterShootButton = document.getElementById('shoot-button');
 const yesMayorButton = document.getElementById('yes-mayor');
 const noMayorButton = document.getElementById('no-mayor');
 const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
@@ -96,28 +98,39 @@ Promise.all([
 
     // When the witch has clicked heal
     healButton.onclick = () => {
-        document.getElementById("witch-menu").classList.toggle("hide");
         heal();
+        document.getElementById("witch-menu").classList.toggle("hide");
     }
 
     // When the witch has clicked poison after inputting a player number 
     poisonButton.onclick = () => {
 
         // We get the number from the input box, and check if it is valid
-        document.getElementById("witch-menu").classList.toggle("hide");
         var numInput = document.getElementById('witch-input').value;
         if (numInput >= 1 && numInput <= 9)
             poison(numInput);
-        
+        document.getElementById("witch-menu").classList.toggle("hide");
     }
 
     // When the witch has clicked skip
     skipButton.onclick = () => {
-
-        document.getElementById("witch-menu").classList.toggle("hide");
         witchSkip();
+        document.getElementById("witch-menu").classList.toggle("hide");
+        
     }
 
+    hunterNoButton.onclick = () => {
+
+        document.getElementById("hunter-menu").classList.toggle("hide");
+        hunterSkip();
+    }
+
+    hunterShootButton.onclick = () => {
+        document.getElementById("hunter-menu").classList.toggle("hide");
+        var numInput = document.getElementById('shoot-input').value;
+        if (numInput >= 1 && numInput <= 9)
+            getHunterChoice(numInput);
+    }
 
     yesMayorButton.onclick = () =>{
         runForMayorOrNot(true);
@@ -269,6 +282,24 @@ export function gameover(winner){
     var display = document.getElementById("game-result");
     display.innerHTML = `${winner} wins.`;
     document.getElementById("game-over").classList.toggle("hide");
+}
+
+export function shoot(poisoned){
+    if(poisoned){
+        document.getElementById("poison-check").innerHTML = `Witch used poison on you. :(`;
+        document.getElementById("hunter-no-button").classList.toggle("hide");
+        document.getElementById("shoot-input").classList.toggle("hide");
+        document.getElementById("shoot-button").classList.toggle("hide");
+    } else {
+        document.getElementById("poison-check").innerHTML = `Witch didn't use poison on you. :)`;
+    }
+    document.getElementById("hunter-menu").classList.toggle("hide");
+}
+
+export function shootResult(result){
+    var display = document.getElementById("shoot-result");
+    display.innerHTML = result;
+    document.getElementById("hunter-shoot").classList.toggle("hide");
 }
 
 export function electionStart(){
