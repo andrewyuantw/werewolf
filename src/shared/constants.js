@@ -80,6 +80,8 @@ module.exports = Object.freeze({
 
         WOLF_VOTE_REVEAL: 'wolf_vote_reveal',
 
+        MAYOR_TIE: 'mayor_tie',
+
         // Server to Client
 
         // JOIN_LOBBY sent whenever someone else has joined the lobby
@@ -154,6 +156,8 @@ module.exports = Object.freeze({
         // sent to wolves
         WOLF_VOTE_REVEAL: 'wolf_vote_reveal',
 
+        REVEAL_MAYOR_TIE_BUTTON: 'reveal_mayor_tie_button',
 
+        MAYOR_TIE: 'mayor_tie'
     },
 });

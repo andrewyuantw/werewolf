@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, moveToMayorTie } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -24,6 +24,7 @@ const wolfMayorRevealButton = document.getElementById('wolf-mayor-reveal-button'
 const moveToDayButton = document.getElementById('move-to-day-button');
 const moveToVoteButton = document.getElementById('move-to-vote-button');
 const wolfRevealButton = document.getElementById('wolf-reveal-button');
+const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button');
 
 
 
@@ -187,6 +188,11 @@ Promise.all([
         wolfRevealButton.classList.toggle("hide");
         wolfReveal();
     }
+
+    moveToMayorTieButton.onclick = () =>{
+        moveToMayorTieButton.classList.toggle("hide");
+        moveToMayorTie();
+    }
 }) 
 
 // Handles server message indicating a new person has joined the lobby
@@ -326,7 +332,10 @@ export function electionStart(){
 }
 
 export function electionSpeechStart(speakingOrder){
-    document.getElementById('election-choice-menu').classList.toggle("hide");
+    if (!document.getElementById("election-choice-menu").classList.contains("hide"))
+        document.getElementById("election-choice-menu").classList.toggle("hide");
+    if (!document.getElementById("mayor-reveal").classList.contains("hide"))
+        document.getElementById("mayor-reveal").classList.toggle("hide");
     document.getElementById("election-speech-menu").classList.toggle("hide");
     document.getElementById("speaking-order").innerHTML = speakingOrder;
 }
@@ -357,11 +366,14 @@ export function update_candidates(candidateList){
     document.getElementById('candidates').innerHTML = candidateList;
 }
 
-export function mayor_reveal(mayor_num, dead_num){
+export function mayor_reveal(mayor_num, dead_num, mayor_vote_history){
 
     // make sure both mayor-voting and mayor-voting-candidate is hidden
     if (!document.getElementById("mayor-voting").classList.contains("hide"))
         document.getElementById("mayor-voting").classList.toggle("hide");
+    if (!document.getElementById("drop-out-button").classList.contains("hide"))
+        document.getElementById("drop-out-button").classList.toggle("hide");
+        
     if (!document.getElementById("mayor-voting-candidate").classList.contains("hide"))
         document.getElementById("mayor-voting-candidate").classList.toggle("hide");
     if (!document.getElementById("election-speech-menu").classList.contains("hide"))
@@ -372,6 +384,9 @@ export function mayor_reveal(mayor_num, dead_num){
     // show mayor-reveal
     document.getElementById('mayor-reveal').classList.toggle("hide");
     document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
+    
+    document.getElementById('mayor-vote-list').innerHTML = mayor_vote_history;
+    
     var words = mayor_num.split(".");
 
     if (dead_num != 0){
@@ -392,11 +407,16 @@ export function start_vote(){
     document.getElementById('vote-menu').classList.toggle("hide");
 }
 
-export function vote_reveal(reveal){
+export function vote_reveal(reveal, vote_history){
     if (!document.getElementById('day-screen').classList.contains("hide"))
         document.getElementById('day-screen').classList.toggle("hide");
+    if (!document.getElementById('vote-menu').classList.contains("hide"))
+        document.getElementById('vote-menu').classList.toggle("hide");
     document.getElementById('vote-reveal').classList.toggle("hide");
     document.getElementById('reveal').innerHTML = reveal + " is now DEAD...";
+
+    document.getElementById('vote-history').innerHTML = vote_history;
+
     var words = reveal.split(".");
 
     // Updates lobby table, makes dead people red
@@ -428,5 +448,10 @@ export function wolf_reveal_button(){
 export function move_to_vote(){
     document.getElementById('day-screen').classList.toggle("hide");
     document.getElementById('vote-menu').classList.toggle("hide");
+}
+
+export function reveal_mayor_tie_button(){
+    
+    document.getElementById('move-to-mayor-tie-button').classList.toggle("hide");
 }
 
