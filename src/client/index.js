@@ -229,7 +229,7 @@ export function startGameForAll(role){
 
 // Handles the server message sent to the seer indicating it is now night
 export function seerNight(){
-
+    document.getElementById("character-reveal").classList.toggle("hide");
     // Shows the seer menu by removing the "hide" attribute
     document.getElementById("seer-menu").classList.toggle("hide");
 }
@@ -243,8 +243,12 @@ export function gotSeerResult(bad){
     document.getElementById("seer-button").classList.toggle("hide");
 }
 
-export function wolfNight(){
+export function goToNight(){
+    document.getElementById("character-reveal").classList.toggle("hide");
+    document.getElementById("night-menu").classList.toggle("hide");
+}
 
+export function wolfNight(){
     // shows the wolf menu
     document.getElementById("wolf-menu").classList.toggle("hide");
 }
@@ -285,6 +289,7 @@ export function gameover(winner){
 }
 
 export function shoot(poisoned){
+    document.getElementById("hunter-menu").classList.toggle("hide");
     if(poisoned){
         document.getElementById("poison-check").innerHTML = `Witch used poison on you. :(`;
         document.getElementById("hunter-no-button").classList.toggle("hide");
@@ -293,7 +298,7 @@ export function shoot(poisoned){
     } else {
         document.getElementById("poison-check").innerHTML = `Witch didn't use poison on you. :)`;
     }
-    document.getElementById("hunter-menu").classList.toggle("hide");
+    
 }
 
 export function shootResult(result){
@@ -311,6 +316,12 @@ export function electionStart(){
     welcomeMenu.classList.toggle("hide");
     */
 
+    if (!document.getElementById("night-menu").classList.contains("hide"))
+        document.getElementById("night-menu").classList.toggle("hide");
+    if (!document.getElementById("seer-menu").classList.contains("hide"))
+        document.getElementById("seer-menu").classList.toggle("hide");
+    if (!document.getElementById("character-reveal").classList.contains("hide"))
+        document.getElementById("character-reveal").classList.toggle("hide");
     document.getElementById('election-choice-menu').classList.toggle("hide");
 }
 

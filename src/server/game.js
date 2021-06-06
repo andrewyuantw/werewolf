@@ -70,6 +70,10 @@ class Game {
         // Hunter is poisoned or not
         this.poisonedHunter = false;
 
+        this.witchResponse = false;
+
+        this.seerResponse = false;
+
         // Stores game over status
         //this.gameover = false;
 
@@ -96,6 +100,8 @@ class Game {
 
         // Counts the amount of alive players in the game
         this.alivePlayers = 0;
+
+        this.mayorID = null;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -219,22 +225,23 @@ class Game {
             // hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, false);
 
 
-            // For the seer, we send SEER_NIGHT
-            const seer_socket = this.sockets[this.seerID];
-            seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
-
-            // For werewolves, we send WOLF_NIGHT
-            this.wolfIDs.forEach(playerID => {
-                const wolf_socket = this.sockets[playerID];
-                wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
-            })
-
+            
             
 
             // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+
+                if (playerID == this.seerID){
+                    const seer_socket = this.sockets[this.seerID];
+                    seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
+                } else if (this.wolfIDs.includes(playerID)){
+                    const wolf_socket = this.sockets[playerID];
+                    wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
+                } else {
+                    const each_socket = this.sockets[playerID];
+                    each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+                }
+                
             })
 
 
@@ -265,6 +272,9 @@ class Game {
         // Send the result back to the seer with the result as an argument
         const seer_socket = this.sockets[this.seerID];
         seer_socket.emit(Constants.MSG_TYPES.SEER_RESULT, bad);
+
+        this.seerResponse = true;
+        this.checkNightResponses();
     }
 
     display_message(socket, message){
@@ -376,16 +386,15 @@ class Game {
     }
 
     check_hunter(){
-        
-        // var hunterNum = this.players[this.hunterID].getPlayerNum();
-        this.deadIDs.forEach(playerID => {
-            // const playerNum = this.players[playerID].getPlayerNum();
-            if(playerID == this.hunterID){
-                const hunter_socket = this.sockets[this.hunterID];
-                hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, this.poisonedHunter);
 
-            }
-        })
+        if (this.deadIDs.includes(this.hunterID)){
+            const hunter_socket = this.sockets[this.hunterID];
+            hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, this.poisonedHunter);
+            
+        } else {
+            this.witchResponse = true;
+            this.checkNightResponses();
+        }
     
         
     }
@@ -417,6 +426,18 @@ class Game {
         })
 
     }
+
+    checkNightResponses(){
+        if (this.witchResponse && this.seerResponse){
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
+            })
+        }
+        this.witchResponse = false;
+        this.seerResponse = true;
+    }
+
     // Takes in the socket and whether this player is going to run for mayor
     run_for_mayor(socket, run){
 
@@ -584,7 +605,8 @@ class Game {
             // Find the player username associated with the number
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == mayor){
-                    returnString = `${mayor}. ${this.players[playerID].username}`
+                    returnString = `${mayor}. ${this.players[playerID].username}`;
+                    this.mayorID = playerID;
                 }
             })
 
@@ -606,8 +628,14 @@ class Game {
             each_socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
         })
 
-        const host_socket = this.sockets[this.hostID];
-        host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+        if (this.mayorID == null){
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+        } else {
+            const mayor_socket = this.sockets[this.mayorID];
+            mayor_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+        }
+        
 
         this.wolfIDs.forEach(playerID => {
             const wolf_socket = this.sockets[playerID];
