@@ -715,12 +715,18 @@ class Game {
 
             var votingHistory = "";
 
+            var tie = false;
+
             Object.keys(this.vote).forEach(playerNum => {
+
                 if (playerNum != 0){
                     var length = this.vote[playerNum].length;
                     if (length > maxLength){
                         maxLength = length;
                         dead = playerNum;
+                        tie = false;
+                    } else if (length == maxLength){
+                        tie = true;
                     }
                 }
 
@@ -737,15 +743,33 @@ class Game {
             })
 
             var returnString = "No one (b/c most people voted 0)";
+
+
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == dead){
                     returnString = `${dead}. ${this.players[playerID].username}`
                 }
             })
+
+
+            if (tie){
+                returnString = "No one (b/c its a tie) ";
+                this.vote = [];
+            }
+
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, returnString, votingHistory);
             })
+
+            const host_socket = (this.mayorID == null) ? this.sockets[this.hostID] : this.sockets[this.mayorID]
+
+            
+            
+            if (tie){
+                host_socket.emit(Constants.MSG_TYPES.VOTE_TIE);
+            }
+
         }
     }
 
@@ -762,66 +786,73 @@ class Game {
 
     mayorTie(){
         var array = [];
-            // Randomly assign speaking order
-            this.mayorNominees.forEach( playerID => {
-                array.push(this.players[playerID].playerNum);
-            })
-            array.sort();
+        // Randomly assign speaking order
+        this.mayorNominees.forEach( playerID => {
+            array.push(this.players[playerID].playerNum);
+        })
+        array.sort();
 
-            var rand = Math.floor(Math.random() * array.length);
-            var direction = Math.round(Math.random());
-            var speakingOrder = "";
+        var rand = Math.floor(Math.random() * array.length);
+        var direction = Math.round(Math.random());
+        var speakingOrder = "";
 
-            // Randomly assign speaking direction (1 -> 9 or 9 -> 1)
-            if (direction == 0){
-                for (var i = 0; i < array.length; i ++){
-                    var index = (rand + i) % array.length; 
-                    var playerNum = array[index]
-                    speakingOrder += playerNum.toString() + " ";
-                }
-            } else {
-                for (var i = array.length; i > 0; i --){
-                    var index = (rand + i) % array.length; 
-                    var playerNum = array[index]
-                    speakingOrder += playerNum.toString() + " ";
-                }
+        // Randomly assign speaking direction (1 -> 9 or 9 -> 1)
+        if (direction == 0){
+            for (var i = 0; i < array.length; i ++){
+                var index = (rand + i) % array.length; 
+                var playerNum = array[index]
+                speakingOrder += playerNum.toString() + " ";
             }
-            
-            // Tell everyone election speeches have started
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.ELECTION_SPEECH_START, speakingOrder);
-            })
+        } else {
+            for (var i = array.length; i > 0; i --){
+                var index = (rand + i) % array.length; 
+                var playerNum = array[index]
+                speakingOrder += playerNum.toString() + " ";
+            }
+        }
+        
+        // Tell everyone election speeches have started
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.ELECTION_SPEECH_START, speakingOrder);
+        })
 
-            // For the host, they get an extra "MOVE TO VOTING" button
-            const host_socket = this.sockets[this.hostID];
-            host_socket.emit(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON);
+        // For the host, they get an extra "MOVE TO VOTING" button
+        const host_socket = this.sockets[this.hostID];
+        host_socket.emit(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON);
 
-            // For mayor nominees, they have an extra "DROP OUT ELECTION" button
-            this.mayorNominees.forEach(playerID => {
-                const nominee_socket = this.sockets[playerID];
-                nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
-            })
+        // For mayor nominees, they have an extra "DROP OUT ELECTION" button
+        this.mayorNominees.forEach(playerID => {
+            const nominee_socket = this.sockets[playerID];
+            nominee_socket.emit(Constants.MSG_TYPES.SHOW_DROP_OUT_BUTTON);
+        })
 
-            this.wolfIDs.forEach(playerID => {
-                const wolf_socket = this.sockets[playerID];
-                wolf_socket.emit(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON);
-            })
+        this.wolfIDs.forEach(playerID => {
+            const wolf_socket = this.sockets[playerID];
+            wolf_socket.emit(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON);
+        })
 
-            // Show current nominee list 
-            var nomineeList = "";
+        // Show current nominee list 
+        var nomineeList = "";
 
-            array.forEach(playerNum => {
-                Object.keys(this.players).forEach(playerID => {
-                    if (this.players[playerID].getPlayerNum() == playerNum){
-                        nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
-                    }
-                })
+        array.forEach(playerNum => {
+            Object.keys(this.players).forEach(playerID => {
+                if (this.players[playerID].getPlayerNum() == playerNum){
+                    nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                }
             })
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
-            })
+        })
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+        })
+    }
+
+    voteTie(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+        })
     }
 }
 

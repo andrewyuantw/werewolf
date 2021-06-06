@@ -158,6 +158,10 @@ module.exports = Object.freeze({
 
         REVEAL_MAYOR_TIE_BUTTON: 'reveal_mayor_tie_button',
 
-        MAYOR_TIE: 'mayor_tie'
+        MAYOR_TIE: 'mayor_tie',
+
+        REVEAL_VOTE_TIE_BUTTON: 'reveal_vote_tie_button',
+
+        VOTE_TIE: 'vote-tie'
     },
 });

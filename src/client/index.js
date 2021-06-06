@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, moveToMayorTie } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, moveToMayorTie, moveToTie } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -25,7 +25,7 @@ const moveToDayButton = document.getElementById('move-to-day-button');
 const moveToVoteButton = document.getElementById('move-to-vote-button');
 const wolfRevealButton = document.getElementById('wolf-reveal-button');
 const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button');
-
+const moveToTieButton = document.getElementById('move-to-tie-button');
 
 
 
@@ -192,6 +192,11 @@ Promise.all([
     moveToMayorTieButton.onclick = () =>{
         moveToMayorTieButton.classList.toggle("hide");
         moveToMayorTie();
+    }
+
+    moveToTieButton.onclick = () =>{
+        moveToTieButton.classList.toggle("hide");
+        moveToTie();
     }
 }) 
 
@@ -455,3 +460,6 @@ export function reveal_mayor_tie_button(){
     document.getElementById('move-to-mayor-tie-button').classList.toggle("hide");
 }
 
+export function reveal_vote_tie_button(){
+    document.getElementById('reveal_vote_tie_button').classList.toggle("hide");
+}
