@@ -427,6 +427,32 @@ class Game {
 
     }
 
+    check_mayor(){
+
+        if (this.deadIDs == this.mayorID){
+            const mayor_socket = this.sockets[this.mayorID];
+            mayor_socket.emit(Constants.MSG_TYPES.MAYOR_SUCCESSOR);
+            
+        }
+    
+        
+    }
+
+    new_mayor(numInput){
+        var result = '';
+        if (numInput == 0){
+            this.mayorId == null;
+            result += 'The mayor destroyed the badge, there will be no mayor this game.';
+        } else {
+            this.mayorID == numInput;
+            result += `${this.players[this.mayorID].playerNum}. ${this.players[this.mayorID.id].username} is the new mayor.`;
+        }
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.NEW_MAYOR, result);
+        })
+    }
+
     checkNightResponses(){
         if (this.witchResponse && this.seerResponse){
             Object.keys(this.sockets).forEach(playerID => {

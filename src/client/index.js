@@ -14,6 +14,8 @@ const poisonButton = document.getElementById('poison-button');
 const skipButton = document.getElementById('skip-button');
 const hunterNoButton = document.getElementById('hunter-no-button');
 const hunterShootButton = document.getElementById('shoot-button');
+const mayorDestroyButton = document.getElementById('destroy-button');
+const mayorSuccessorButton = document.getElementById('successor-button');
 const yesMayorButton = document.getElementById('yes-mayor');
 const noMayorButton = document.getElementById('no-mayor');
 const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
@@ -121,16 +123,31 @@ Promise.all([
     }
 
     hunterNoButton.onclick = () => {
-
-        document.getElementById("hunter-menu").classList.toggle("hide");
         hunterSkip();
+        document.getElementById("hunter-menu").classList.toggle("hide");
+        
     }
 
     hunterShootButton.onclick = () => {
-        document.getElementById("hunter-menu").classList.toggle("hide");
+        
         var numInput = document.getElementById('shoot-input').value;
         if (numInput >= 1 && numInput <= 9)
             getHunterChoice(numInput);
+        document.getElementById("hunter-menu").classList.toggle("hide");
+    }
+
+    mayorDestroyButton.onclick = () => {
+        getMayorChoice(0);
+        document.getElementById("mayor-successor-menu").classList.toggle("hide");
+        
+    }
+
+    mayorSuccessorButton.onclick = () => {
+        var numInput = document.getElementById('successor-input').value;
+        if (numInput >= 1 && numInput <= 9)
+            getMayorChoice(numInput);
+        document.getElementById("mayor-successor-menu").classList.toggle("hide");
+        
     }
 
     yesMayorButton.onclick = () =>{
@@ -318,6 +335,15 @@ export function shootResult(result){
     document.getElementById("hunter-shoot").classList.toggle("hide");
 }
 
+export function mayorMenu(){
+    document.getElementById("mayor-successor-menu").classList.toggle("hide");
+}
+
+export function mayorResult(result){
+    var display = document.getElementById("mayor-successor-result");
+    display.innerHTML = result;
+    document.getElementById("mayor-successor").classList.toggle("hide");
+}
 export function electionStart(){
 
     /* COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING

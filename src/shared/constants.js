@@ -48,6 +48,9 @@ module.exports = Object.freeze({
         // SHOOT_RESULT sent to everyone when hunter shoots someone
         SHOOT_RESULT: 'shoot_result',
 
+        // MAYOR_RESPONSE sent whenever a mayor has submitted the player number
+        MAYOR_RESPONSE: 'mayor_response',
+        
         // MAYOR_SUCCESSOR sent to mayor when mayor is dead
         MAYOR_SUCCESSOR: 'mayor_successor',
 
