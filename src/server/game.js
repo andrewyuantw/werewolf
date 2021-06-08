@@ -414,7 +414,7 @@ class Game {
             if(playerNum == numInput){
                 player.dead();
                 this.deadCount++;
-                this.deadIDs = playerID;
+                this.deadIDs.push(playerID);
                 shootResult += `${playerNum}. ${player.username} is shot by hunter.`;
             }
         })
