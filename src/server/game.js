@@ -70,6 +70,9 @@ class Game {
         // Hunter is poisoned or not
         this.poisonedHunter = false;
 
+        // Hunter shot or not
+        this.hunterShotOrNot = false;
+
         this.witchResponse = false;
 
         this.seerResponse = false;
@@ -387,7 +390,7 @@ class Game {
 
     check_hunter(){
 
-        if (this.deadIDs.includes(this.hunterID)){
+        if (!this.hunterShotOrNot && this.deadIDs.includes(this.hunterID)){
             const hunter_socket = this.sockets[this.hunterID];
             hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, this.poisonedHunter);
             
@@ -418,7 +421,7 @@ class Game {
                 shootResult += `${playerNum}. ${player.username} is shot by hunter.`;
             }
         })
-
+        this.hunterShotOrNot = true;
         
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
