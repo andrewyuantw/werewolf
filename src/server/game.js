@@ -1,9 +1,10 @@
 const Player = require('./player');
 const Constants = require('../shared/constants');
 const socket = require('socket.io-client/lib/socket');
+const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 3;
+const PLAYERNUM = 9;
 
 class Game {
 
@@ -105,6 +106,10 @@ class Game {
         this.alivePlayers = 0;
 
         this.mayorID = null;
+
+        this.firstNight = true;
+
+        this.firstMayorTie = true;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -163,8 +168,8 @@ class Game {
         // Sends a server message to everyone with their role in the form of a string
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            //each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
             //each_socket.emit(Constants.MSG_TYPES.START_VOTE);
         })
     }
@@ -227,11 +232,7 @@ class Game {
             // const hunter_socket = this.sockets[this.hunterID];
             // hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, false);
 
-
             
-            
-
-            // TO DO: Delete this loop, and replace with the appropriate messages
             Object.keys(this.sockets).forEach(playerID => {
 
                 if (playerID == this.seerID){
@@ -246,7 +247,7 @@ class Game {
                 }
                 
             })
-
+            
 
             /*
             Object.keys(this.sockets).forEach(playerID => {
@@ -254,6 +255,7 @@ class Game {
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
             })
             */
+            
         }
     }
 
@@ -464,7 +466,7 @@ class Game {
             })
         }
         this.witchResponse = false;
-        this.seerResponse = true;
+        this.seerResponse = false;
     }
 
     // Takes in the socket and whether this player is going to run for mayor
@@ -530,17 +532,21 @@ class Game {
 
             // Show current nominee list 
             var nomineeList = "";
+            var activeNomineeListToSend = [];
 
             array.forEach(playerNum => {
                 Object.keys(this.players).forEach(playerID => {
                     if (this.players[playerID].getPlayerNum() == playerNum){
                         nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                        activeNomineeListToSend.push(this.players[playerID].playerNum);
                     }
                 })
             })
+
+            
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+                each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList, activeNomineeListToSend);
             })
         }
     }
@@ -581,10 +587,12 @@ class Game {
         array.sort();
 
 
+        var activeNomineeListToSend = [];
         array.forEach(playerNum => {
             Object.keys(this.players).forEach(playerID => {
                 if (this.players[playerID].getPlayerNum() == playerNum){
                     nomineeList += `${this.players[playerID].playerNum}. ${this.players[playerID].username}<br>` ;
+                    activeNomineeListToSend.push(this.players[playerID].playerNum);
                 }
             })
         })
@@ -592,7 +600,7 @@ class Game {
         // Send nomineeList to everyone
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList);
+            each_socket.emit(Constants.MSG_TYPES.UPDATE_CANDIDATES, nomineeList, activeNomineeListToSend);
         })
     }
 
@@ -655,7 +663,7 @@ class Game {
                 }
             })
 
-            if (tie){
+            if (tie && this.firstMayorTie){
                 returnString = "No one (b/c its a tie) ";
                 this.mayorNominees = [];
                 this.activeNominees = [];
@@ -673,6 +681,11 @@ class Game {
 
                 });
                 this.mayorVote = {};
+                this.mayorVoteCount = 0;
+                
+            } else if (tie){
+                returnString = "No one (b/c its a tie) ";
+                
             }
 
             // Send mayor reveal info to everyone
@@ -683,8 +696,9 @@ class Game {
 
             // Host gets additional MOVE TO DAY button
             const host_socket = this.sockets[this.hostID];
-            if (tie){
+            if (tie && this.firstMayorTie){
                 host_socket.emit(Constants.MSG_TYPES.REVEAL_MAYOR_TIE_BUTTON);
+                this.firstMayorTie = false;
             } else {
                 host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
             }
@@ -808,12 +822,27 @@ class Game {
             each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! <br>No one (b/c wolf reveal)`, this.players[socket.id].playerNum);
         })
 
+        /*
+
+
+
+        REMEMBER TO CHANGE HERE
+        change to send to death reveal before going straight to night
+        instead of going to day
+
+
+
+
+
+        */
+
         // Host gets additional MOVE TO DAY button
         const host_socket = this.sockets[this.hostID];
         host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
     }
 
     mayorTie(){
+        
         var array = [];
         // Randomly assign speaking order
         this.mayorNominees.forEach( playerID => {

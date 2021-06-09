@@ -30,6 +30,12 @@ const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button')
 const moveToTieButton = document.getElementById('move-to-tie-button');
 
 
+// Stores the player number (not IDs) of playeres alive (from player perspective)
+var alivePlayers = [];
+
+
+// Stores the player number (not IDs) of eligible nominees that you can still vote for
+var activeNominees = []
 
 
 
@@ -77,7 +83,7 @@ Promise.all([
         // needs to handle case where wolves kill someone before the seer makes decision
         // in this case, the person cannot be shown to be dead yet
         var numInput = document.getElementById('seer-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (alivePlayers.includes(numInput))
             getSeerChoice(numInput);
     }
 
@@ -87,7 +93,7 @@ Promise.all([
         // We get the number from the input box, and check if it is valid
        
         var numInput = document.getElementById('wolf-input').value;
-        if (numInput >= 0 && numInput <= 9)
+        if (alivePlayers.includes(numInput) || numInput == 0)
             getKillChoice(numInput);
     }
 
@@ -110,9 +116,10 @@ Promise.all([
 
         // We get the number from the input box, and check if it is valid
         var numInput = document.getElementById('witch-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (alivePlayers.includes(numInput)){
             poison(numInput);
-        document.getElementById("witch-menu").classList.toggle("hide");
+            document.getElementById("witch-menu").classList.toggle("hide");
+        }
     }
 
     // When the witch has clicked skip
@@ -131,7 +138,7 @@ Promise.all([
     hunterShootButton.onclick = () => {
         
         var numInput = document.getElementById('shoot-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (alivePlayers.includes(numInput))
             getHunterChoice(numInput);
         document.getElementById("hunter-menu").classList.toggle("hide");
     }
@@ -144,7 +151,7 @@ Promise.all([
 
     mayorSuccessorButton.onclick = () => {
         var numInput = document.getElementById('successor-input').value;
-        if (numInput >= 1 && numInput <= 9)
+        if (alivePlayers.includes(numInput))
             getMayorChoice(numInput);
         document.getElementById("mayor-successor-menu").classList.toggle("hide");
         
@@ -173,17 +180,28 @@ Promise.all([
     }
 
     mayorVoteButton.onclick = () =>{
-        mayorVoteButton.classList.toggle("hide");
+        console.log("clicked");
+        activeNominees.forEach(a =>{
+            console.log(a);
+            console.log(typeof(a));
+        })
+        
         var numInput = document.getElementById('mayor-input').value;
-        if (numInput >= 0 && numInput <= 9)
+        console.log(typeof(numInput));
+        if (activeNominees.includes(parseInt(numInput)) || numInput == "0"){
+            console.log("sent");
             mayorVote(numInput);
+            mayorVoteButton.classList.toggle("hide");
+        }
     }
 
     voteButton.onclick = () =>{
-        voteButton.classList.toggle("hide");
+        
         var numInput = document.getElementById('vote-input').value;
-        if (numInput >= 0 && numInput <= 9)
+        if (alivePlayers.includes(parseInt(numInput)) || numInput == "0"){
             vote(numInput);
+            voteButton.classList.toggle("hide");
+        }
     }
 
     wolfMayorRevealButton.onclick = () => {
@@ -222,6 +240,9 @@ export function changeDisplay(username, num){
 
     // Changes the "lobby" div display
     document.getElementById(num.toString()).innerHTML = `<td>${num}.</td><td>${username}</td>`;
+
+    // Pushes playerNum to alivePlayers
+    alivePlayers.push(num);
 }
 
 // Handles the server message sent to the host indicating there are enough players
@@ -380,6 +401,8 @@ export function show_mayor_menu(){
     document.getElementById("mayor-voting").classList.toggle("hide");
     if (!document.getElementById("wolf-mayor-reveal-button").classList.contains("hide"))
         document.getElementById("wolf-mayor-reveal-button").classList.toggle("hide");
+    if (document.getElementById("mayor-vote-button").classList.contains("hide"))
+        document.getElementById("mayor-vote-button").classList.toggle("hide");
 }
 
 export function show_mayor_menu_candidate(){
@@ -393,8 +416,12 @@ export function show_drop_out_button(){
     document.getElementById('drop-out-button').classList.toggle("hide");
 }
 
-export function update_candidates(candidateList){
-    document.getElementById('candidates').innerHTML = candidateList;
+export function update_candidates(candidateString, candidateListSent){
+    document.getElementById('candidates').innerHTML = candidateString;
+    activeNominees = [...candidateListSent];
+    activeNominees.forEach(element =>{
+        console.log(element);
+    })
 }
 
 export function mayor_reveal(mayor_num, dead_num, mayor_vote_history){
