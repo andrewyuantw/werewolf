@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 9;
+const PLAYERNUM = 3;
 
 class Game {
 
@@ -110,6 +110,10 @@ class Game {
         this.firstNight = true;
 
         this.firstMayorTie = true;
+
+        this.firstVoteTie = true;
+
+        this.voteTied = [];
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -168,9 +172,9 @@ class Game {
         // Sends a server message to everyone with their role in the form of a string
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
-            //each_socket.emit(Constants.MSG_TYPES.START_VOTE);
+            //each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
+            each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
         })
     }
 
@@ -764,12 +768,17 @@ class Game {
 
                 if (playerNum != 0){
                     var length = this.vote[playerNum].length;
+                    if (this.vote[playerNum].includes(this.mayorID)){
+                        length += 0.5;
+                    }
                     if (length > maxLength){
                         maxLength = length;
                         dead = playerNum;
                         tie = false;
+                        this.voteTied = [playerNum];
                     } else if (length == maxLength){
                         tie = true;
+                        this.voteTied.push(playerNum);
                     }
                 }
 
@@ -795,9 +804,11 @@ class Game {
             })
 
 
-            if (tie){
+            if (tie && this.firstVoteTie){
                 returnString = "No one (b/c its a tie) ";
                 this.vote = [];
+            } else if (tie){
+                returnString = "no one (b/c its a tie)";
             }
 
             Object.keys(this.sockets).forEach(playerID => {
@@ -806,12 +817,15 @@ class Game {
             })
 
             const host_socket = (this.mayorID == null) ? this.sockets[this.hostID] : this.sockets[this.mayorID]
-
             
-            
-            if (tie){
-                host_socket.emit(Constants.MSG_TYPES.VOTE_TIE);
+            if (tie && this.firstVoteTie){
+                host_socket.emit(Constants.MSG_TYPES.REVEAL_VOTE_TIE_BUTTON);
+                this.firstVoteTie = false;
+            } else {
+                // send host MOVE TO NIGHT button
             }
+
+            this.voteCount = 0;
 
         }
     }
@@ -909,7 +923,7 @@ class Game {
     voteTie(){
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING, this.voteTied);
         })
     }
 }

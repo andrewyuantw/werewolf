@@ -30,13 +30,14 @@ const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button')
 const moveToTieButton = document.getElementById('move-to-tie-button');
 
 
-// Stores the player number (not IDs) of playeres alive (from player perspective)
+// Stores the player number (not IDs) of players alive (from player perspective)
 var alivePlayers = [];
 
 
 // Stores the player number (not IDs) of eligible nominees that you can still vote for
 var activeNominees = []
 
+var voteCheck = [];
 
 
 // Handle HTML button onclick functions
@@ -187,7 +188,6 @@ Promise.all([
         })
         
         var numInput = document.getElementById('mayor-input').value;
-        console.log(typeof(numInput));
         if (activeNominees.includes(parseInt(numInput)) || numInput == "0"){
             console.log("sent");
             mayorVote(numInput);
@@ -196,9 +196,13 @@ Promise.all([
     }
 
     voteButton.onclick = () =>{
-        
+        console.log("clicked");
+        voteCheck.forEach(a =>{
+            console.log(a);
+            console.log(typeof(a));
+        })
         var numInput = document.getElementById('vote-input').value;
-        if (alivePlayers.includes(parseInt(numInput)) || numInput == "0"){
+        if (voteCheck.includes(numInput) || numInput == "0"){
             vote(numInput);
             voteButton.classList.toggle("hide");
         }
@@ -243,6 +247,7 @@ export function changeDisplay(username, num){
 
     // Pushes playerNum to alivePlayers
     alivePlayers.push(num);
+    console.log(num);
 }
 
 // Handles the server message sent to the host indicating there are enough players
@@ -461,10 +466,6 @@ export function your_number(num){
     document.getElementById(num.toString()).classList.toggle("me");
 }
 
-export function start_vote(){
-    document.getElementById('vote-menu').classList.toggle("hide");
-}
-
 export function vote_reveal(reveal, vote_history){
     if (!document.getElementById('day-screen').classList.contains("hide"))
         document.getElementById('day-screen').classList.toggle("hide");
@@ -478,8 +479,16 @@ export function vote_reveal(reveal, vote_history){
     var words = reveal.split(".");
 
     // Updates lobby table, makes dead people red
-    if (parseInt(words) != 0)
+    if (parseInt(words) != 0){
         document.getElementById(words[0].toString()).classList.toggle("dead");
+
+        // Removes the dead player from index.js's aliveplayer array
+        var index = alivePlayers.indexOf(words[0].toString());
+        if (index !== -1){
+            alivePlayers.splice(index, 1);
+        }
+    }
+    
 }
 
 export function wolf_mayor_reveal_button(){
@@ -503,9 +512,20 @@ export function wolf_reveal_button(){
     document.getElementById('wolf-reveal-button').classList.toggle("hide");
 }
 
-export function move_to_vote(){
+export function move_to_vote(tieList){
+    if (!document.getElementById('vote-reveal').classList.contains("hide"))
+        document.getElementById('vote-reveal').classList.toggle("hide");
     document.getElementById('day-screen').classList.toggle("hide");
     document.getElementById('vote-menu').classList.toggle("hide");
+    if (document.getElementById('vote-button').classList.contains("hide"))
+        document.getElementById('vote-button').classList.toggle("hide");
+    if (tieList == null){
+        console.log("tie list null");
+        voteCheck = [...alivePlayers];
+    } else {
+        console.log("tie list not null");
+        voteCheck = [...tieList];
+    }
 }
 
 export function reveal_mayor_tie_button(){
@@ -514,5 +534,5 @@ export function reveal_mayor_tie_button(){
 }
 
 export function reveal_vote_tie_button(){
-    document.getElementById('reveal_vote_tie_button').classList.toggle("hide");
+    document.getElementById('move-to-tie-button').classList.toggle("hide");
 }

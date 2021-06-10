@@ -42,7 +42,6 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.UPDATE_CANDIDATES, update_candidates);
     socket.on(Constants.MSG_TYPES.MAYOR_REVEAL, mayor_reveal);
     socket.on(Constants.MSG_TYPES.YOUR_NUMBER, your_number);
-    socket.on(Constants.MSG_TYPES.START_VOTE, start_vote);
     socket.on(Constants.MSG_TYPES.VOTE_REVEAL, vote_reveal);
     socket.on(Constants.MSG_TYPES.WOLF_MAYOR_BUTTON, wolf_mayor_reveal_button);
     socket.on(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON, reveal_move_to_day_button);
