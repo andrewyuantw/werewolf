@@ -10,6 +10,6 @@
 ----------------------------------------------------
 
 * Handle case where players disconnect from server
-* Add button for recap of voting history 
+* Add button for recap of who ran in mayor election and final nominees
 * Deploy website
  
