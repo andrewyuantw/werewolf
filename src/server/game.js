@@ -705,6 +705,7 @@ class Game {
                 this.firstMayorTie = false;
             } else {
                 host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_DAY_BUTTON);
+                
             }
         }
     }
@@ -823,6 +824,7 @@ class Game {
                 this.firstVoteTie = false;
             } else {
                 // send host MOVE TO NIGHT button
+                this.firstVoteTie = true;
             }
 
             this.voteCount = 0;
