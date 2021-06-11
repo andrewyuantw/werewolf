@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 3;
+const PLAYERNUM = 5;
 
 class Game {
 

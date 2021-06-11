@@ -28,6 +28,7 @@ const moveToVoteButton = document.getElementById('move-to-vote-button');
 const wolfRevealButton = document.getElementById('wolf-reveal-button');
 const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button');
 const moveToTieButton = document.getElementById('move-to-tie-button');
+const historyButton = document.getElementById('history');
 
 
 // Stores the player number (not IDs) of players alive (from player perspective)
@@ -236,6 +237,10 @@ Promise.all([
     moveToTieButton.onclick = () =>{
         moveToTieButton.classList.toggle("hide");
         moveToTie();
+    }
+
+    historyButton.onclick = () =>{
+        document.getElementById("history-display").classList.toggle("hide");
     }
 }) 
 
@@ -447,8 +452,9 @@ export function mayor_reveal(mayor_num, dead_num, mayor_vote_history){
     // show mayor-reveal
     document.getElementById('mayor-reveal').classList.toggle("hide");
     document.getElementById('mayor-name').innerHTML = mayor_num + " is now your mayor!";
-    
+    document.getElementById('history-display').innerHTML += mayor_num + " is now your mayor!" + "<br>";
     document.getElementById('mayor-vote-list').innerHTML = mayor_vote_history;
+    document.getElementById('history-display').innerHTML += mayor_vote_history + "<br>";
     
     var words = mayor_num.split(".");
 
@@ -473,8 +479,10 @@ export function vote_reveal(reveal, vote_history){
         document.getElementById('vote-menu').classList.toggle("hide");
     document.getElementById('vote-reveal').classList.toggle("hide");
     document.getElementById('reveal').innerHTML = reveal + " is now DEAD...";
-
+    document.getElementById('history-display').innerHTML += reveal + " is now DEAD..." + "<br>";
     document.getElementById('vote-history').innerHTML = vote_history;
+    document.getElementById('history-display').innerHTML += vote_history + "<br>";
+    
 
     var words = reveal.split(".");
 
