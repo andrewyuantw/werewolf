@@ -7,9 +7,11 @@ body {
     "Helvetica Neue",
     Helvetica, "Muli", 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
     background-color: #242424;
-    visibility: visible;
-    animation: fadeIn 3s;
-    -webkit-animation: fadeIn 3s;
+    visibility: hidden;
+}
+
+body a{
+    visibility: hidden;
 }
 
 @keyframes fadeIn {
@@ -22,9 +24,17 @@ body {
     100% {opacity:1;}
   }
 
-/* toggle the "hide" class to hide any elements */
-.hide{
-    visibility: hidden;
+/* toggle the "show" class to hide any elements */
+.show{
+    visibility: visible;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+}
+
+button.show{
+    visibility: visible;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
 }
 
 h1{
@@ -36,7 +46,7 @@ h2{
 }
 
 /* Styling for the welcome page where you input display name */
-div:not(#lobby, #button-container) {
+div:not(#lobby, #button-container, #your-role) {
     /* Use the next four lines to move any div into the middle */
     position: fixed;
     top: 50%;
@@ -71,6 +81,17 @@ div#history-display{
     position: absolute;
     z-index: 999;
     overflow-y: auto;
+}
+
+div#your-role{
+    float: top;
+    color: white;
+    font-size: xx-large;
+    position: fixed;
+    left: 50%;
+    padding: 10px;
+    transform: translate(-50%, 0%);
+    z-index: 999;
 }
 
 /* Styling for the list of players to the top right */
@@ -137,6 +158,7 @@ button {
     border-radius: 24px;
     cursor: pointer;
     font-size: 20px;
+    visibility: hidden;
 }
 
 button:hover {
@@ -202,7 +224,7 @@ button#wolf-reveal-button{
 tr.me {
     color:#1b01ff;
 }
-A
+
 tr.mayor {
     color: gold;
 }

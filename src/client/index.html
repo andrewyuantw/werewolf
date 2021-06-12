@@ -7,16 +7,17 @@
 
     <body>
         
-        <div id="play-menu">
+        <div id="play-menu" class="show">
             <h1>Werewolf.</h1>
             <h3>Enter your desired display name...</h3>
             <input type="text" id="username-input" placeholder="Username" />
-            <button id="play-button">Play</button>
+            <button id="play-button" class="show">Play</button>
             <br>
-            <button id="start-game-button" class= "hide">Start</button>
+            <!-- check back later -->
+            <button id="start-game-button">Start</button>
         </div>
 
-        <div id= "lobby">
+        <div id= "lobby" class="show">
             Players
             <table>
                 <tr >
@@ -64,41 +65,39 @@
             </table>
         </div>
         
-        <div id="character-reveal" class="hide"> 
+        <div id="character-reveal"> 
             <h1>The game has started</h1>
             <h2 id="role"></h2>
             <button id="ready">Ready</button>
         </div>
 
-        <div id="seer-menu" class="hide">
+        <div id="seer-menu">
             <h2>Seer, who do you want to look at?</h2>
             <input type="number" id="seer-input" placeholder="enter num">
             <button id="seer-button" >Confirm</button>
             <h2 id="seer-result"></h2>
         </div>
 
-        <div id="button-container">
-            <button id="history">View History</button>
+        <div id="button-container" class="show">
+            <button id="history" class="show">View History</button>
             <br>
             <button id="see-your-role">See Your Role</button>
             <br>
-            <button id="wolf-mayor-reveal-button" class="hide" class="wolf-reveal">Reveal yourself</button>
-            <br>
-            <button id="wolf-reveal-button" class="hide" class="wolf-reveal"> Wolf reveal</button>
+            <button id="wolf-reveal-button" class="wolf-reveal">Reveal yourself</button>
         </div>
        
-
+        <div id="your-role">Your Role: </div>
         
-        <div id="history-display" class="hide"> Voting History:<br> </div>
+        <div id="history-display"> Voting History:<br> </div>
 
-        <div id="night-menu" class="hide">
+        <div id="night-menu">
             <h2>It is now night.</h2>
         </div>
 
-        <div id="wolf-menu" class="hide">
+        <div id="wolf-menu">
             <h2>Werewolves, who do you want to kill?</h2>
-            <h2>You will not able to send message after click confirm button.</h2>
-            <input type="text" id="chat-input" placeholder="enter message here" />
+            <h2>You will not be able to send messages after clicking the confirm button.</h2>
+            <input type="text" id="chat-input" placeholder="Enter Messages Here" />
             <button id="chat-button">Send</button>
             <h2 id="chat"></h2>
             <input type="number" id="wolf-input" placeholder="Enter Number">
@@ -106,7 +105,7 @@
             
         </div>
 
-        <div id="witch-menu" class="hide">
+        <div id="witch-menu">
             <h2>Witch, which potion do you want to use?</h2>
             <h2 id="potion"></h2>
             <h2 id="player-killed"></h2>
@@ -116,58 +115,61 @@
             <button id="skip-button" >SKIP</button>
         </div>
 
-        <div id="election-choice-menu" class="hide">
+        <div id="election-choice-menu">
             <h2>Do you want to run for mayor?</h2>
             <button id="yes-mayor">Yes</button>
             <button id="no-mayor">No</button>
         </div>
 
-        <div id="election-speech-menu" class="hide">
+        <div id="election-speech-menu">
             <h1>Election Speeches</h1>
             <h2>Speaking Order</h2>
             <h3 id="speaking-order"></h3>
             <h2>Candidates:</h2>
             <h3 id="candidates"></h3>
-            <button id="start-mayor-vote-button" class= "hide">Move to voting</button>
-            <button id="drop-out-button" class= "hide">Drop out of election</button>
+            <!-- check back later -->
+            <button id="start-mayor-vote-button">Move to voting</button>
+            <button id="drop-out-button">Drop out of election</button>
         </div>
 
-        <div id="mayor-voting" class="hide">
+        <div id="mayor-voting">
             <h1>Time to Vote!</h1>
             <h2>Vote 0 if you do not wish to vote for anyone</h2>
             <input type="number" id="mayor-input" placeholder="Enter Vote">
             <button id="mayor-vote-button" >Vote</button>
         </div>
 
-        <div id="mayor-voting-candidate" class="hide">
+        <div id="mayor-voting-candidate">
             <h2> Others are voting now</h2>
             <h2> Results will come out once everyone votes.</h2>
         </div>
 
-        <div id="mayor-reveal" class="hide">
+        <div id="mayor-reveal">
             <h1 id="mayor-name"></h1>
             <h2 id="mayor-vote-list"></h2>
-            <button id="move-to-day-button" class="hide">Move to day</button>
-            <button id="move-to-mayor-tie-button" class="hide">Move to mayor tie</button>
+            <!-- check back later -->
+            <button id="move-to-day-button">Move to day</button>
+            <button id="move-to-mayor-tie-button">Move to mayor tie</button>
         </div>
 
-        <div id="day-screen" class="hide">
+        <div id="day-screen">
             <h2>You may now discuss who to vote for.</h2>
-            <button id="move-to-vote-button" class="hide">Move to voting</button>
+            <!-- check back later -->
+            <button id="move-to-vote-button">Move to voting</button>
             
         </div>
 
-        <div id="vote-menu" class="hide">
+        <div id="vote-menu">
             <h1>Time to Vote!</h1>
             <h2>Vote 0 if you do not wish to vote for anyone</h2>
             <input type="number" id="vote-input" placeholder="Enter Vote">
             <button id="vote-button" >Vote</button>
         </div>
 
-        <div id="vote-reveal" class="hide">
+        <div id="vote-reveal">
             <h1 id="reveal"></h1>
             <h2 id="vote-history"></h2>
-            <button id="move-to-tie-button" class="hide">Move to tie</button>
+            <button id="move-to-tie-button">Move to tie</button>
         </div>
 
         <div id="dead-reveal" class="hide">
@@ -176,12 +178,12 @@
             <button id="confirm-death-button" class="hide">Confirm</button>
         </div>
 
-        <div id="game-over" class="hide">
+        <div id="game-over">
             <h2>Game over!</h2>
             <h2 id="game-result"></h2>
         </div>
 
-        <div id="hunter-menu" class="hide">
+        <div id="hunter-menu">
             <h2>You are dead, do you want to use your ability to shoot one player?</h2>
             <h2 id="poison-check"></h2>
             <button id="hunter-no-button" >NO</button>
@@ -189,19 +191,19 @@
             <button id="shoot-button" >Shoot</button>
         </div>
 
-        <div id="hunter-shoot" class="hide">
+        <div id="hunter-shoot">
             <h2>Hunter reveals his/her role.</h2>
             <h2 id="shoot-result"></h2>
         </div>
 
-        <div id="mayor-successor-menu" class="hide">
+        <div id="mayor-successor-menu">
             <h2>You are dead, do you want to name a successor or destroy the badge?</h2>
             <button id="destroy-button" >NO</button>
             <input type="number" id="successor-input" placeholder="enter num">
             <button id="successor-button" >Successor</button>
         </div>
 
-        <div id="mayor-successor" class="hide">
+        <div id="mayor-successor">
             <h2 id="mayor-successor-result"></h2>
         </div>
     </body>

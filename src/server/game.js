@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 5;
+const PLAYERNUM = 9;
 
 class Game {
 
@@ -173,8 +173,8 @@ class Game {
         // Sends a server message to everyone with their role in the form of a string
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            //each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
+            each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
+            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
             //each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
         })
     }
@@ -755,7 +755,10 @@ class Game {
                         tie = true;
                     }
                 }
-                votingHistory += `Voted for ${playerNum}: `;
+                if (playerNum != 0)
+                    votingHistory += `Voted for ${playerNum}: `;
+                else
+                    votingHistory += `Abstained: `;
                 this.mayorVote[playerNum].forEach(playerWhoVoted =>{
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
@@ -767,18 +770,18 @@ class Game {
             })
             
             // Default is "no one", if there is even a single vote for a numbered player, the string will be overwritten
-            var returnString = "No one (b/c most people voted 0)";
+            var returnString = "Everyone abstained!";
 
             // Find the player username associated with the number
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == mayor){
-                    returnString = `${mayor}. ${this.players[playerID].username}`;
+                    returnString = `${mayor}. ${this.players[playerID].username} is now your mayor!`;
                     this.mayorID = playerID;
                 }
             })
 
             if (tie && this.firstMayorTie){
-                returnString = "No one (b/c its a tie) ";
+                returnString = "It's a tie!";
                 this.mayorNominees = [];
                 this.activeNominees = [];
                 Object.keys(this.mayorVote).forEach(playerNum => {
@@ -798,7 +801,7 @@ class Game {
                 this.mayorVoteCount = 0;
                 
             } else if (tie){
-                returnString = "No one (b/c its a tie) ";
+                returnString = "It's a tie!";
                 
             }
 
@@ -851,10 +854,10 @@ class Game {
 
     wolf_vote_reveal(socket){
         var message = `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} `;
-        message = message + "has revealed themselves!<br>" + message;
+        message = message + "has revealed themselves!<br>";
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, message);
+            each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, message, "");
         })
     }
 
@@ -892,8 +895,10 @@ class Game {
                         this.voteTied.push(playerNum);
                     }
                 }
-
-                votingHistory += `Voted for ${playerNum}: `;
+                if (playerNum != 0)
+                    votingHistory += `Voted for ${playerNum}: `;
+                else
+                    votingHistory += `Abstained: `;
                 this.vote[playerNum].forEach(playerWhoVoted =>{
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
@@ -905,12 +910,12 @@ class Game {
 
             })
 
-            var returnString = "No one (b/c most people voted 0)";
+            var returnString = "Everyone abstained!";
 
 
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == dead){
-                    returnString = `${dead}. ${this.players[playerID].username}`
+                    returnString = `${dead}. ${this.players[playerID].username} is now DEAD...`
                     this.deadIDs.push(playerID);
                     this.decrement_role_num(playerID);
                 }
@@ -918,10 +923,10 @@ class Game {
 
 
             if (tie && this.firstVoteTie){
-                returnString = "No one (b/c its a tie) ";
+                returnString = "It's a tie!";
                 this.vote = [];
             } else if (tie){
-                returnString = "no one (b/c its a tie)";
+                returnString = "It's a tie!";
             }
 
             Object.keys(this.sockets).forEach(playerID => {
@@ -947,7 +952,7 @@ class Game {
     wolf_mayor_reveal(socket){
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves! <br>No one (b/c wolf reveal)`, this.players[socket.id].playerNum);
+            each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves!`, this.players[socket.id].playerNum, "");
         })
 
         /*
