@@ -4,7 +4,7 @@
 import io from 'socket.io-client';
 
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, mayorMenu, mayorResult, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, mayorMenu, mayorResult, deadLastNight, confirm_death_button, deathEnd, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button } from "./index";
 
 
 const Constants = require('../shared/constants');
@@ -33,6 +33,11 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.SHOOT_RESULT, shootResult);
     socket.on(Constants.MSG_TYPES.MAYOR_SUCCESSOR, mayorMenu);
     socket.on(Constants.MSG_TYPES.NEW_MAYOR, mayorResult);
+    
+    socket.on(Constants.MSG_TYPES.REVEAL_DEAD_LAST_NIGHT, deadLastNight);
+    socket.on(Constants.MSG_TYPES.CONFIRM_DEATH, deathEnd);
+    socket.on(Constants.MSG_TYPES.REVEAL_CONFIRM_DEATH_BUTTON, confirm_death_button);
+
     socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);
     socket.on(Constants.MSG_TYPES.ELECTION_SPEECH_START, electionSpeechStart)
     socket.on(Constants.MSG_TYPES.SHOW_MAYOR_BUTTON, show_mayor_button);
@@ -97,8 +102,16 @@ export function getHunterChoice(numInput){
     socket.emit(Constants.MSG_TYPES.HUNTER_RESPONSE, numInput);
 }
 
+export function hunterSkip(){
+    socket.emit(Constants.MSG_TYPES.HUNTER_SKIP);
+}
+
 export function getMayorChoice(numInput){
     socket.emit(Constants.MSG_TYPES.MAYOR_RESPONSE, numInput);
+}
+
+export function confirmDeath(){
+    socket.emit(Constants.MSG_TYPES.CONFIRM_DEATH);
 }
 
 export function runForMayorOrNot(run){

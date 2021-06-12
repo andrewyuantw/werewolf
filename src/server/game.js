@@ -79,7 +79,8 @@ class Game {
         this.seerResponse = false;
 
         // Stores game over status
-        //this.gameover = false;
+        this.gameover = false;
+        this.winner = '';
 
         // People who have run for mayor
         this.mayorNominees = [];
@@ -301,19 +302,35 @@ class Game {
 
     // checks if the game is over or not once a player is killed (including wolfkill, poison, exile, huntershoot, wolfselfexpose)
     check_game_over(){
-        if(this.villagerCount == 0 || this.godCount == 0){
-            // this.gameover = true;
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.GAME_OVER, 'Werewolves');
-            })
-        }else if(this.wolfCount == 0){
-            // this.gameover = true;
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.GAME_OVER, 'Good people');
-            })
+
+        if (this.villagerCount == 0 || this.godCount == 0) {
+            this.gameover = true;
+            this.winner = 'Werewolves ';
+        } else if (this.wolfCount == 0) {
+            this.gameover = true;
+            this.winner = 'Good people ';
+        } else {
+            this.gameover = false;
+            this.winner = '';
         }
+    }
+
+    game_over(){
+
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.GAME_OVER, this.winner);
+        })
+    }
+
+    decrement_role_num(playerID){
+
+        if(playerID == this.seerID || playerID == this.witchID || playerID == this.hunterID)
+            this.godCount--;
+        else if(this.wolfIDs.includes(playerID))
+            this.wolfCount--;
+        else
+            this.villagerCount--;
     }
 
     kill(numInput){
@@ -325,9 +342,12 @@ class Game {
             if(playerNum == numInput){
                 player.dead();
                 this.victim = player;
-                this.deadAtNightPlayers[0] = player;
+                this.deadAtNightPlayers.push(playerID);
                 this.deadCount++;
                 this.deadIDs.push(playerID);
+
+                this.decrement_role_num(playerID);
+
             }
         })  
         this.wolfIDs.forEach(playerID => {
@@ -359,11 +379,27 @@ class Game {
 
     witch_heal(){
         this.victim.changeAliveStatus();
+        var victimNum = this.victim.getPlayerNum();
+        Object.keys(this.deadIDs).forEach(playerID => {
+            const playerNum = this.players[playerID].getPlayerNum();
+            if(playerNum == victimNum){
+                delete this.deadIDs[playerID];
+                if(playerID == this.seerID || playerID == this.witchID || playerID == this.hunterID)
+                    this.godCount++;
+                else if(this.wolfIDs.includes(playerID))
+                    this.wolfCount++;
+                else
+                    this.villagerCount++;
+            }
+            delete this.deadAtNightPlayers[playerID];
+        })
+        this.check_game_over();
         this.victim = null;
-        delete this.deadAtNightPlayers[0];
+        
         this.deadCount--;
         this.heal--;
-        this.check_hunter();
+        this.witchResponse = true;
+        this.checkNightResponses();
     }
 
     witch_poison(numInput){
@@ -374,9 +410,12 @@ class Game {
             const player = this.players[playerID];
             if(playerNum == numInput){
                 player.dead();
-                this.deadAtNightPlayers[1] = player;
+                this.deadAtNightPlayers.push(playerID);
                 this.deadCount++;
                 this.deadIDs.push(playerID);
+
+                this.decrement_role_num(playerID);
+                this.check_game_over();
             }
         })
 
@@ -387,11 +426,15 @@ class Game {
         }
 
         this.poison--;
-        this.check_hunter();
+        this.witchResponse = true;
+        this.checkNightResponses();
+        this.dead_reveal();
     }
 
     witch_skip(){
-        this.check_hunter();
+        this.witchResponse = true;
+        this.checkNightResponses();
+        this.dead_reveal();
     }
 
     check_hunter(){
@@ -401,16 +444,17 @@ class Game {
             hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, this.poisonedHunter);
             
         } else {
-            this.witchResponse = true;
-            this.checkNightResponses();
+            this.check_mayor();
         }
     
         
     }
 
     hunter_skip(){
-
+        this.hunterShotOrNot = true;
+        this.check_mayor();
     }
+
 
     hunter_shoot(numInput){
         var shootResult = '';
@@ -424,6 +468,10 @@ class Game {
                 player.dead();
                 this.deadCount++;
                 this.deadIDs.push(playerID);
+
+                this.decrement_role_num(playerID);
+                this.check_game_over();
+
                 shootResult += `${playerNum}. ${player.username} is shot by hunter.`;
             }
         })
@@ -437,17 +485,30 @@ class Game {
     }
 
     check_mayor(){
-
-        if (this.deadIDs == this.mayorID){
-            const mayor_socket = this.sockets[this.mayorID];
-            mayor_socket.emit(Constants.MSG_TYPES.MAYOR_SUCCESSOR);
+        if (this.gameover) {
+            this.game_over();
+        } else {
+            if (this.deadIDs.includes(this.mayorID)) {
+                const mayor_socket = this.sockets[this.mayorID];
+                mayor_socket.emit(Constants.MSG_TYPES.MAYOR_SUCCESSOR);
             
+            } else {
+                if (this.mayorID == null){
+                    const host_socket = this.sockets[this.hostID];
+                    host_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
+                } else {
+                    const mayor_socket = this.sockets[this.mayorID];
+                    mayor_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
+                }
+            }
         }
+        
     
         
     }
 
     new_mayor(numInput){
+
         var result = '';
         if (numInput == 0){
             this.mayorId == null;
@@ -460,6 +521,55 @@ class Game {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.NEW_MAYOR, result);
         })
+    }
+
+    dead_reveal(){
+        if (this.gameover) {
+            this.game_over();
+        } else {
+            var result = '';
+            if (this.deadAtNightPlayers.length == 0) {
+                result += 'No one died last night.';
+            } else {
+                result += 'Player died last night: '
+                this.deadAtNightPlayers.sort();
+                this.deadAtNightPlayers.forEach(playerID => {
+                    const playerNum = this.players[playerID].getPlayerNum();
+                    const player = this.players[playerID];
+                    result += `${playerNum}. ${player.username} `;
+                })
+            }
+
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.REVEAL_DEAD_LAST_NIGHT, result);
+            })
+
+            if (this.mayorID == null){
+                const host_socket = this.sockets[this.hostID];
+                host_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_DEATH_BUTTON);
+            } else {
+                const mayor_socket = this.sockets[this.mayorID];
+                mayor_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_DEATH_BUTTON);
+            }
+        }
+    }
+
+    confirm_death(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.CONFIRM_DEATH);
+        })
+
+        this.check_hunter();
+    }
+
+    move_to_day_or_night(){
+
+
+
+
+
     }
 
     checkNightResponses(){

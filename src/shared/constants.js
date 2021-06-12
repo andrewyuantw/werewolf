@@ -45,6 +45,9 @@ module.exports = Object.freeze({
         // HUNTER_SHOOT sent to hunter when hunter is dead
         HUNTER_SHOOT: 'hunter_shoot',
 
+        // HUNTER_SKIP sent whenever a hunter skips
+        HUNTER_SKIP: 'hunter_skip',
+        
         // SHOOT_RESULT sent to everyone when hunter shoots someone
         SHOOT_RESULT: 'shoot_result',
 
@@ -56,6 +59,18 @@ module.exports = Object.freeze({
 
         // NEW_MAYOR sent to everyone
         NEW_MAYOR: 'new_mayor',
+
+        // REVEAL_DEAD_LAST_NIGHT sent to everyone before day speech
+        REVEAL_DEAD_LAST_NIGHT: 'reveal_dead_last_night',
+
+        // REVEAL_CONFIRM_DEATH_BUTTON sent to host
+        REVEAL_CONFIRM_DEATH_BUTTON: 'reveal_confirm_death_button',
+
+        // CONFIRM_DEATH sent to everyone
+        CONFIRM_DEATH: 'confirm_deadth',
+        
+        // MOVE_TO_NEXT_STAGE sent whenever host or mayor confirms death
+        MOVE_TO_NEXT_STAGE: 'move_to_next_stage', 
 
         // GAME_OVER sent to every player whenever the game is over
         GAME_OVER: 'game_over',

@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, moveToMayorTie, moveToTie } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmDeath, moveToMayorTie, moveToTie } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -29,6 +29,7 @@ const wolfRevealButton = document.getElementById('wolf-reveal-button');
 const moveToMayorTieButton = document.getElementById('move-to-mayor-tie-button');
 const moveToTieButton = document.getElementById('move-to-tie-button');
 const historyButton = document.getElementById('history');
+const confirmDeathButton = document.getElementById('confirm-death-button');
 
 
 // Stores the player number (not IDs) of players alive (from player perspective)
@@ -143,6 +144,12 @@ Promise.all([
         if (alivePlayers.includes(numInput))
             getHunterChoice(numInput);
         document.getElementById("hunter-menu").classList.toggle("hide");
+    }
+
+    confirmDeathButton.onclick = () => {
+
+        confirmDeathButton.classList.toggle("hide");
+        confirmDeath();
     }
 
     mayorDestroyButton.onclick = () => {
@@ -339,6 +346,19 @@ export function gotKillResult(result, heal, poison){
 export function witchNightEnd(){
 
     document.getElementById("witch-menu").classList.toggle("hide");
+}
+
+export function deadLastNight(result){
+    var display = document.getElementById("death");
+    display.innerHTML = result;
+    document.getElementById("dead-reveal").classList.toggle("hide");
+}
+
+export function confirm_death_button(){
+    document.getElementById("confirm-death-button").classList.toggle("hide");
+}
+export function deathEnd(){
+    document.getElementById("dead-reveal").classList.toggle("hide");
 }
 
 export function gameover(winner){

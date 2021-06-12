@@ -37,7 +37,9 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.POISON, poison);
     socket.on(Constants.MSG_TYPES.WITCH_SKIP, witch_skip);
     socket.on(Constants.MSG_TYPES.HUNTER_RESPONSE, verify_hunter_choice);
-    socket.on(Constants.MSG_TYPES.HUNTER_RESPONSE, verify_mayor_choice);
+    socket.on(Constants.MSG_TYPES.HUNTER_SKIP, hunter_skip);
+    socket.on(Constants.MSG_TYPES.CONFIRM_DEATH, confirm_death);
+    socket.on(Constants.MSG_TYPES.MAYOR_RESPONSE, verify_mayor_choice);
     socket.on(Constants.MSG_TYPES.RUN_FOR_MAYOR, run_for_mayor);
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
     socket.on(Constants.MSG_TYPES.DROP_OUT_ELECTION, drop_out_election);
@@ -100,10 +102,16 @@ function verify_hunter_choice(num){
     game.hunter_shoot(num);
 }
 
+function hunter_skip(){
+    game.hunter_skip();
+}
 function verify_mayor_choice(num){
     game.new_mayor(num);
 }
 
+function confirm_death(){
+    game.confirm_death();
+}
 function run_for_mayor(run){
     game.run_for_mayor(this, run);
 }
