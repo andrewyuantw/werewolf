@@ -911,6 +911,8 @@ class Game {
             Object.keys(this.players).forEach(playerID =>{
                 if (this.players[playerID].getPlayerNum() == dead){
                     returnString = `${dead}. ${this.players[playerID].username}`
+                    this.deadIDs.push(playerID);
+                    this.decrement_role_num(playerID);
                 }
             })
 
