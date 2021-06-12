@@ -755,7 +755,7 @@ class Game {
                         tie = true;
                     }
                 }
-                votingHistory += `People who voted for ${playerNum}: `;
+                votingHistory += `Voted for ${playerNum}: `;
                 this.mayorVote[playerNum].forEach(playerWhoVoted =>{
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
@@ -893,7 +893,7 @@ class Game {
                     }
                 }
 
-                votingHistory += `People who voted for ${playerNum}: `;
+                votingHistory += `Voted for ${playerNum}: `;
                 this.vote[playerNum].forEach(playerWhoVoted =>{
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){

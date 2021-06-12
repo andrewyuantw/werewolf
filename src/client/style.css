@@ -2,18 +2,41 @@
 /* Body - visibility set to default here already */
 /* do NOT change visibility for subsequent elements */
 body {
-    font-family: "Muli", 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
-    background-color: #7395AE;
+    font-family: "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica, "Muli", 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
+    background-color: #242424;
     visibility: visible;
+    animation: fadeIn 3s;
+    -webkit-animation: fadeIn 3s;
 }
+
+@keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
+
+@-webkit-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+  }
 
 /* toggle the "hide" class to hide any elements */
 .hide{
     visibility: hidden;
 }
 
+h1{
+    font-size: 300%;
+}
+
+h2{
+    color: rgb(177, 177, 177);
+}
+
 /* Styling for the welcome page where you input display name */
-div:not(#lobby) {
+div:not(#lobby, #button-container) {
     /* Use the next four lines to move any div into the middle */
     position: fixed;
     top: 50%;
@@ -22,7 +45,7 @@ div:not(#lobby) {
 
     /* optional styling below */
     width: 600px;
-    background-color:#5d5c61;
+    background-color: #242424;
     padding: 10px;
     text-align: center;
     color: white;
@@ -30,17 +53,15 @@ div:not(#lobby) {
     box-shadow: 5px 10px rgb(37, 37, 37);
 }
 
-#wolf-mayor-button{
-    float:left;
-    margin-right: 30px;
-    top: 20px;
-    left: 30px;
+
+
+div#button-container{
+    float: left;
+    margin: 30px;
+    padding: 10px;
+
 }
 
-#history{
-    background-color: antiquewhite;
-    color: black;
-}
 div#history-display{
     background-color: antiquewhite;
     color:black;
@@ -57,11 +78,12 @@ div#lobby {
 
     /* Positions the div to the top right */
     float: right;
-    margin-left: 10px;
+    margin-left: 20px;
     top: 20px;
-    right: 30px;
+    right: 50px;
 
     /* Optional styling */
+    margin: 30px;
     padding: 10px;
     width: 150px;
     color: white;
@@ -98,6 +120,10 @@ input::placeholder{
 
 /* Styling for buttons */
 button {
+    font-family: "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica, "Muli", 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
     border: 0;
     background: none;
     margin: 20px auto;
@@ -110,7 +136,6 @@ button {
     color: white;
     border-radius: 24px;
     cursor: pointer;
-    text-decoration: none;
     font-size: 20px;
 }
 
@@ -120,11 +145,50 @@ button:hover {
 }
 
 button#wolf-mayor-reveal-button{
-    background-color: red;
+    background-color: rgb(211, 95, 95);
+    border: none;
 }
 
 button#wolf-reveal-button{
-    background-color: red;
+    background-color: rgb(211, 95, 95);
+    border: none;
+}
+
+#history{
+    background-color: antiquewhite;
+    color: black;
+    border: none;
+}
+
+#see-your-role{
+    background-color: antiquewhite;
+    color: black;
+    border: none;
+}
+
+#history:hover {
+    transform:scale(1.15,1.15);
+    -webkit-transform:scale(1.15,1.15);
+    -moz-transform:scale(1.15,1.15);
+}
+
+#see-your-role:hover {
+    transform:scale(1.15,1.15);
+    -webkit-transform:scale(1.15,1.15);
+    -moz-transform:scale(1.15,1.15);
+}
+
+
+#wolf-mayor-reveal-button:hover {
+    transform:scale(1.15,1.15);
+    -webkit-transform:scale(1.15,1.15);
+    -moz-transform:scale(1.15,1.15);
+}
+
+#wolf-reveal-button:hover {
+    transform:scale(1.15,1.15);
+    -webkit-transform:scale(1.15,1.15);
+    -moz-transform:scale(1.15,1.15);
 }
 
 #chat {
@@ -136,9 +200,9 @@ button#wolf-reveal-button{
 }
 
 tr.me {
-    color:#0010f3;
+    color:#1b01ff;
 }
-
+A
 tr.mayor {
     color: gold;
 }
