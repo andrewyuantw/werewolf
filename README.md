@@ -10,8 +10,5 @@
 ----------------------------------------------------
 
 * Handle case where players disconnect from server
-* Add button for recap of who ran in mayor election and final nominees
-* See Your Role button
-* Add dynamic button container
-* Change Hide to Show
+* Dead player screens
  
