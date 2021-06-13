@@ -90,6 +90,9 @@ Promise.all([
         // needs to handle case where wolves kill someone before the seer makes decision
         // in this case, the person cannot be shown to be dead yet
         var numInput = document.getElementById('seer-input').value;
+        alivePlayers.forEach(a =>{
+            console.log(a);
+        })
         if (alivePlayers.includes(numInput))
             getSeerChoice(numInput);
     }
@@ -252,7 +255,8 @@ export function changeDisplay(username, num){
     document.getElementById(num.toString()).innerHTML = `<td>${num}.</td><td>${username}</td>`;
 
     // Pushes playerNum to alivePlayers
-    alivePlayers.push(num);
+    if (!alivePlayers.includes(num.toString()))
+        alivePlayers.push(num.toString());
 }
 
 // Handles the server message sent to the host indicating there are enough players
