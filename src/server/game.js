@@ -23,7 +23,7 @@ class Game {
         this.hostID = null;
 
         // Holds a string to be displayed in the "lobby" div
-        this.current_roster = {};
+        this.current_roster = [];
 
         // Counts the number of players that have hit the ready button after seeing their role
         this.ready_number = 0;
@@ -115,6 +115,8 @@ class Game {
         this.firstVoteTie = true;
 
         this.voteTied = [];
+
+        this.gameStarted = false;
     }
   
     // This function adds a player to the game; it is called when someone enters the lobby
@@ -131,7 +133,7 @@ class Game {
         this.players[socket.id] = new Player(socket.id, username, this.playerInLobby);
         
         // Updates the string to be displayed in the "lobby" div 
-        this.current_roster[this.playerInLobby] = username;
+        this.current_roster.push(username);
 
         // Sets this.hostID to be the first person to join the game
         if (this.hostID == null){
@@ -144,9 +146,11 @@ class Game {
         // Send a message to every player in the game so they can update their lobby display
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            Object.keys(this.current_roster).forEach(playerNum => {
-                each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[playerNum], playerNum);
-            });
+
+            for (var i = 0; i < this.current_roster.length ; i ++){
+                each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[i], i + 1);
+            }
+            
             
         })
 
@@ -158,10 +162,42 @@ class Game {
     }
 
     // Removes a player from the game
-    // TO DO: implement this function for when players drop out of the game
     removePlayer(socket) {
+
+        var disconnectedPlayerNum = this.players[socket.id].playerNum;
+        console.log(disconnectedPlayerNum);
         delete this.sockets[socket.id];
         delete this.players[socket.id];
+        console.log(`player ${socket.id} disconnected`)
+
+        this.playerInLobby--;
+        this.alivePlayers--;
+
+        this.current_roster.splice(disconnectedPlayerNum - 1, 1);
+
+        if (this.gameStarted){
+
+            this.deadIDs.push(socket.id);
+            this.decrement_role_num(socket.id);
+
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.PLAYER_DISCONNECTED, disconnectedPlayerNum);
+            })
+        } else {
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                for (var i = 0; i < this.current_roster.length ; i ++){
+                    console.log(i);
+                    each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[i], i + 1);
+                }
+                each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, "", this.current_roster.length + 1);
+                if (this.players[playerID].playerNum > disconnectedPlayerNum){
+                    each_socket.emit(Constants.MSG_TYPES.YOUR_NUMBER, this.players[playerID].playerNum - 1);
+                    this.players[playerID].playerNum = this.players[playerID].playerNum - 1;
+                }
+            })
+        }
     }
 
     // Starts the game for all players
@@ -192,6 +228,8 @@ class Game {
             var rand = Math.floor(Math.random() * (i + 1));
             [array[i], array[rand]] = [array[rand], array[i]];
         }
+
+        this.gameStarted = true;
 
         // Goes through the now randomized array
         i = 0;
@@ -327,10 +365,22 @@ class Game {
 
         if(playerID == this.seerID || playerID == this.witchID || playerID == this.hunterID)
             this.godCount--;
-        else if(this.wolfIDs.includes(playerID))
+        else if(this.wolfIDs.includes(playerID)){
             this.wolfCount--;
+            this.wolfIDs.splice(this.wolfIDs.indexOf(playerID), 1);
+        }
         else
             this.villagerCount--;
+
+        if (playerID == this.seerID){
+            this.seerID = null;
+        } else if (playerID == this.witchID) {
+            this.witchID = null;
+        } else if (playerID == this.hunterID){
+            this.hunterID = null;
+        } else if (playerID == this.hostID){
+            this.hostID = Object.keys(this.players)[Math.floor(Math.random()*Object.keys(this.players).length)];
+        }
     }
 
     kill(numInput){
@@ -848,13 +898,23 @@ class Game {
     move_to_vote(){
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+
+            if (this.deadIDs.includes(playerID)){
+                console.log("dead person detected");
+                each_socket.emit(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE_CANDIDATE);
+            } else {
+                each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
+            }
         })
     }
 
     wolf_vote_reveal(socket){
         var message = `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} `;
         message = message + "has revealed themselves!<br>";
+
+        this.deadIDs.push(socket.id);
+        this.decrement_role_num(socket.id);
+
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.VOTE_REVEAL, message, "");
@@ -870,7 +930,7 @@ class Game {
         }
 
         this.voteCount++;
-        if (this.voteCount >= (this.alivePlayers)){
+        if (this.voteCount >= (PLAYERNUM - this.deadIDs.length)){
             var maxLength = 0;
             var dead = 0;
 
@@ -954,7 +1014,8 @@ class Game {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.MAYOR_REVEAL, `${this.players[socket.id].playerNum}. ${this.players[socket.id].username} just revealed themselves!`, this.players[socket.id].playerNum, "");
         })
-
+        this.deadIDs.push(socket.id);
+        this.decrement_role_num(socket.id);
         /*
 
 

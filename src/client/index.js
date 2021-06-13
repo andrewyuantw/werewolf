@@ -451,10 +451,14 @@ export function show_mayor_menu(){
 
 export function show_mayor_menu_candidate(){
     document.getElementById('history-display').innerHTML += "<br> Final candidates: <br>" + document.getElementById('candidates').innerHTML + "<br>";
-    document.getElementById('election-speech-menu').classList.toggle("show");
-    document.getElementById("mayor-voting-candidate").classList.toggle("show");
+    if (document.getElementById("election-speech-menu").classList.contains("show"))
+        document.getElementById('election-speech-menu').classList.toggle("show");
+    if (!document.getElementById("mayor-voting-candidate").classList.contains("show"))
+        document.getElementById("mayor-voting-candidate").classList.toggle("show");
     if (document.getElementById("wolf-reveal-button").classList.contains("show"))
         document.getElementById("wolf-reveal-button").classList.toggle("show");
+    if (document.getElementById("day-screen").classList.contains("show"))
+        document.getElementById("day-screen").classList.toggle("show");
     if (document.getElementById("drop-out-button").classList.contains("show"))
         document.getElementById("drop-out-button").classList.toggle("show");
     currentMode = 0;
@@ -510,6 +514,10 @@ export function mayor_reveal(mayor_num, dead_num, mayor_vote_history){
 
 export function your_number(num){
 
+    for (var i = 1; i <= 9; i ++){
+        if (document.getElementById(i.toString()).classList.contains("me"))
+            document.getElementById(i.toString()).classList.toggle("me");
+    }
     // Updates lobby table, makes self blue
     document.getElementById(num.toString()).classList.toggle("me");
 }
@@ -519,6 +527,8 @@ export function vote_reveal(reveal, vote_history){
         document.getElementById('day-screen').classList.toggle("show");
     if (document.getElementById('vote-menu').classList.contains("show"))
         document.getElementById('vote-menu').classList.toggle("show");
+    if (document.getElementById('mayor-voting-candidate').classList.contains("show"))
+        document.getElementById('mayor-voting-candidate').classList.toggle("show");
     document.getElementById('vote-reveal').classList.toggle("show");
     document.getElementById('reveal').innerHTML = reveal ;
     document.getElementById('history-display').innerHTML += reveal + "<br>";
@@ -590,4 +600,8 @@ export function reveal_mayor_tie_button(){
 
 export function reveal_vote_tie_button(){
     document.getElementById('move-to-tie-button').classList.toggle("show");
+}
+
+export function player_disconnected(disconnectedNum){
+    document.getElementById(disconnectedNum.toString()).classList.toggle("dead");
 }

@@ -63,6 +63,7 @@ function joinGame(username) {
 }
   
 function onDisconnect() {
+    console.log("here");
     game.removePlayer(this);
 }
 

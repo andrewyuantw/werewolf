@@ -179,6 +179,8 @@ module.exports = Object.freeze({
 
         REVEAL_VOTE_TIE_BUTTON: 'reveal_vote_tie_button',
 
-        VOTE_TIE: 'vote-tie'
+        VOTE_TIE: 'vote-tie',
+
+        PLAYER_DISCONNECTED: 'player-disconnected'
     },
 });
