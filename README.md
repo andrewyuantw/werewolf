@@ -7,8 +7,4 @@
 * Check if game has ended, also check if hunter wants to shoot
 * If Mayor dead, who is next mayor?
 
-----------------------------------------------------
 
-* Handle case where players disconnect from server
-* Dead player screens
- 
