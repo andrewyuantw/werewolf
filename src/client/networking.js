@@ -39,7 +39,7 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.NEW_MAYOR, mayorResult);
     
     socket.on(Constants.MSG_TYPES.REVEAL_DEAD_LAST_NIGHT, deadLastNight);
-    socket.on(Constants.MSG_TYPES.CONFIRM_DEATH, deathEnd);
+    socket.on(Constants.MSG_TYPES.DEATH_END, deathEnd);
     socket.on(Constants.MSG_TYPES.REVEAL_CONFIRM_DEATH_BUTTON, confirm_death_button);
 
     socket.on(Constants.MSG_TYPES.ELECTION_START, electionStart);

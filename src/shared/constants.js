@@ -66,10 +66,13 @@ module.exports = Object.freeze({
         // REVEAL_CONFIRM_DEATH_BUTTON sent to host
         REVEAL_CONFIRM_DEATH_BUTTON: 'reveal_confirm_death_button',
 
-        // CONFIRM_DEATH sent to everyone
+        // CONFIRM_DEATH sent whenever a host confirms death
         CONFIRM_DEATH: 'confirm_deadth',
+
+        // DEATH_END sent to everyone
+        DEATH_END: 'death_end',
         
-        // MOVE_TO_NEXT_STAGE sent whenever host or mayor confirms death
+        // MOVE_TO_NEXT_STAGE sent after checks
         MOVE_TO_NEXT_STAGE: 'move_to_next_stage', 
 
         // GAME_OVER sent to every player whenever the game is over

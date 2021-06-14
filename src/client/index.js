@@ -385,11 +385,11 @@ export function shoot(poisoned){
     document.getElementById("hunter-menu").classList.toggle("show");
     if(poisoned){
         document.getElementById("poison-check").innerHTML = `Witch used poison on you. :(`;
+    } else {
+        document.getElementById("poison-check").innerHTML = `Witch didn't use poison on you. :)`;
         document.getElementById("hunter-no-button").classList.toggle("show");
         document.getElementById("shoot-input").classList.toggle("show");
         document.getElementById("shoot-button").classList.toggle("show");
-    } else {
-        document.getElementById("poison-check").innerHTML = `Witch didn't use poison on you. :)`;
     }
     
 }
