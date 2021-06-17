@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 9;
+const PLAYERNUM = 5;
 
 class Game {
 
@@ -222,7 +222,12 @@ class Game {
         // Roles 1 to 9, for debugging, you can alter this array
         // For example. if you just want to test werewolf functions, set this to
         // [7, 8, 9] and you will ensure that you will get the werewolf role
+
+        
         var array = [1,2,3,4,5,6,7,8,9];
+
+        // for testing purposes
+        // var array = [1,5,6,7,8];
 
         // Shuffles the array
         for (var i = array.length - 1; i > 0; i --){
@@ -251,6 +256,7 @@ class Game {
             // If this playerID's corresponding role is 6 (hunter), store in this.witchID
             if (array[i] == 6)
                 this.hunterID = playerID;
+                //this.mayorID = playerID; // for testing purposes
 
             // If this playerID's corresponding role is 7 or greater (Wolf), store in this.wolfIDs array
             if (array[i] >= 7)
@@ -391,7 +397,8 @@ class Game {
             this.witchID = null;
         } else if (playerID == this.hunterID){
             this.hunterID = null;
-        } else if (playerID == this.hostID){
+        }
+        if (playerID == this.hostID){
             this.hostID = Object.keys(this.players)[Math.floor(Math.random()*Object.keys(this.players).length)];
         }
     }
@@ -408,9 +415,11 @@ class Game {
                 this.deadAtNightPlayers.push(playerID);
                 this.deadCount++;
                 this.deadIDs.push(playerID);
-
+                
                 this.decrement_role_num(playerID);
 
+
+                this.mayorID = playerID; // for testing purposes
             }
         })  
         this.wolfIDs.forEach(playerID => {
@@ -553,17 +562,24 @@ class Game {
             each_socket.emit(Constants.MSG_TYPES.SHOOT_RESULT, shootResult);
         })
 
-        if (this.gameover) {
-            this.game_over();
+        
+        if (this.mayorID == null){
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_SHOT_BUTTON);
         } else {
-            if (this.mayorID == null){
-                const host_socket = this.sockets[this.hostID];
-                host_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_SHOT_BUTTON);
-            } else {
-                const mayor_socket = this.sockets[this.mayorID];
-                mayor_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_SHOT_BUTTON);
-            }
+            const mayor_socket = this.sockets[this.mayorID];
+            mayor_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_SHOT_BUTTON);
         }
+        
+    }
+
+    confirm_shot(){
+        this.check_mayor();
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.SHOT_END);
+        })
+
     }
 
     check_mayor(){
@@ -572,6 +588,7 @@ class Game {
         } else {
             this.deadAtNightPlayers.forEach(playerID => {
                 this.remove_dead_player_ID(playerID);
+                this.deadAtNightPlayers.splice(this.deadAtNightPlayers.indexOf(playerID), 1);
             })
             if (this.deadIDs.includes(this.mayorID)) {
                 const mayor_socket = this.sockets[this.mayorID];
@@ -599,8 +616,14 @@ class Game {
             this.mayorId == null;
             result += 'The mayor destroyed the badge, there will be no mayor this game.';
         } else {
-            this.mayorID == numInput;
-            result += `${this.players[this.mayorID].playerNum}. ${this.players[this.mayorID.id].username} is the new mayor.`;
+            
+            Object.keys(this.players).forEach(playerID => {
+                const playerNum = this.players[playerID].getPlayerNum();
+                if(playerNum == numInput){
+                    this.mayorID = playerID;
+                }
+            })
+            result += `${this.players[this.mayorID].playerNum}. ${this.players[this.mayorID].username} is the new mayor.`;
         }
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];

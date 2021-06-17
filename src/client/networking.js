@@ -4,7 +4,7 @@
 import io from 'socket.io-client';
 
 
-import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, mayorMenu, mayorResult, deadLastNight, confirm_death_button, deathEnd, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button, player_disconnected } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, confirm_shot_button, shotEnd, mayorMenu, mayorResult, deadLastNight, confirm_death_button, deathEnd, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button, player_disconnected } from "./index";
 
 
 const Constants = require('../shared/constants');
@@ -35,6 +35,8 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.GAME_OVER, gameover);
     socket.on(Constants.MSG_TYPES.HUNTER_SHOOT, shoot);
     socket.on(Constants.MSG_TYPES.SHOOT_RESULT, shootResult);
+    socket.on(Constants.MSG_TYPES.REVEAL_CONFIRM_SHOT_BUTTON, confirm_shot_button);
+    socket.on(Constants.MSG_TYPES.SHOT_END, shotEnd);
     socket.on(Constants.MSG_TYPES.MAYOR_SUCCESSOR, mayorMenu);
     socket.on(Constants.MSG_TYPES.NEW_MAYOR, mayorResult);
     
@@ -109,6 +111,10 @@ export function getHunterChoice(numInput){
 
 export function hunterSkip(){
     socket.emit(Constants.MSG_TYPES.HUNTER_SKIP);
+}
+
+export function confirmShot(){
+    socket.emit(Constants.MSG_TYPES.CONFIRM_SHOT);
 }
 
 export function getMayorChoice(numInput){

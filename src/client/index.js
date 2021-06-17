@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmDeath, moveToMayorTie, moveToTie } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, moveToMayorTie, moveToTie } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -14,6 +14,7 @@ const poisonButton = document.getElementById('poison-button');
 const skipButton = document.getElementById('skip-button');
 const hunterNoButton = document.getElementById('hunter-no-button');
 const hunterShootButton = document.getElementById('shoot-button');
+const confirmShotButton = document.getElementById('confirm-shot-button');
 const mayorDestroyButton = document.getElementById('destroy-button');
 const mayorSuccessorButton = document.getElementById('successor-button');
 const yesMayorButton = document.getElementById('yes-mayor');
@@ -118,6 +119,9 @@ Promise.all([
     // When the witch has clicked heal
     healButton.onclick = () => {
         heal();
+        healButton.classList.toggle("show");
+        poisonButton.classList.toggle("show");
+        skipButton.classList.toggle("show");
         document.getElementById("witch-menu").classList.toggle("show");
     }
 
@@ -128,6 +132,9 @@ Promise.all([
         var numInput = document.getElementById('witch-input').value;
         if (alivePlayers.includes(numInput)){
             poison(numInput);
+            healButton.classList.toggle("show");
+            poisonButton.classList.toggle("show");
+            skipButton.classList.toggle("show");
             document.getElementById("witch-menu").classList.toggle("show");
         }
     }
@@ -135,12 +142,18 @@ Promise.all([
     // When the witch has clicked skip
     skipButton.onclick = () => {
         witchSkip();
+        healButton.classList.toggle("show");
+        poisonButton.classList.toggle("show");
+        skipButton.classList.toggle("show");
         document.getElementById("witch-menu").classList.toggle("show");
         
     }
 
     hunterNoButton.onclick = () => {
         hunterSkip();
+        hunterNoButton.classList.toggle("show");
+        hunterShootButton.classList.toggle("show");
+        document.getElementById("shoot-input").classList.toggle("show");
         document.getElementById("hunter-menu").classList.toggle("show");
         
     }
@@ -148,9 +161,19 @@ Promise.all([
     hunterShootButton.onclick = () => {
         
         var numInput = document.getElementById('shoot-input').value;
-        if (alivePlayers.includes(numInput))
+        if (alivePlayers.includes(numInput)) {
             getHunterChoice(numInput);
-        document.getElementById("hunter-menu").classList.toggle("show");
+            hunterNoButton.classList.toggle("show");
+            hunterShootButton.classList.toggle("show");
+            document.getElementById("shoot-input").classList.toggle("show");
+            document.getElementById("hunter-menu").classList.toggle("show");
+        }
+    }
+
+    confirmShotButton.onclick = () => {
+
+        confirmShotButton.classList.toggle("show");
+        confirmShot();
     }
 
     confirmDeathButton.onclick = () => {
@@ -161,16 +184,22 @@ Promise.all([
 
     mayorDestroyButton.onclick = () => {
         getMayorChoice(0);
+        mayorDestroyButton.classList.toggle("show");
+        mayorSuccessorButton.classList.toggle("show");
+        //document.getElementById("successor-input").classList.toggle("show");
         document.getElementById("mayor-successor-menu").classList.toggle("show");
         
     }
 
     mayorSuccessorButton.onclick = () => {
         var numInput = document.getElementById('successor-input').value;
-        if (alivePlayers.includes(numInput))
+        if (alivePlayers.includes(numInput)){
             getMayorChoice(numInput);
-        document.getElementById("mayor-successor-menu").classList.toggle("show");
-        
+            mayorDestroyButton.classList.toggle("show");
+            mayorSuccessorButton.classList.toggle("show");
+            //document.getElementById("successor-input").classList.toggle("show");
+            document.getElementById("mayor-successor-menu").classList.toggle("show");
+        }
     }
 
     yesMayorButton.onclick = () =>{
@@ -349,17 +378,19 @@ export function gotKillResult(result, heal, poison){
     var witch_display = document.getElementById("player-killed");
     witch_display.innerHTML = result;
     document.getElementById("witch-menu").classList.toggle("show");
-    document.getElementById("heal-button").classList.toggle("show");
-    document.getElementById("poison-button").classList.toggle("show");
+    if (heal == 1)
+        document.getElementById("heal-button").classList.toggle("show");
+    if (poison == 1)
+        document.getElementById("poison-button").classList.toggle("show");
     document.getElementById("skip-button").classList.toggle("show");
 }
 
 export function witchNightEnd(){
 
     document.getElementById("witch-menu").classList.toggle("show");
-    document.getElementById("heal-button").classList.toggle("show");
-    document.getElementById("poison-button").classList.toggle("show");
-    document.getElementById("skip-button").classList.toggle("show");
+    //document.getElementById("heal-button").classList.toggle("show");
+    //document.getElementById("poison-button").classList.toggle("show");
+    //document.getElementById("skip-button").classList.toggle("show");
 }
 
 export function deadLastNight(result){
@@ -400,7 +431,17 @@ export function shootResult(result){
     document.getElementById("hunter-shoot").classList.toggle("show");
 }
 
+export function confirm_shot_button(){
+    document.getElementById("confirm-shot-button").classList.toggle("show");
+}
+
+export function shotEnd(){
+    document.getElementById("hunter-shoot").classList.toggle("show");
+}
+
 export function mayorMenu(){
+    document.getElementById("destroy-button").classList.toggle("show");
+    document.getElementById("successor-button").classList.toggle("show");
     document.getElementById("mayor-successor-menu").classList.toggle("show");
 }
 

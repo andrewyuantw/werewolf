@@ -51,6 +51,15 @@ module.exports = Object.freeze({
         // SHOOT_RESULT sent to everyone when hunter shoots someone
         SHOOT_RESULT: 'shoot_result',
 
+        // REVEAL_CONFIRM_SHOT_BUTTON sent to host
+        REVEAL_CONFIRM_SHOT_BUTTON: 'reveal_confirm_shot_button',
+
+        // CONFIRM_SHOT sent whenever shot result is confirmed
+        CONFIRM_SHOT: 'confirm_shot',
+
+        // SHOT_END sent to everyone 
+        SHOT_END: 'shot_end',
+        
         // MAYOR_RESPONSE sent whenever a mayor has submitted the player number
         MAYOR_RESPONSE: 'mayor_response',
         
