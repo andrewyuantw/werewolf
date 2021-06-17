@@ -224,10 +224,10 @@ class Game {
         // [7, 8, 9] and you will ensure that you will get the werewolf role
 
         
-        var array = [1,2,3,4,5,6,7,8,9];
+        // var array = [1,2,3,4,5,6,7,8,9];
 
         // for testing purposes
-        // var array = [1,5,6,7,8];
+        var array = [1,5,6,7,8];
 
         // Shuffles the array
         for (var i = array.length - 1; i > 0; i --){
@@ -492,13 +492,15 @@ class Game {
                     this.poisonedHunter = true;
                     // hunter gets notice about being poisoned by witch
                 }
+                if (this.deadAtNightPlayers.indexOf(playerID) == -1){
+                    player.dead();
+                    this.deadAtNightPlayers.push(playerID);
+                    this.deadCount++;
+                    this.deadIDs.push(playerID);
 
-                player.dead();
-                this.deadAtNightPlayers.push(playerID);
-                this.deadCount++;
-                this.deadIDs.push(playerID);
-
-                this.decrement_role_num(playerID);
+                    this.decrement_role_num(playerID);
+                }
+                
                 this.check_game_over();
             }
         })

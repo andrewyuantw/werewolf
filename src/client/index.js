@@ -152,8 +152,11 @@ Promise.all([
     hunterNoButton.onclick = () => {
         hunterSkip();
         hunterNoButton.classList.toggle("show");
-        hunterShootButton.classList.toggle("show");
-        document.getElementById("shoot-input").classList.toggle("show");
+        if (hunterShootButton.classList.contains("show"))
+            hunterShootButton.classList.toggle("show");
+
+        //document.getElementById("shoot-input").classList.toggle("show");
+          
         document.getElementById("hunter-menu").classList.toggle("show");
         
     }
@@ -165,7 +168,7 @@ Promise.all([
             getHunterChoice(numInput);
             hunterNoButton.classList.toggle("show");
             hunterShootButton.classList.toggle("show");
-            document.getElementById("shoot-input").classList.toggle("show");
+            //document.getElementById("shoot-input").classList.toggle("show");
             document.getElementById("hunter-menu").classList.toggle("show");
         }
     }
@@ -416,10 +419,11 @@ export function shoot(poisoned){
     document.getElementById("hunter-menu").classList.toggle("show");
     if(poisoned){
         document.getElementById("poison-check").innerHTML = `Witch used poison on you. :(`;
+        document.getElementById("hunter-no-button").classList.toggle("show");
+
     } else {
         document.getElementById("poison-check").innerHTML = `Witch didn't use poison on you. :)`;
         document.getElementById("hunter-no-button").classList.toggle("show");
-        document.getElementById("shoot-input").classList.toggle("show");
         document.getElementById("shoot-button").classList.toggle("show");
     }
     
