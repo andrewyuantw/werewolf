@@ -1,5 +1,5 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, moveToMayorTie, moveToTie } from "./networking"
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, confirmNewMayor, moveToMayorTie, moveToTie } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -17,6 +17,7 @@ const hunterShootButton = document.getElementById('shoot-button');
 const confirmShotButton = document.getElementById('confirm-shot-button');
 const mayorDestroyButton = document.getElementById('destroy-button');
 const mayorSuccessorButton = document.getElementById('successor-button');
+const confirmNewMayorButton = document.getElementById('confirm-new-mayor-button');
 const yesMayorButton = document.getElementById('yes-mayor');
 const noMayorButton = document.getElementById('no-mayor');
 const startMayorVoteButton = document.getElementById('start-mayor-vote-button');
@@ -203,6 +204,12 @@ Promise.all([
             //document.getElementById("successor-input").classList.toggle("show");
             document.getElementById("mayor-successor-menu").classList.toggle("show");
         }
+    }
+
+    confirmNewMayorButton.onclick = () => {
+
+        confirmNewMayorButton.classList.toggle("show");
+        confirmNewMayor();
     }
 
     yesMayorButton.onclick = () =>{
@@ -454,6 +461,15 @@ export function mayorResult(result){
     display.innerHTML = result;
     document.getElementById("mayor-successor").classList.toggle("show");
 }
+
+export function confirm_new_mayor_button(){
+    document.getElementById("confirm-new-mayor-button").classList.toggle("show");
+}
+
+export function successorEnd(){
+    document.getElementById("mayor-successor").classList.toggle("show");
+}
+
 export function electionStart(){
 
     /* COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING

@@ -81,6 +81,15 @@ module.exports = Object.freeze({
         // DEATH_END sent to everyone
         DEATH_END: 'death_end',
         
+        // REVEAL_CONFIRM_NEW_MAYOR_BUTTON sent to host
+        REVEAL_CONFIRM_NEW_MAYOR_BUTTON: 'reveal_confirm_new_mayor_button',
+        
+        // CONFIRM_NEW_MAYOR sent whenever a host confirms new mayor
+        CONFIRM_NEW_MAYOR: 'confirm_new_mayor',
+
+        // SUCCESSOR_END sent to everyone
+        SUCCESSOR_END: 'successor_end',
+        
         // MOVE_TO_NEXT_STAGE sent after checks
         MOVE_TO_NEXT_STAGE: 'move_to_next_stage', 
 

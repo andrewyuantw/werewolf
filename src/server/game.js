@@ -44,10 +44,10 @@ class Game {
         this.wolf_chat = "Chat: <br>";
         
         // Counts the number of villagers alive
-        this.villagerCount = 3;
+        this.villagerCount = 1;
 
         // Counts the number of gods alive
-        this.godCount = 3;
+        this.godCount = 1;
         
         // Counts the number of werewolves alive
         this.wolfCount = 1;
@@ -107,6 +107,8 @@ class Game {
         this.alivePlayers = 0;
 
         this.mayorID = null;
+
+        this.moveToDay = true;
 
         this.firstNight = true;
 
@@ -291,10 +293,10 @@ class Game {
                 } else if (this.wolfIDs.includes(playerID)){
                     const wolf_socket = this.sockets[playerID];
                     wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
-                } else {
-                    const each_socket = this.sockets[playerID];
-                    each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
                 }
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+                
                 
             })
             
@@ -347,14 +349,16 @@ class Game {
 
     // checks if the game is over or not once a player is killed (including wolfkill, poison, exile, huntershoot, wolfselfexpose)
     check_game_over(){
-
-        if (this.villagerCount == 0 || this.godCount == 0) {
-            this.gameover = true;
-            this.winner = 'Werewolves ';
-        } else if (this.wolfCount == 0) {
-            this.gameover = true;
-            this.winner = 'Good people ';
-        }/*  else {
+        if (!this.gameover){
+            if (this.villagerCount == 0 || this.godCount == 0) {
+                this.gameover = true;
+                this.winner = 'Werewolves ';
+            } else if (this.wolfCount == 0) {
+                this.gameover = true;
+                this.winner = 'Good people ';
+            }
+        }
+        /*  else {
             this.gameover = false;
             this.winner = '';
         } */
@@ -370,11 +374,10 @@ class Game {
 
     decrement_role_num(playerID){
 
-        if(playerID == this.seerID || playerID == this.witchID || playerID == this.hunterID)
+        if (playerID == this.seerID || playerID == this.witchID || playerID == this.hunterID)
             this.godCount--;
-        else if(this.wolfIDs.includes(playerID)){
+        else if (this.wolfIDs.includes(playerID)){
             this.wolfCount--;
-            this.wolfIDs.splice(this.wolfIDs.indexOf(playerID), 1);
         }
         else
             this.villagerCount--;
@@ -393,10 +396,12 @@ class Game {
     remove_dead_player_ID(playerID){
         if (playerID == this.seerID){
             this.seerID = null;
-        } else if (playerID == this.witchID) {
+        } else if (playerID == this.witchID){
             this.witchID = null;
         } else if (playerID == this.hunterID){
             this.hunterID = null;
+        } else if (this.wolfIDs.includes(playerID)){
+            this.wolfIDs.splice(this.wolfIDs.indexOf(playerID), 1);
         }
         if (playerID == this.hostID){
             this.hostID = Object.keys(this.players)[Math.floor(Math.random()*Object.keys(this.players).length)];
@@ -597,13 +602,10 @@ class Game {
                 mayor_socket.emit(Constants.MSG_TYPES.MAYOR_SUCCESSOR);
             
             } else {
-                if (this.mayorID == null){
-                    const host_socket = this.sockets[this.hostID];
-                    host_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
-                } else {
-                    const mayor_socket = this.sockets[this.mayorID];
-                    mayor_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
-                }
+                if (this.moveToDay)
+                    this.move_to_day();
+                else
+                    this.move_to_night();
             }
         }
         
@@ -631,6 +633,33 @@ class Game {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.NEW_MAYOR, result);
         })
+
+        if (this.mayorID == null){
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_NEW_MAYOR_BUTTON);
+        } else {
+            const mayor_socket = this.sockets[this.mayorID];
+            mayor_socket.emit(Constants.MSG_TYPES.REVEAL_CONFIRM_NEW_MAYOR_BUTTON);
+        }
+    }
+
+    confirm_new_mayor(){
+        Object.keys(this.sockets).forEach(playerID => {
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.SUCCESSOR_END);
+        })
+
+        if (this.moveToDay)
+            this.move_to_day();
+        else
+            this.move_to_night();
+        /* if (this.mayorID == null){
+            const host_socket = this.sockets[this.hostID];
+            host_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
+        } else {
+            const mayor_socket = this.sockets[this.mayorID];
+            mayor_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
+        } */
     }
 
     dead_reveal(){
@@ -674,12 +703,22 @@ class Game {
 
     }
 
-    move_to_day_or_night(){
-        
+    move_to_night(){
+        Object.keys(this.sockets).forEach(playerID => {
 
-
-
-
+            if (playerID == this.seerID){
+                const seer_socket = this.sockets[this.seerID];
+                seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
+            } else if (this.wolfIDs.includes(playerID)){
+                const wolf_socket = this.sockets[playerID];
+                wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
+            }
+            const each_socket = this.sockets[playerID];
+            each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+            
+            
+        })
+        this.moveToDay = true;
     }
 
     checkNightResponses(){
@@ -953,6 +992,7 @@ class Game {
             wolf_socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
         })
 
+        this.moveToDay = false;
     }
 
     move_to_vote(){
@@ -974,7 +1014,7 @@ class Game {
 
         this.deadIDs.push(socket.id);
         this.decrement_role_num(socket.id);
-        this.remove_dead_player_ID(playerID);
+        this.remove_dead_player_ID(socket);
 
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
@@ -1078,7 +1118,7 @@ class Game {
         })
         this.deadIDs.push(socket.id);
         this.decrement_role_num(socket.id);
-        this.remove_dead_player_ID(playerID);
+        this.remove_dead_player_ID(socket);
         /*
 
 

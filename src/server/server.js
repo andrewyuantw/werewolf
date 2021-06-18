@@ -41,6 +41,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.CONFIRM_SHOT, confirm_shot);
     socket.on(Constants.MSG_TYPES.CONFIRM_DEATH, confirm_death);
     socket.on(Constants.MSG_TYPES.MAYOR_RESPONSE, verify_mayor_choice);
+    socket.on(Constants.MSG_TYPES.CONFIRM_NEW_MAYOR, confirm_new_mayor);
     socket.on(Constants.MSG_TYPES.RUN_FOR_MAYOR, run_for_mayor);
     socket.on(Constants.MSG_TYPES.MOVE_TO_MAYOR_VOTE, mayor_vote);
     socket.on(Constants.MSG_TYPES.DROP_OUT_ELECTION, drop_out_election);
@@ -117,6 +118,10 @@ function confirm_death(){
 
 function confirm_shot(){
     game.confirm_shot();
+}
+
+function confirm_new_mayor(){
+    game.confirm_new_mayor();
 }
 
 function run_for_mayor(run){
