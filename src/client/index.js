@@ -403,10 +403,20 @@ export function witchNightEnd(){
     //document.getElementById("skip-button").classList.toggle("show");
 }
 
-export function deadLastNight(result){
+export function deadLastNight(result, deadNums){
     var display = document.getElementById("death");
     display.innerHTML = result;
     document.getElementById("dead-reveal").classList.toggle("show");
+
+    deadNums.forEach(dead =>{
+        document.getElementById(dead.toString()).classList.toggle("dead");
+
+        // Removes the dead player from index.js's aliveplayer array
+        var index = alivePlayers.indexOf(dead.toString());
+        if (index != -1){
+            alivePlayers.splice(index, 1);
+        }
+    })
 }
 
 export function confirm_death_button(){
@@ -440,6 +450,19 @@ export function shootResult(result){
     var display = document.getElementById("shoot-result");
     display.innerHTML = result;
     document.getElementById("hunter-shoot").classList.toggle("show");
+
+    var words = result.split(".");
+
+    // Updates lobby table, makes dead people red
+    if (parseInt(words) != 0){
+        document.getElementById(words[0].toString()).classList.toggle("dead");
+
+        // Removes the dead player from index.js's aliveplayer array
+        var index = alivePlayers.indexOf(words[0].toString());
+        if (index !== -1){
+            alivePlayers.splice(index, 1);
+        }
+    }
 }
 
 export function confirm_shot_button(){

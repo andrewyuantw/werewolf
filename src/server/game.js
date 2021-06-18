@@ -110,7 +110,7 @@ class Game {
 
         this.moveToDay = true;
 
-        this.firstNight = false;
+        this.firstNight = true;
 
         this.firstMayorTie = true;
 
@@ -672,6 +672,7 @@ class Game {
             this.game_over();
         } else {
             var result = '';
+            var deadNums = [];
             if (this.deadAtNightPlayers.length == 0) {
                 result += 'No one died last night.';
             } else {
@@ -680,13 +681,14 @@ class Game {
                 this.deadAtNightPlayers.forEach(playerID => {
                     const playerNum = this.players[playerID].getPlayerNum();
                     const player = this.players[playerID];
+                    deadNums.push(playerNum);
                     result += `${playerNum}. ${player.username} `;
                 })
             }
 
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.REVEAL_DEAD_LAST_NIGHT, result);
+                each_socket.emit(Constants.MSG_TYPES.REVEAL_DEAD_LAST_NIGHT, result, deadNums);
             })
 
             if (this.mayorID == null){
