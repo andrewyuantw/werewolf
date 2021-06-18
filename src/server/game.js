@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 5;
+const PLAYERNUM = 4;
 
 class Game {
 
@@ -229,7 +229,7 @@ class Game {
         // var array = [1,2,3,4,5,6,7,8,9];
 
         // for testing purposes
-        var array = [1,5,6,7,8];
+        var array = [4,5,6,7];
 
         // Shuffles the array
         for (var i = array.length - 1; i > 0; i --){
@@ -286,7 +286,8 @@ class Game {
 
             
             Object.keys(this.sockets).forEach(playerID => {
-
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
                 if (playerID == this.seerID){
                     const seer_socket = this.sockets[this.seerID];
                     seer_socket.emit(Constants.MSG_TYPES.SEER_NIGHT);
@@ -294,8 +295,7 @@ class Game {
                     const wolf_socket = this.sockets[playerID];
                     wolf_socket.emit(Constants.MSG_TYPES.WOLF_NIGHT);
                 }
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.GO_TO_NIGHT);
+                
                 
                 
             })
@@ -486,8 +486,8 @@ class Game {
             this.gameover = false;
             this.winner = '';
         }
-        //this.checkNightResponses();
-        this.dead_reveal();
+        this.checkNightResponses();
+        //this.dead_reveal();
     }
 
     witch_poison(numInput){
@@ -518,14 +518,14 @@ class Game {
 
         this.poison--;
         this.witchResponse = true;
-        //this.checkNightResponses();
-        this.dead_reveal();
+        this.checkNightResponses();
+        //this.dead_reveal();
     }
 
     witch_skip(){
         this.witchResponse = true;
-        //this.checkNightResponses();
-        this.dead_reveal();
+        this.checkNightResponses();
+        //this.dead_reveal();
     }
 
     check_hunter(){
@@ -729,14 +729,18 @@ class Game {
     }
 
     checkNightResponses(){
+
         if (this.witchResponse && this.seerResponse){
+            const seer_socket = this.sockets[this.seerID];
+            seer_socket.emit(Constants.MSG_TYPES.SEER_END);
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
                 each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
             })
+            this.witchResponse = false;
+            this.seerResponse = false;
         }
-        this.witchResponse = false;
-        this.seerResponse = false;
+        
     }
 
     // Takes in the socket and whether this player is going to run for mayor

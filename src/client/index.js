@@ -352,6 +352,14 @@ export function gotSeerResult(bad){
     document.getElementById("seer-button").classList.toggle("show");
 }
 
+export function seerNightEnd(){
+
+    // 
+    document.getElementById("seer-menu").classList.toggle("show");
+    document.getElementById("seer-button").classList.toggle("show");
+
+}
+
 export function goToNight(){
     document.getElementById("character-reveal").classList.toggle("show");
     document.getElementById("night-menu").classList.toggle("show");

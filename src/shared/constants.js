@@ -15,6 +15,9 @@ module.exports = Object.freeze({
         // SEER_RESPONSE sent whenever a seer has submitted the player number they want to check
         SEER_RESPONSE: 'seer_response',
 
+        // SEER_END sent to seer
+        SEER_END: 'seer_end',
+
         // WOLF_RESPONSE sent whenever a wolf presses send to chat
         WOLF_RESPONSE: 'wolf_response',
 
@@ -89,7 +92,7 @@ module.exports = Object.freeze({
 
         // SUCCESSOR_END sent to everyone
         SUCCESSOR_END: 'successor_end',
-        
+
         // MOVE_TO_NEXT_STAGE sent after checks
         MOVE_TO_NEXT_STAGE: 'move_to_next_stage', 
 
