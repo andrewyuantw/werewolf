@@ -44,13 +44,13 @@ class Game {
         this.wolf_chat = "Chat: <br>";
         
         // Counts the number of villagers alive
-        this.villagerCount = 1;
+        this.villagerCount = 2;
 
         // Counts the number of gods alive
-        this.godCount = 1;
+        this.godCount = 2;
         
         // Counts the number of werewolves alive
-        this.wolfCount = 1;
+        this.wolfCount = 2;
 
         // Stores the ID for the player got killed by werewolves
         this.victim = null;
@@ -110,7 +110,7 @@ class Game {
 
         this.moveToDay = true;
 
-        this.firstNight = true;
+        this.firstNight = false;
 
         this.firstMayorTie = true;
 
@@ -424,7 +424,7 @@ class Game {
                 this.decrement_role_num(playerID);
 
 
-                this.mayorID = playerID; // for testing purposes
+                //this.mayorID = playerID; // for testing purposes
             }
         })  
         this.wolfIDs.forEach(playerID => {
@@ -438,8 +438,13 @@ class Game {
     kill_result_for_witch(){
         var witch_socket = this.sockets[this.witchID];
         var resultToWitch = '';
+        var ableToHeal = true;
         if(this.heal == 1){
             resultToWitch += `${this.victim.playerNum}. ${this.victim.username} was killed tonight, do you want to use the heal potion? <br>`;
+            if (this.victim.getSocketID() == this.witchID && !this.firstNight) {
+                ableToHeal = false;
+                resultToWitch += `You cannot use heal potion on yourself after first night. :( <br>`
+            }
         } else {
             resultToWitch += `You have already used your heal potion. <br>`;
         }
@@ -451,7 +456,7 @@ class Game {
         }
 
 
-        witch_socket.emit(Constants.MSG_TYPES.KILL_RESULT, resultToWitch, this.heal, this.poison);
+        witch_socket.emit(Constants.MSG_TYPES.KILL_RESULT, resultToWitch, this.heal, this.poison, ableToHeal);
     }
 
     witch_heal(){

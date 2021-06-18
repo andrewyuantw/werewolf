@@ -379,7 +379,7 @@ export function wolfNightEnd(){
     document.getElementById("wolf-button").classList.toggle("show");
 }
 
-export function gotKillResult(result, heal, poison){
+export function gotKillResult(result, heal, poison, ableToHeal){
 
     var potion_display = document.getElementById("potion");
     var potion_num = `You have ${heal} heal potion and ${poison} poison potion.`;
@@ -388,7 +388,7 @@ export function gotKillResult(result, heal, poison){
     var witch_display = document.getElementById("player-killed");
     witch_display.innerHTML = result;
     document.getElementById("witch-menu").classList.toggle("show");
-    if (heal == 1)
+    if (heal == 1 && ableToHeal)
         document.getElementById("heal-button").classList.toggle("show");
     if (poison == 1)
         document.getElementById("poison-button").classList.toggle("show");
