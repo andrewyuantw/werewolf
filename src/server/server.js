@@ -53,6 +53,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.WOLF_VOTE_REVEAL, wolfVoteReveal);
     socket.on(Constants.MSG_TYPES.MAYOR_TIE, moveToMayorTie);
     socket.on(Constants.MSG_TYPES.VOTE_TIE, moveToTie);
+    socket.on(Constants.MSG_TYPES.AFTER_VOTE, afterVote);
 });
 
 // Sets up the Game
@@ -166,4 +167,8 @@ function moveToMayorTie(){
 
 function moveToTie(){
     game.voteTie();
+}
+
+function afterVote(){
+    game.afterVote();
 }

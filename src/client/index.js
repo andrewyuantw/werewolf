@@ -1,5 +1,6 @@
 
-import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, confirmNewMayor, moveToMayorTie, moveToTie } from "./networking"
+import socket from "socket.io-client/lib/socket";
+import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, confirmNewMayor, moveToMayorTie, moveToTie, afterVote } from "./networking"
 import './style.css';
 
 // Gets the desired element from our index.html file 
@@ -32,7 +33,7 @@ const moveToTieButton = document.getElementById('move-to-tie-button');
 const historyButton = document.getElementById('history');
 const confirmDeathButton = document.getElementById('confirm-death-button');
 const seeYourRoleButton = document.getElementById('see-your-role');
-
+const moveToAfterVoteButton = document.getElementById('move-to-after-vote-button');
 
 // Stores the player number (not IDs) of players alive (from player perspective)
 var alivePlayers = [];
@@ -285,6 +286,11 @@ Promise.all([
     seeYourRoleButton.onclick = () =>{
         document.getElementById("your-role").classList.toggle("show");
     }
+
+    moveToAfterVoteButton.onclick = () =>{
+        moveToAfterVoteButton.classList.toggle("show");
+        afterVote();
+    }
 }) 
 
 // Handles server message indicating a new person has joined the lobby
@@ -414,6 +420,9 @@ export function witchNightEnd(){
 export function deadLastNight(result, deadNums){
     var display = document.getElementById("death");
     display.innerHTML = result;
+
+    document.getElementById('history-display').innerHTML += result + "<br>";
+
     document.getElementById("dead-reveal").classList.toggle("show");
 
     deadNums.forEach(dead =>{
@@ -491,6 +500,13 @@ export function mayorResult(result){
     var display = document.getElementById("mayor-successor-result");
     display.innerHTML = result;
     document.getElementById("mayor-successor").classList.toggle("show");
+
+    var words = result.split(".");
+
+    if (parseInt(words)!= 0) {
+        document.getElementById(words[0].toString()).classList.toggle("mayor");
+    }
+
 }
 
 export function confirm_new_mayor_button(){
@@ -700,4 +716,8 @@ export function reveal_vote_tie_button(){
 
 export function player_disconnected(disconnectedNum){
     document.getElementById(disconnectedNum.toString()).classList.toggle("dead");
+}
+
+export function move_to_after_vote(){
+    document.getElementById('move-to-after-vote-button').classList.toggle("show");
 }

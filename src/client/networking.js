@@ -4,7 +4,7 @@
 import io from 'socket.io-client';
 
 
-import { changeDisplay, gotSeerResult, seerNight, seerNightEnd, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, confirm_shot_button, shotEnd, mayorMenu, mayorResult, confirm_new_mayor_button, successorEnd, deadLastNight, confirm_death_button, deathEnd, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button, player_disconnected } from "./index";
+import { changeDisplay, gotSeerResult, seerNight, seerNightEnd, wolfNight, wolfNightEnd, wolfChat, gotKillResult, gameover, shoot, shootResult, confirm_shot_button, shotEnd, mayorMenu, mayorResult, confirm_new_mayor_button, successorEnd, deadLastNight, confirm_death_button, deathEnd, showStartGameButton, startGameForAll, electionStart, electionSpeechStart, show_mayor_button, show_mayor_menu, show_drop_out_button, update_candidates, mayor_reveal, show_mayor_menu_candidate, your_number, start_vote, vote_reveal, wolf_mayor_reveal_button, reveal_move_to_day_button, reveal_move_to_vote_button, move_to_vote, wolf_reveal_button, move_to_day, goToNight, reveal_mayor_tie_button, reveal_vote_tie_button, player_disconnected, move_to_after_vote } from "./index";
 
 
 const Constants = require('../shared/constants');
@@ -66,6 +66,7 @@ const connectedPromise = new Promise(resolve => {
     socket.on(Constants.MSG_TYPES.REVEAL_MAYOR_TIE_BUTTON, reveal_mayor_tie_button);
     socket.on(Constants.MSG_TYPES.REVEAL_VOTE_TIE_BUTTON, reveal_vote_tie_button);
     socket.on(Constants.MSG_TYPES.PLAYER_DISCONNECTED, player_disconnected);
+    socket.on(Constants.MSG_TYPES.REVEAL_MOVE_TO_AFTER_VOTE_BUTTON, move_to_after_vote)
 });
 
 
@@ -173,4 +174,7 @@ export function moveToMayorTie(){
 
 export function moveToTie(){
     socket.emit(Constants.MSG_TYPES.VOTE_TIE);
+}
+export function afterVote(){
+    socket.emit(Constants.MSG_TYPES.AFTER_VOTE);
 }

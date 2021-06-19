@@ -124,6 +124,8 @@ module.exports = Object.freeze({
 
         MAYOR_TIE: 'mayor_tie',
 
+        AFTER_VOTE: 'after_vote',
+
         // Server to Client
 
         // JOIN_LOBBY sent whenever someone else has joined the lobby
@@ -205,6 +207,8 @@ module.exports = Object.freeze({
 
         VOTE_TIE: 'vote-tie',
 
-        PLAYER_DISCONNECTED: 'player-disconnected'
+        PLAYER_DISCONNECTED: 'player-disconnected',
+
+        REVEAL_MOVE_TO_AFTER_VOTE_BUTTON: 'reveal-move-to-after-vote-button'
     },
 });

@@ -4,7 +4,7 @@ const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
-const PLAYERNUM = 4;
+const PLAYERNUM = 9;
 
 class Game {
 
@@ -44,13 +44,13 @@ class Game {
         this.wolf_chat = "Chat: <br>";
         
         // Counts the number of villagers alive
-        this.villagerCount = 2;
+        this.villagerCount = 3;
 
         // Counts the number of gods alive
-        this.godCount = 2;
+        this.godCount = 3;
         
         // Counts the number of werewolves alive
-        this.wolfCount = 2;
+        this.wolfCount = 3;
 
         // Stores the ID for the player got killed by werewolves
         this.victim = null;
@@ -181,7 +181,7 @@ class Game {
 
             this.deadIDs.push(socket.id);
             this.decrement_role_num(socket.id);
-            this.remove_dead_player_ID(playerID);
+            this.remove_dead_player_ID(socket.id);
 
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
@@ -226,10 +226,10 @@ class Game {
         // [7, 8, 9] and you will ensure that you will get the werewolf role
 
         
-        // var array = [1,2,3,4,5,6,7,8,9];
+        var array = [1,2,3,4,5,6,7,8,9];
 
         // for testing purposes
-        var array = [4,5,6,7];
+        // var array = [4,5,6,7];
 
         // Shuffles the array
         for (var i = array.length - 1; i > 0; i --){
@@ -487,7 +487,6 @@ class Game {
             this.winner = '';
         }
         this.checkNightResponses();
-        //this.dead_reveal();
     }
 
     witch_poison(numInput){
@@ -519,13 +518,11 @@ class Game {
         this.poison--;
         this.witchResponse = true;
         this.checkNightResponses();
-        //this.dead_reveal();
     }
 
     witch_skip(){
         this.witchResponse = true;
         this.checkNightResponses();
-        //this.dead_reveal();
     }
 
     check_hunter(){
@@ -729,16 +726,27 @@ class Game {
     }
 
     checkNightResponses(){
-
+        
         if (this.witchResponse && this.seerResponse){
-            const seer_socket = this.sockets[this.seerID];
-            seer_socket.emit(Constants.MSG_TYPES.SEER_END);
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
-            })
-            this.witchResponse = false;
-            this.seerResponse = false;
+
+
+            setTimeout(function () {
+                const seer_socket = this.sockets[this.seerID];
+                seer_socket.emit(Constants.MSG_TYPES.SEER_END);
+                if (this.firstNight){
+                    Object.keys(this.sockets).forEach(playerID => {
+                        const each_socket = this.sockets[playerID];
+                        each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
+                    })
+                } else {
+                    this.dead_reveal();
+                }
+                
+                this.witchResponse = false;
+                this.seerResponse = false;
+            }, 5000);
+
+            
         }
         
     }
@@ -984,26 +992,31 @@ class Game {
     }
 
     move_to_day(){
-        Object.keys(this.sockets).forEach(playerID => {
-            const each_socket = this.sockets[playerID];
-            each_socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
-        })
-
-        if (this.mayorID == null){
-            const host_socket = this.sockets[this.hostID];
-            host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+        if (this.firstNight){
+            this.dead_reveal();
+            this.firstNight = false;
         } else {
-            const mayor_socket = this.sockets[this.mayorID];
-            mayor_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+            Object.keys(this.sockets).forEach(playerID => {
+                const each_socket = this.sockets[playerID];
+                each_socket.emit(Constants.MSG_TYPES.MOVE_TO_DAY);
+            })
+
+            if (this.mayorID == null){
+                const host_socket = this.sockets[this.hostID];
+                host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+            } else {
+                const mayor_socket = this.sockets[this.mayorID];
+                mayor_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_VOTE_BUTTON);
+            }
+            
+
+            this.wolfIDs.forEach(playerID => {
+                const wolf_socket = this.sockets[playerID];
+                wolf_socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
+            })
+
+            this.moveToDay = false;
         }
-        
-
-        this.wolfIDs.forEach(playerID => {
-            const wolf_socket = this.sockets[playerID];
-            wolf_socket.emit(Constants.MSG_TYPES.WOLF_VOTE_REVEAL);
-        })
-
-        this.moveToDay = false;
     }
 
     move_to_vote(){
@@ -1113,7 +1126,7 @@ class Game {
                 host_socket.emit(Constants.MSG_TYPES.REVEAL_VOTE_TIE_BUTTON);
                 this.firstVoteTie = false;
             } else {
-                // send host MOVE TO NIGHT button
+                host_socket.emit(Constants.MSG_TYPES.REVEAL_MOVE_TO_AFTER_VOTE_BUTTON);
                 this.firstVoteTie = true;
             }
 
@@ -1219,6 +1232,15 @@ class Game {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING, this.voteTied);
         })
+    }
+
+    afterVote(){
+        this.check_game_over();
+        if (this.gameover){
+            this.game_over();
+        } else {
+            this.check_hunter();
+        }
     }
 }
 
