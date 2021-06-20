@@ -343,10 +343,15 @@ export function startGameForAll(role){
 
 // Handles the server message sent to the seer indicating it is now night
 export function seerNight(){
-    document.getElementById("character-reveal").classList.toggle("show");
+    if (document.getElementById("character-reveal").classList.contains("show"))
+        document.getElementById("character-reveal").classList.toggle("show");
+    if (document.getElementById("vote-reveal").classList.contains("show"))
+        document.getElementById("vote-reveal").classList.toggle("show");
     // Shows the seer menu by removing the "hide" attribute
-    document.getElementById("seer-menu").classList.toggle("show");
-    document.getElementById("seer-button").classList.toggle("show");
+    if (!document.getElementById("seer-menu").classList.contains("show"))
+        document.getElementById("seer-menu").classList.toggle("show");
+    if (!document.getElementById("seer-button").classList.contains("show"))
+        document.getElementById("seer-button").classList.toggle("show");
 }
 
 // Handles the server message sent to the seer indicating whether their input is good or bad
@@ -367,12 +372,17 @@ export function seerNightEnd(){
 }
 
 export function goToNight(){
-    document.getElementById("character-reveal").classList.toggle("show");
+    if (document.getElementById("character-reveal").classList.contains("show"))
+        document.getElementById("character-reveal").classList.toggle("show");
+    if (document.getElementById("vote-reveal").classList.contains("show"))
+        document.getElementById("vote-reveal").classList.toggle("show");    
     document.getElementById("night-menu").classList.toggle("show");
 }
 
 export function wolfNight(){
     // shows the wolf menu
+    if (document.getElementById("vote-reveal").classList.contains("show"))
+        document.getElementById("vote-reveal").classList.toggle("show");
     document.getElementById("wolf-menu").classList.toggle("show");
     document.getElementById("chat-button").classList.toggle("show");
     document.getElementById("wolf-button").classList.toggle("show");
@@ -395,6 +405,9 @@ export function wolfNightEnd(){
 
 export function gotKillResult(result, heal, poison, ableToHeal){
 
+    if (document.getElementById("vote-reveal").classList.contains("show"))
+        document.getElementById("vote-reveal").classList.toggle("show");
+
     var potion_display = document.getElementById("potion");
     var potion_num = `You have ${heal} heal potion and ${poison} poison potion.`;
     potion_display.innerHTML = potion_num;
@@ -412,6 +425,13 @@ export function gotKillResult(result, heal, poison, ableToHeal){
 export function witchNightEnd(){
 
     document.getElementById("witch-menu").classList.toggle("show");
+
+    if (document.getElementById("heal-button").classList.contains("show"))
+        document.getElementById("heal-button").classList.toggle("show");
+    if (document.getElementById("poison-button").classList.contains("show"))
+        document.getElementById("poison-button").classList.toggle("show");
+    if (document.getElementById("skip-button").classList.contains("show"))
+        document.getElementById("skip-button").classList.toggle("show");
     //document.getElementById("heal-button").classList.toggle("show");
     //document.getElementById("poison-button").classList.toggle("show");
     //document.getElementById("skip-button").classList.toggle("show");

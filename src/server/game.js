@@ -2,6 +2,7 @@ const Player = require('./player');
 const Constants = require('../shared/constants');
 const socket = require('socket.io-client/lib/socket');
 const { findLastKey } = require('lodash');
+const { RuleTester } = require('eslint');
 
 // Number of players in a game. Typically 9, for debugging purposes, you can set it to lower
 const PLAYERNUM = 9;
@@ -165,6 +166,10 @@ class Game {
 
     // Removes a player from the game
     removePlayer(socket) {
+
+        if (!Object.keys(this.players).includes(socket.id)){
+            return;
+        }
 
         var disconnectedPlayerNum = this.players[socket.id].playerNum;
         console.log(disconnectedPlayerNum);
@@ -437,6 +442,11 @@ class Game {
 
     kill_result_for_witch(){
         var witch_socket = this.sockets[this.witchID];
+        if (this.witchID == null){
+            this.witchResponse = true;
+            this.checkNightResponses();
+            return;
+        }
         var resultToWitch = '';
         var ableToHeal = true;
         if(this.heal == 1){
@@ -454,7 +464,6 @@ class Game {
         }else{
             resultToWitch += `You have already used your poison. <br>`;
         }
-
 
         witch_socket.emit(Constants.MSG_TYPES.KILL_RESULT, resultToWitch, this.heal, this.poison, ableToHeal);
     }
@@ -730,21 +739,19 @@ class Game {
         if (this.witchResponse && this.seerResponse){
 
 
-            setTimeout(function () {
-                const seer_socket = this.sockets[this.seerID];
-                seer_socket.emit(Constants.MSG_TYPES.SEER_END);
-                if (this.firstNight){
-                    Object.keys(this.sockets).forEach(playerID => {
-                        const each_socket = this.sockets[playerID];
-                        each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
-                    })
-                } else {
-                    this.dead_reveal();
-                }
-                
-                this.witchResponse = false;
-                this.seerResponse = false;
-            }, 5000);
+            const seer_socket = this.sockets[this.seerID];
+            seer_socket.emit(Constants.MSG_TYPES.SEER_END);
+            if (this.firstNight){
+                Object.keys(this.sockets).forEach(playerID => {
+                    const each_socket = this.sockets[playerID];
+                    each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
+                })
+            } else {
+                this.dead_reveal();
+            }
+            
+            this.witchResponse = false;
+            this.seerResponse = false;
 
             
         }
