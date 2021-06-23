@@ -683,12 +683,25 @@ class Game {
                 result += 'No one died last night.';
             } else {
                 result += 'Player died last night: '
-                this.deadAtNightPlayers.sort();
-                this.deadAtNightPlayers.forEach(playerID => {
-                    const playerNum = this.players[playerID].getPlayerNum();
-                    const player = this.players[playerID];
-                    deadNums.push(playerNum);
-                    result += `${playerNum}. ${player.username} `;
+
+                var tempArray = [];
+
+                this.deadAtNightPlayers.forEach(playerID =>{
+                    tempArray.push(this.players[playerID].getPlayerNum());
+                })
+
+                tempArray.sort();
+
+                tempArray.forEach(playerNum => {
+
+                    Object.keys(this.players).forEach(playerID =>{
+                        if (this.players[playerID].getPlayerNum() == playerNum){
+                            const player = this.players[playerID];
+                            deadNums.push(playerNum);
+                            result += `${playerNum}. ${player.username} `;
+                        }
+                    })
+                    
                 })
             }
 
@@ -934,13 +947,26 @@ class Game {
                     votingHistory += `Voted for ${playerNum}: `;
                 else
                     votingHistory += `Abstained: `;
+
+                var tempVote = [];
                 this.mayorVote[playerNum].forEach(playerWhoVoted =>{
+
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
-                            votingHistory += this.players[playerID].playerNum + " ";
+                            tempVote.push(this.players[playerID].playerNum);
+                            //votingHistory += this.players[playerID].playerNum + " ";
                         }
                     })
+
                 })
+
+                tempVote.sort();
+
+                tempVote.forEach(playerNum =>{
+                    votingHistory += playerNum + " ";
+                })
+
+
                 votingHistory += "<br>";
             })
             
@@ -1091,13 +1117,24 @@ class Game {
                     votingHistory += `Voted for ${playerNum}: `;
                 else
                     votingHistory += `Abstained: `;
+
+                var tempVote = [];
+                
                 this.vote[playerNum].forEach(playerWhoVoted =>{
+
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
-                            votingHistory += this.players[playerID].playerNum + " ";
+                            tempVote.push(this.players[playerID].playerNum);
                         }
                     })
                 })
+
+                tempVote.sort();
+
+                tempVote.forEach(playerNum =>{
+                    votingHistory += playerNum + " "; 
+                })
+
                 votingHistory += "<br>";
 
             })
