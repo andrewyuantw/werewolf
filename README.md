@@ -1,10 +1,9 @@
 # werewolf
 
-### Minimum To Do
-
-* Witch night menu (remember witch rules for using potions)
-* Day menu - Announce death at the top
-* Check if game has ended, also check if hunter wants to shoot
-* If Mayor dead, who is next mayor?
+### Bug List
+* Add five second delay for witch/seer response
+* Seer's CONFIRM button showing up on second night regardless 
+* Witch's screen does not appear on second night
+* Investigate whether more than ten people connecting to the website will break the game
 
 
