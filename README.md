@@ -14,7 +14,7 @@ On one open terminal, run the following command.
 
 > node src/server/server.js
 
-This should start the website at *http://localhost:3000/*.
+This should start the website at http://localhost:3000/.
 
 To get your friends in the same game, you can use a tool like *ngrok* to generate a public-facing link that tunnels to your locally hosted website.
 
