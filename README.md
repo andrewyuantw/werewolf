@@ -23,3 +23,11 @@ To do so, run the following command.
 > ngrok http 3000
 
 If successful, you should see a XXXXX.ngrok.io link pointing to http://localhost:3000 under "Forwarding". Supply this link to your friends and they will be able to join the game!
+
+### Future Plans
+
+* Host the website online with a custom domain once adequate testing has been conducted
+* Add game modes to support up to 12 players (currently only 9 people can play)
+* Develop more playable character roles 
+* Allow players to dynamically configure what roles they want to include in the game before starting
+* Implement different game rooms so multiple games can take place simultaneously
