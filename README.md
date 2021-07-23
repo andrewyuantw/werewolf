@@ -6,7 +6,7 @@ This is an online version of Werewolf, a party game similar to Mafia but with mo
 
 ### Gameplay Screenshots
 
-<img src="https://i.imgur.com/lgL9U0s.png" width=300px/>
+<img src="https://i.imgur.com/lgL9U0s.png" width=700px/>
 
 ### How to play
 
