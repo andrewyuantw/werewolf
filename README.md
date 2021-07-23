@@ -4,6 +4,10 @@
 
 This is an online version of Werewolf, a party game similar to Mafia but with more complicated character roles. Players get randomly assigned a role, with "werewolves" choosing their prey at night, while villagers try to vote out the werewolves during the day. There are other villagers, referred to as "gods", whose specialized powers give the villagers a better chance at successfully finding all the werewolves. This current branch holds a multiplayer version for 9 players, with the player arrangement consisting of 3 wolves, 3 villagers, 1 seer, 1 witch, and 1 hunter. 
 
+### Gameplay Screenshots
+
+<img src="https://i.imgur.com/lgL9U0s.png" width=300px/>
+
 ### How to play
 
 Be sure to have *node* installed beforehand.
