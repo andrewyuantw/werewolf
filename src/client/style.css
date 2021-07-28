@@ -1,5 +1,5 @@
 
-/* Body - visibility set to default here already */
+/* Body - visibility set to default value of hidden here already */
 /* do NOT change visibility for subsequent elements */
 body {
     font-family: "HelveticaNeue-Light",
@@ -63,13 +63,10 @@ div:not(#lobby, #button-container, #your-role) {
     box-shadow: 5px 10px rgb(37, 37, 37);
 }
 
-
-
 div#button-container{
     float: left;
     margin: 30px;
     padding: 10px;
-
 }
 
 div#history-display{
@@ -141,10 +138,7 @@ input::placeholder{
 
 /* Styling for buttons */
 button {
-    font-family: "HelveticaNeue-Light",
-    "Helvetica Neue Light",
-    "Helvetica Neue",
-    Helvetica, "Muli", 'Trebuchet MS', "Gill Sans","Inter", sans-serif;
+    font-family: "HelveticaNeue-Light", 'Trebuchet MS', "Inter", sans-serif;
     border: 0;
     background: none;
     margin: 20px auto;

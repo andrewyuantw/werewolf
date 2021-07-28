@@ -27,10 +27,10 @@ module.exports = Object.freeze({
         // WOLF_KILL sent whenever the wolf leader has submitted the player number they want to kill
         WOLF_KILL: 'wolf_kill',
 
-        //
+        // KILL_RESULT sent to server when one wolf makes the decision to kill 
         KILL_RESULT: 'kill_result',
 
-        //
+        // WITCH_NIGHT is sent to 
         WITCH_NIGHT: 'witch_night',
 
         //

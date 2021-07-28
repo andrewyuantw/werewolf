@@ -3,7 +3,6 @@ import socket from "socket.io-client/lib/socket";
 import { connect, dropOutElection, enterUsername, getSeerChoice, getKillChoice, hostStartGame, mayorVote, moveToMayorVote, play, playerReady, readyToStart, runForMayorOrNot, seerLook, startGame, vote, wolfChatMessage, witchSkip, heal, poison, wolfMayorReveal, moveToDay, moveToVote, wolfReveal, getHunterChoice, hunterSkip, confirmShot, confirmDeath, getMayorChoice, confirmNewMayor, moveToMayorTie, moveToTie, afterVote } from "./networking"
 import './style.css';
 
-// Gets the desired element from our index.html file 
 const playButton = document.getElementById('play-button');
 const startGameButton = document.getElementById('start-game-button');
 const readyButton = document.getElementById('ready');
@@ -89,9 +88,6 @@ Promise.all([
     seerButton.onclick = () => {
 
         // We get the number from the input box, and check if it is valid
-        // TO DO: Check if the player number is for someone alive
-        // needs to handle case where wolves kill someone before the seer makes decision
-        // in this case, the person cannot be shown to be dead yet
         var numInput = document.getElementById('seer-input').value;
         alivePlayers.forEach(a =>{
             console.log(a);
@@ -104,7 +100,6 @@ Promise.all([
     wolfButton.onclick = () => {
 
         // We get the number from the input box, and check if it is valid
-       
         var numInput = document.getElementById('wolf-input').value;
         if (alivePlayers.includes(numInput) || numInput == 0)
             getKillChoice(numInput);
@@ -156,9 +151,6 @@ Promise.all([
         hunterNoButton.classList.toggle("show");
         if (hunterShootButton.classList.contains("show"))
             hunterShootButton.classList.toggle("show");
-
-        //document.getElementById("shoot-input").classList.toggle("show");
-          
         document.getElementById("hunter-menu").classList.toggle("show");
         
     }
@@ -170,7 +162,6 @@ Promise.all([
             getHunterChoice(numInput);
             hunterNoButton.classList.toggle("show");
             hunterShootButton.classList.toggle("show");
-            //document.getElementById("shoot-input").classList.toggle("show");
             document.getElementById("hunter-menu").classList.toggle("show");
         }
     }
@@ -191,7 +182,6 @@ Promise.all([
         getMayorChoice(0);
         mayorDestroyButton.classList.toggle("show");
         mayorSuccessorButton.classList.toggle("show");
-        //document.getElementById("successor-input").classList.toggle("show");
         document.getElementById("mayor-successor-menu").classList.toggle("show");
         
     }
@@ -202,7 +192,6 @@ Promise.all([
             getMayorChoice(numInput);
             mayorDestroyButton.classList.toggle("show");
             mayorSuccessorButton.classList.toggle("show");
-            //document.getElementById("successor-input").classList.toggle("show");
             document.getElementById("mayor-successor-menu").classList.toggle("show");
         }
     }
@@ -332,6 +321,7 @@ export function startGameForAll(role){
     characterReveal.classList.toggle("show");
 
     document.getElementById("ready").classList.toggle("show");
+
     // Shows the player's role
     document.getElementById("role").innerHTML = `Your role is ${role}`;
     document.getElementById("your-role").innerHTML = `Your role is ${role}`;
@@ -347,6 +337,7 @@ export function seerNight(){
         document.getElementById("character-reveal").classList.toggle("show");
     if (document.getElementById("vote-reveal").classList.contains("show"))
         document.getElementById("vote-reveal").classList.toggle("show");
+
     // Shows the seer menu by removing the "hide" attribute
     if (!document.getElementById("seer-menu").classList.contains("show"))
         document.getElementById("seer-menu").classList.toggle("show");
@@ -364,8 +355,6 @@ export function gotSeerResult(bad){
 }
 
 export function seerNightEnd(){
-
-    // 
     document.getElementById("seer-menu").classList.toggle("show");
     document.getElementById("seer-button").classList.toggle("show");
 
@@ -380,6 +369,7 @@ export function goToNight(){
 }
 
 export function wolfNight(){
+
     // shows the wolf menu
     if (document.getElementById("vote-reveal").classList.contains("show"))
         document.getElementById("vote-reveal").classList.toggle("show");
@@ -391,13 +381,11 @@ export function wolfNight(){
 export function wolfChat(message){
 
     // shows the wolf menu
-
     document.getElementById("chat").innerHTML = message;
 }
 
 export function wolfNightEnd(){
 
-    // 
     document.getElementById("wolf-menu").classList.toggle("show");
     document.getElementById("chat-button").classList.toggle("show");
     document.getElementById("wolf-button").classList.toggle("show");
@@ -432,9 +420,6 @@ export function witchNightEnd(){
         document.getElementById("poison-button").classList.toggle("show");
     if (document.getElementById("skip-button").classList.contains("show"))
         document.getElementById("skip-button").classList.toggle("show");
-    //document.getElementById("heal-button").classList.toggle("show");
-    //document.getElementById("poison-button").classList.toggle("show");
-    //document.getElementById("skip-button").classList.toggle("show");
 }
 
 export function deadLastNight(result, deadNums){
@@ -539,13 +524,6 @@ export function successorEnd(){
 
 export function electionStart(){
 
-    /* COMMENT THIS OUT THIS IS HERE ONLY FOR DEBUGGING
-       Hides welcome menu, useful when looking to skip ahead to voting
-    
-    var welcomeMenu = document.getElementById("play-menu");
-    welcomeMenu.classList.toggle("hide");
-    */
-
     if (document.getElementById("night-menu").classList.contains("show"))
         document.getElementById("night-menu").classList.toggle("show");
     if (document.getElementById("seer-menu").classList.contains("show"))
@@ -626,6 +604,7 @@ export function mayor_reveal(mayor_num, dead_num, mayor_vote_history){
     if (document.getElementById("wolf-reveal-button").classList.contains("show"))
         document.getElementById("wolf-reveal-button").classList.toggle("show");
     currentMode = 0;
+    
     // show mayor-reveal
     document.getElementById('mayor-reveal').classList.toggle("show");
     document.getElementById('mayor-name').innerHTML = mayor_num;

@@ -75,6 +75,8 @@ class Game {
         // Hunter shot or not
         this.hunterShotOrNot = false;
 
+        // Coordinates the timing of when to move to day
+        // Server needs to receive witchResponse AND seerResponse to move onto day
         this.witchResponse = false;
 
         this.seerResponse = false;
@@ -153,8 +155,6 @@ class Game {
             for (var i = 0; i < this.current_roster.length ; i ++){
                 each_socket.emit(Constants.MSG_TYPES.JOIN_LOBBY, this.current_roster[i], i + 1);
             }
-            
-            
         })
 
         // If we have enough players, we send a message to the host only
@@ -218,8 +218,6 @@ class Game {
         Object.keys(this.sockets).forEach(playerID => {
             const each_socket = this.sockets[playerID];
             each_socket.emit(Constants.MSG_TYPES.START_GAME, this.players[playerID].getRole());
-            //each_socket.emit(Constants.MSG_TYPES.ELECTION_START, this.players[playerID].getRole());
-            //each_socket.emit(Constants.MSG_TYPES.MOVE_TO_VOTING);
         })
     }
 
@@ -229,12 +227,8 @@ class Game {
         // Roles 1 to 9, for debugging, you can alter this array
         // For example. if you just want to test werewolf functions, set this to
         // [7, 8, 9] and you will ensure that you will get the werewolf role
-
         
         var array = [1,2,3,4,5,6,7,8,9];
-
-        // for testing purposes
-        // var array = [4,5,6,7];
 
         // Shuffles the array
         for (var i = array.length - 1; i > 0; i --){
@@ -282,13 +276,6 @@ class Game {
         if (this.ready_number >= PLAYERNUM){
 
             // We send different messages depending on the role
-
-            
-
-            // this is for testing purposes
-            //const hunter_socket = this.sockets[this.hunterID];
-            //hunter_socket.emit(Constants.MSG_TYPES.HUNTER_SHOOT, false);
-
             
             Object.keys(this.sockets).forEach(playerID => {
                 const each_socket = this.sockets[playerID];
@@ -304,14 +291,6 @@ class Game {
                 
                 
             })
-            
-
-            /*
-            Object.keys(this.sockets).forEach(playerID => {
-                const each_socket = this.sockets[playerID];
-                each_socket.emit(Constants.MSG_TYPES.ELECTION_START);
-            })
-            */
             
         }
     }
@@ -363,10 +342,6 @@ class Game {
                 this.winner = 'Good people ';
             }
         }
-        /*  else {
-            this.gameover = false;
-            this.winner = '';
-        } */
     }
 
     game_over(){
@@ -386,16 +361,6 @@ class Game {
         }
         else
             this.villagerCount--;
-
-       /*  if (playerID == this.seerID){
-            this.seerID = null;
-        } else if (playerID == this.witchID) {
-            this.witchID = null;
-        } else if (playerID == this.hunterID){
-            this.hunterID = null;
-        } else if (playerID == this.hostID){
-            this.hostID = Object.keys(this.players)[Math.floor(Math.random()*Object.keys(this.players).length)];
-        } */
     }
 
     remove_dead_player_ID(playerID){
@@ -664,13 +629,6 @@ class Game {
             this.move_to_day();
         else
             this.move_to_night();
-        /* if (this.mayorID == null){
-            const host_socket = this.sockets[this.hostID];
-            host_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
-        } else {
-            const mayor_socket = this.sockets[this.mayorID];
-            mayor_socket.emit(Constants.MSG_TYPES.MOVE_TO_NEXT_STAGE);
-        } */
     }
 
     dead_reveal(){
@@ -768,7 +726,6 @@ class Game {
 
             
         }
-        
     }
 
     // Takes in the socket and whether this player is going to run for mayor
@@ -954,7 +911,7 @@ class Game {
                     Object.keys(this.players).forEach(playerID =>{
                         if (playerID == playerWhoVoted){
                             tempVote.push(this.players[playerID].playerNum);
-                            //votingHistory += this.players[playerID].playerNum + " ";
+                            
                         }
                     })
 
@@ -1187,19 +1144,6 @@ class Game {
         this.deadIDs.push(socket.id);
         this.decrement_role_num(socket.id);
         this.remove_dead_player_ID(socket);
-        /*
-
-
-
-        REMEMBER TO CHANGE HERE
-        change to send to death reveal before going straight to night
-        instead of going to day
-
-
-
-
-
-        */
 
         // Host gets additional MOVE TO DAY button
         const host_socket = this.sockets[this.hostID];
